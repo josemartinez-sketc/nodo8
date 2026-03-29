@@ -1,311 +1,979 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="es">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>nodo8 — Soluciones tecnológicas</title>
-  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
-  <style>
-    :root {
-      --bg: #0a0a0a;
-      --surface: #111111;
-      --surface2: #181818;
-      --border: rgba(255,255,255,0.07);
-      --accent: #c8f04b;
-      --accent-dim: rgba(200,240,75,0.12);
-      --text: #f0f0ec;
-      --muted: #888880;
-      --font-display: 'Syne', sans-serif;
-      --font-body: 'DM Sans', sans-serif;
-    }
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    html { scroll-behavior: smooth; }
-    body { background: var(--bg); color: var(--text); font-family: var(--font-body); font-size: 16px; line-height: 1.7; overflow-x: hidden; }
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>nodo8 — Soluciones tecnológicas</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:wght@300;400;500&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --bg: #0a0a0a;
+        --surface: #111111;
+        --surface2: #181818;
+        --border: rgba(255, 255, 255, 0.07);
+        --accent: #c8f04b;
+        --accent-dim: rgba(200, 240, 75, 0.12);
+        --text: #f0f0ec;
+        --muted: #888880;
+        --font-display: "Syne", sans-serif;
+        --font-body: "DM Sans", sans-serif;
+      }
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      html {
+        scroll-behavior: smooth;
+      }
+      body {
+        background: var(--bg);
+        color: var(--text);
+        font-family: var(--font-body);
+        font-size: 16px;
+        line-height: 1.7;
+        overflow-x: hidden;
+      }
 
-    nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; display: flex; align-items: center; justify-content: space-between; padding: 1.25rem 2.5rem; border-bottom: 1px solid var(--border); background: rgba(10,10,10,0.88); backdrop-filter: blur(12px); }
-    .nav-logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
-    .nav-logo-text { font-family: var(--font-display); font-size: 1.1rem; font-weight: 800; color: var(--text); letter-spacing: -0.02em; }
-    .nav-logo-text span { color: var(--accent); }
-    .nav-links { display: flex; gap: 2rem; list-style: none; }
-    .nav-links a { font-size: 0.85rem; color: var(--muted); text-decoration: none; letter-spacing: 0.03em; transition: color 0.2s; }
-    .nav-links a:hover { color: var(--text); }
-    .nav-cta { font-family: var(--font-body); font-size: 0.85rem; font-weight: 500; color: var(--bg); background: var(--accent); border: none; padding: 0.55rem 1.25rem; border-radius: 4px; cursor: pointer; text-decoration: none; transition: opacity 0.2s; }
-    .nav-cta:hover { opacity: 0.88; }
+      nav {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: 100;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 1.25rem 2.5rem;
+        border-bottom: 1px solid var(--border);
+        background: rgba(10, 10, 10, 0.88);
+        backdrop-filter: blur(12px);
+      }
+      .nav-logo {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        text-decoration: none;
+      }
+      .nav-logo-text {
+        font-family: var(--font-display);
+        font-size: 1.1rem;
+        font-weight: 800;
+        color: var(--text);
+        letter-spacing: -0.02em;
+      }
+      .nav-logo-text span {
+        color: var(--accent);
+      }
+      .nav-links {
+        display: flex;
+        gap: 2rem;
+        list-style: none;
+      }
+      .nav-links a {
+        font-size: 0.85rem;
+        color: var(--muted);
+        text-decoration: none;
+        letter-spacing: 0.03em;
+        transition: color 0.2s;
+      }
+      .nav-links a:hover {
+        color: var(--text);
+      }
+      .nav-cta {
+        font-family: var(--font-body);
+        font-size: 0.85rem;
+        font-weight: 500;
+        color: var(--bg);
+        background: var(--accent);
+        border: none;
+        padding: 0.55rem 1.25rem;
+        border-radius: 4px;
+        cursor: pointer;
+        text-decoration: none;
+        transition: opacity 0.2s;
+      }
+      .nav-cta:hover {
+        opacity: 0.88;
+      }
 
-    .hero { min-height: 100vh; display: flex; flex-direction: column; justify-content: flex-end; padding: 8rem 2.5rem 4rem; position: relative; overflow: hidden; }
-    .hero-grid { position: absolute; inset: 0; background-image: linear-gradient(var(--border) 1px, transparent 1px), linear-gradient(90deg, var(--border) 1px, transparent 1px); background-size: 60px 60px; opacity: 0.5; }
-    .hero-glow { position: absolute; top: 20%; right: -10%; width: 600px; height: 600px; background: radial-gradient(circle, rgba(200,240,75,0.07) 0%, transparent 70%); pointer-events: none; }
-    .hero-glow2 { position: absolute; bottom: 0; left: -5%; width: 400px; height: 400px; background: radial-gradient(circle, rgba(200,240,75,0.04) 0%, transparent 70%); pointer-events: none; }
-    .hero-tag { display: inline-flex; align-items: center; gap: 8px; font-size: 0.78rem; color: var(--accent); letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 1.5rem; }
-    .hero-tag::before { content: ''; width: 24px; height: 1px; background: var(--accent); }
-    .hero h1 { font-family: var(--font-display); font-size: clamp(2.8rem, 7vw, 5.5rem); font-weight: 800; line-height: 1.05; letter-spacing: -0.03em; max-width: 800px; margin-bottom: 1.5rem; }
-    .hero h1 em { font-style: normal; color: var(--accent); }
-    .hero-sub { font-size: 1.05rem; color: var(--muted); max-width: 480px; margin-bottom: 2.5rem; font-weight: 300; }
-    .hero-actions { display: flex; gap: 1rem; flex-wrap: wrap; }
-    .btn-primary { font-family: var(--font-body); font-size: 0.9rem; font-weight: 500; color: var(--bg); background: var(--accent); border: none; padding: 0.85rem 2rem; border-radius: 4px; cursor: pointer; text-decoration: none; transition: opacity 0.2s, transform 0.2s; display: inline-block; }
-    .btn-primary:hover { opacity: 0.88; transform: translateY(-1px); }
-    .btn-ghost { font-family: var(--font-body); font-size: 0.9rem; font-weight: 400; color: var(--muted); background: transparent; border: 1px solid var(--border); padding: 0.85rem 2rem; border-radius: 4px; cursor: pointer; text-decoration: none; transition: color 0.2s, border-color 0.2s; display: inline-block; }
-    .btn-ghost:hover { color: var(--text); border-color: rgba(255,255,255,0.2); }
-    .hero-stats { display: flex; gap: 3rem; margin-top: 4rem; padding-top: 2.5rem; border-top: 1px solid var(--border); flex-wrap: wrap; }
-    .stat-num { font-family: var(--font-display); font-size: 2rem; font-weight: 700; color: var(--text); }
-    .stat-lbl { font-size: 0.8rem; color: var(--muted); letter-spacing: 0.05em; }
+      .hero {
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-end;
+        padding: 8rem 2.5rem 4rem;
+        position: relative;
+        overflow: hidden;
+      }
+      .hero-grid {
+        position: absolute;
+        inset: 0;
+        background-image:
+          linear-gradient(var(--border) 1px, transparent 1px),
+          linear-gradient(90deg, var(--border) 1px, transparent 1px);
+        background-size: 60px 60px;
+        opacity: 0.5;
+      }
+      .hero-glow {
+        position: absolute;
+        top: 20%;
+        right: -10%;
+        width: 600px;
+        height: 600px;
+        background: radial-gradient(
+          circle,
+          rgba(200, 240, 75, 0.07) 0%,
+          transparent 70%
+        );
+        pointer-events: none;
+      }
+      .hero-glow2 {
+        position: absolute;
+        bottom: 0;
+        left: -5%;
+        width: 400px;
+        height: 400px;
+        background: radial-gradient(
+          circle,
+          rgba(200, 240, 75, 0.04) 0%,
+          transparent 70%
+        );
+        pointer-events: none;
+      }
+      .hero-tag {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 0.78rem;
+        color: var(--accent);
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        margin-bottom: 1.5rem;
+      }
+      .hero-tag::before {
+        content: "";
+        width: 24px;
+        height: 1px;
+        background: var(--accent);
+      }
+      .hero h1 {
+        font-family: var(--font-display);
+        font-size: clamp(2.8rem, 7vw, 5.5rem);
+        font-weight: 800;
+        line-height: 1.05;
+        letter-spacing: -0.03em;
+        max-width: 800px;
+        margin-bottom: 1.5rem;
+      }
+      .hero h1 em {
+        font-style: normal;
+        color: var(--accent);
+      }
+      .hero-sub {
+        font-size: 1.05rem;
+        color: var(--muted);
+        max-width: 480px;
+        margin-bottom: 2.5rem;
+        font-weight: 300;
+      }
+      .hero-actions {
+        display: flex;
+        gap: 1rem;
+        flex-wrap: wrap;
+      }
+      .btn-primary {
+        font-family: var(--font-body);
+        font-size: 0.9rem;
+        font-weight: 500;
+        color: var(--bg);
+        background: var(--accent);
+        border: none;
+        padding: 0.85rem 2rem;
+        border-radius: 4px;
+        cursor: pointer;
+        text-decoration: none;
+        transition:
+          opacity 0.2s,
+          transform 0.2s;
+        display: inline-block;
+      }
+      .btn-primary:hover {
+        opacity: 0.88;
+        transform: translateY(-1px);
+      }
+      .btn-ghost {
+        font-family: var(--font-body);
+        font-size: 0.9rem;
+        font-weight: 400;
+        color: var(--muted);
+        background: transparent;
+        border: 1px solid var(--border);
+        padding: 0.85rem 2rem;
+        border-radius: 4px;
+        cursor: pointer;
+        text-decoration: none;
+        transition:
+          color 0.2s,
+          border-color 0.2s;
+        display: inline-block;
+      }
+      .btn-ghost:hover {
+        color: var(--text);
+        border-color: rgba(255, 255, 255, 0.2);
+      }
+      .hero-stats {
+        display: flex;
+        gap: 3rem;
+        margin-top: 4rem;
+        padding-top: 2.5rem;
+        border-top: 1px solid var(--border);
+        flex-wrap: wrap;
+      }
+      .stat-num {
+        font-family: var(--font-display);
+        font-size: 2rem;
+        font-weight: 700;
+        color: var(--text);
+      }
+      .stat-lbl {
+        font-size: 0.8rem;
+        color: var(--muted);
+        letter-spacing: 0.05em;
+      }
 
-    section { padding: 6rem 2.5rem; }
-    .section-header { display: flex; align-items: flex-end; justify-content: space-between; margin-bottom: 3rem; flex-wrap: wrap; gap: 1rem; }
-    .section-eyebrow { font-size: 0.75rem; color: var(--accent); letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 0.5rem; }
-    .section-title { font-family: var(--font-display); font-size: clamp(1.8rem, 4vw, 2.8rem); font-weight: 700; line-height: 1.1; letter-spacing: -0.02em; }
-    .section-note { font-size: 0.9rem; color: var(--muted); max-width: 280px; text-align: right; }
+      section {
+        padding: 6rem 2.5rem;
+      }
+      .section-header {
+        display: flex;
+        align-items: flex-end;
+        justify-content: space-between;
+        margin-bottom: 3rem;
+        flex-wrap: wrap;
+        gap: 1rem;
+      }
+      .section-eyebrow {
+        font-size: 0.75rem;
+        color: var(--accent);
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        margin-bottom: 0.5rem;
+      }
+      .section-title {
+        font-family: var(--font-display);
+        font-size: clamp(1.8rem, 4vw, 2.8rem);
+        font-weight: 700;
+        line-height: 1.1;
+        letter-spacing: -0.02em;
+      }
+      .section-note {
+        font-size: 0.9rem;
+        color: var(--muted);
+        max-width: 280px;
+        text-align: right;
+      }
 
-    .services-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1px; border: 1px solid var(--border); border-radius: 12px; overflow: hidden; }
-    .service-card { background: var(--surface); padding: 2rem; position: relative; transition: background 0.3s; }
-    .service-card:hover { background: var(--surface2); }
-    .service-card::after { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: var(--accent); opacity: 0; transition: opacity 0.3s; }
-    .service-card:hover::after { opacity: 1; }
-    .service-num { font-family: var(--font-display); font-size: 0.7rem; color: var(--muted); letter-spacing: 0.1em; margin-bottom: 1.5rem; }
-    .service-icon-wrap { width: 44px; height: 44px; background: var(--accent-dim); border-radius: 8px; display: flex; align-items: center; justify-content: center; margin-bottom: 1.25rem; }
-    .service-icon-wrap svg { width: 20px; height: 20px; stroke: var(--accent); fill: none; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
-    .service-card h3 { font-family: var(--font-display); font-size: 1rem; font-weight: 600; color: var(--text); margin-bottom: 0.6rem; }
-    .service-card p { font-size: 0.875rem; color: var(--muted); line-height: 1.7; }
-    .service-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 1.25rem; }
-    .tag { font-size: 0.72rem; color: var(--accent); background: var(--accent-dim); padding: 3px 10px; border-radius: 100px; }
+      .services-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+        gap: 1px;
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        overflow: hidden;
+      }
+      .service-card {
+        background: var(--surface);
+        padding: 2rem;
+        position: relative;
+        transition: background 0.3s;
+      }
+      .service-card:hover {
+        background: var(--surface2);
+      }
+      .service-card::after {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 2px;
+        background: var(--accent);
+        opacity: 0;
+        transition: opacity 0.3s;
+      }
+      .service-card:hover::after {
+        opacity: 1;
+      }
+      .service-num {
+        font-family: var(--font-display);
+        font-size: 0.7rem;
+        color: var(--muted);
+        letter-spacing: 0.1em;
+        margin-bottom: 1.5rem;
+      }
+      .service-icon-wrap {
+        width: 44px;
+        height: 44px;
+        background: var(--accent-dim);
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 1.25rem;
+      }
+      .service-icon-wrap svg {
+        width: 20px;
+        height: 20px;
+        stroke: var(--accent);
+        fill: none;
+        stroke-width: 1.5;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+      }
+      .service-card h3 {
+        font-family: var(--font-display);
+        font-size: 1rem;
+        font-weight: 600;
+        color: var(--text);
+        margin-bottom: 0.6rem;
+      }
+      .service-card p {
+        font-size: 0.875rem;
+        color: var(--muted);
+        line-height: 1.7;
+      }
+      .service-tags {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+        margin-top: 1.25rem;
+      }
+      .tag {
+        font-size: 0.72rem;
+        color: var(--accent);
+        background: var(--accent-dim);
+        padding: 3px 10px;
+        border-radius: 100px;
+      }
 
-    .process-list { display: flex; flex-direction: column; }
-    .process-item { display: flex; align-items: flex-start; gap: 2rem; padding: 2rem 0; border-bottom: 1px solid var(--border); }
-    .process-item:last-child { border-bottom: none; }
-    .process-num { font-family: var(--font-display); font-size: 0.7rem; color: var(--muted); min-width: 32px; margin-top: 4px; }
-    .process-content h3 { font-family: var(--font-display); font-size: 1.1rem; font-weight: 600; color: var(--text); margin-bottom: 0.4rem; }
-    .process-content p { font-size: 0.875rem; color: var(--muted); max-width: 500px; }
+      .process-list {
+        display: flex;
+        flex-direction: column;
+      }
+      .process-item {
+        display: flex;
+        align-items: flex-start;
+        gap: 2rem;
+        padding: 2rem 0;
+        border-bottom: 1px solid var(--border);
+      }
+      .process-item:last-child {
+        border-bottom: none;
+      }
+      .process-num {
+        font-family: var(--font-display);
+        font-size: 0.7rem;
+        color: var(--muted);
+        min-width: 32px;
+        margin-top: 4px;
+      }
+      .process-content h3 {
+        font-family: var(--font-display);
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: var(--text);
+        margin-bottom: 0.4rem;
+      }
+      .process-content p {
+        font-size: 0.875rem;
+        color: var(--muted);
+        max-width: 500px;
+      }
 
-    .contact-section { background: var(--surface); border-radius: 16px; padding: 3.5rem; display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; align-items: center; }
-    .contact-left h2 { font-family: var(--font-display); font-size: clamp(1.6rem, 3.5vw, 2.4rem); font-weight: 700; line-height: 1.15; letter-spacing: -0.02em; margin-bottom: 1rem; }
-    .contact-left p { font-size: 0.9rem; color: var(--muted); line-height: 1.7; }
-    .contact-detail { font-size: 0.85rem; color: var(--muted); }
-    .contact-form { display: flex; flex-direction: column; gap: 12px; }
-    .form-group { display: flex; flex-direction: column; gap: 6px; }
-    .form-group label { font-size: 0.78rem; color: var(--muted); letter-spacing: 0.05em; }
-    .form-group input, .form-group textarea { background: var(--bg); border: 1px solid var(--border); border-radius: 6px; padding: 0.75rem 1rem; font-family: var(--font-body); font-size: 0.9rem; color: var(--text); outline: none; transition: border-color 0.2s; resize: none; }
-    .form-group input:focus, .form-group textarea:focus { border-color: var(--accent); }
-    .form-group input::placeholder, .form-group textarea::placeholder { color: #555; }
+      .contact-section {
+        background: var(--surface);
+        border-radius: 16px;
+        padding: 3.5rem;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 3rem;
+        align-items: center;
+      }
+      .contact-left h2 {
+        font-family: var(--font-display);
+        font-size: clamp(1.6rem, 3.5vw, 2.4rem);
+        font-weight: 700;
+        line-height: 1.15;
+        letter-spacing: -0.02em;
+        margin-bottom: 1rem;
+      }
+      .contact-left p {
+        font-size: 0.9rem;
+        color: var(--muted);
+        line-height: 1.7;
+      }
+      .contact-detail {
+        font-size: 0.85rem;
+        color: var(--muted);
+      }
+      .contact-form {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+      }
+      .form-group {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+      }
+      .form-group label {
+        font-size: 0.78rem;
+        color: var(--muted);
+        letter-spacing: 0.05em;
+      }
+      .form-group input,
+      .form-group textarea {
+        background: var(--bg);
+        border: 1px solid var(--border);
+        border-radius: 6px;
+        padding: 0.75rem 1rem;
+        font-family: var(--font-body);
+        font-size: 0.9rem;
+        color: var(--text);
+        outline: none;
+        transition: border-color 0.2s;
+        resize: none;
+      }
+      .form-group input:focus,
+      .form-group textarea:focus {
+        border-color: var(--accent);
+      }
+      .form-group input::placeholder,
+      .form-group textarea::placeholder {
+        color: #555;
+      }
 
-    footer { padding: 2.5rem; border-top: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem; }
-    .footer-brand { display: flex; align-items: center; gap: 8px; }
-    .footer-brand-text { font-family: var(--font-display); font-size: 0.9rem; font-weight: 800; color: var(--muted); letter-spacing: -0.02em; }
-    .footer-brand-text span { color: var(--accent); }
-    .footer-copy { font-size: 0.8rem; color: var(--muted); }
-    .footer-links { display: flex; gap: 1.5rem; }
-    .footer-links a { font-size: 0.8rem; color: var(--muted); text-decoration: none; transition: color 0.2s; }
-    .footer-links a:hover { color: var(--text); }
+      footer {
+        padding: 2.5rem;
+        border-top: 1px solid var(--border);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 1rem;
+      }
+      .footer-brand {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .footer-brand-text {
+        font-family: var(--font-display);
+        font-size: 0.9rem;
+        font-weight: 800;
+        color: var(--muted);
+        letter-spacing: -0.02em;
+      }
+      .footer-brand-text span {
+        color: var(--accent);
+      }
+      .footer-copy {
+        font-size: 0.8rem;
+        color: var(--muted);
+      }
+      .footer-links {
+        display: flex;
+        gap: 1.5rem;
+      }
+      .footer-links a {
+        font-size: 0.8rem;
+        color: var(--muted);
+        text-decoration: none;
+        transition: color 0.2s;
+      }
+      .footer-links a:hover {
+        color: var(--text);
+      }
 
-    @keyframes fadeUp { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: translateY(0); } }
-    .hero-tag { animation: fadeUp 0.6s ease both; }
-    .hero h1 { animation: fadeUp 0.6s 0.1s ease both; }
-    .hero-sub { animation: fadeUp 0.6s 0.2s ease both; }
-    .hero-actions { animation: fadeUp 0.6s 0.3s ease both; }
-    .hero-stats { animation: fadeUp 0.6s 0.4s ease both; }
+      @keyframes fadeUp {
+        from {
+          opacity: 0;
+          transform: translateY(24px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      .hero-tag {
+        animation: fadeUp 0.6s ease both;
+      }
+      .hero h1 {
+        animation: fadeUp 0.6s 0.1s ease both;
+      }
+      .hero-sub {
+        animation: fadeUp 0.6s 0.2s ease both;
+      }
+      .hero-actions {
+        animation: fadeUp 0.6s 0.3s ease both;
+      }
+      .hero-stats {
+        animation: fadeUp 0.6s 0.4s ease both;
+      }
 
-    @media (max-width: 768px) {
-      nav { padding: 1rem 1.5rem; }
-      .nav-links { display: none; }
-      .hero { padding: 7rem 1.5rem 3rem; }
-      section { padding: 4rem 1.5rem; }
-      .contact-section { grid-template-columns: 1fr; padding: 2rem; }
-      .section-note { text-align: left; }
-      footer { flex-direction: column; align-items: flex-start; padding: 2rem 1.5rem; }
-    }
-  </style>
-</head>
-<body>
+      @media (max-width: 768px) {
+        nav {
+          padding: 1rem 1.5rem;
+        }
+        .nav-links {
+          display: none;
+        }
+        .hero {
+          padding: 7rem 1.5rem 3rem;
+        }
+        section {
+          padding: 4rem 1.5rem;
+        }
+        .contact-section {
+          grid-template-columns: 1fr;
+          padding: 2rem;
+        }
+        .section-note {
+          text-align: left;
+        }
+        footer {
+          flex-direction: column;
+          align-items: flex-start;
+          padding: 2rem 1.5rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <nav>
+      <a href="#" class="nav-logo">
+        <svg
+          width="30"
+          height="30"
+          viewBox="0 0 30 30"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <!-- Outer ring of 8 nodes evenly spaced -->
+          <circle cx="15" cy="3" r="2.2" fill="#c8f04b" />
+          <circle cx="24.6" cy="7.4" r="2.2" fill="#c8f04b" opacity="0.7" />
+          <circle cx="27" cy="15" r="2.2" fill="#c8f04b" />
+          <circle cx="24.6" cy="22.6" r="2.2" fill="#c8f04b" opacity="0.7" />
+          <circle cx="15" cy="27" r="2.2" fill="#c8f04b" />
+          <circle cx="5.4" cy="22.6" r="2.2" fill="#c8f04b" opacity="0.7" />
+          <circle cx="3" cy="15" r="2.2" fill="#c8f04b" />
+          <circle cx="5.4" cy="7.4" r="2.2" fill="#c8f04b" opacity="0.7" />
+          <!-- Center node -->
+          <circle
+            cx="15"
+            cy="15"
+            r="3.5"
+            fill="none"
+            stroke="#c8f04b"
+            stroke-width="1.5"
+          />
+          <!-- Spokes from center to cardinal nodes -->
+          <line
+            x1="15"
+            y1="5.2"
+            x2="15"
+            y2="11.5"
+            stroke="#c8f04b"
+            stroke-width="1.2"
+            stroke-linecap="round"
+          />
+          <line
+            x1="15"
+            y1="18.5"
+            x2="15"
+            y2="24.8"
+            stroke="#c8f04b"
+            stroke-width="1.2"
+            stroke-linecap="round"
+          />
+          <line
+            x1="5.2"
+            y1="15"
+            x2="11.5"
+            y2="15"
+            stroke="#c8f04b"
+            stroke-width="1.2"
+            stroke-linecap="round"
+          />
+          <line
+            x1="18.5"
+            y1="15"
+            x2="24.8"
+            y2="15"
+            stroke="#c8f04b"
+            stroke-width="1.2"
+            stroke-linecap="round"
+          />
+        </svg>
+        <span class="nav-logo-text">nodo<span>8</span></span>
+      </a>
+      <ul class="nav-links">
+        <li><a href="#servicios">Servicios</a></li>
+        <li><a href="#proceso">Proceso</a></li>
+        <li><a href="#contacto">Contacto</a></li>
+      </ul>
+      <a href="#contacto" class="nav-cta">Agendar llamada</a>
+    </nav>
 
-<nav>
-  <a href="#" class="nav-logo">
-    <svg width="30" height="30" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <!-- Outer ring of 8 nodes evenly spaced -->
-      <circle cx="15" cy="3"  r="2.2" fill="#c8f04b"/>
-      <circle cx="24.6" cy="7.4" r="2.2" fill="#c8f04b" opacity="0.7"/>
-      <circle cx="27" cy="15" r="2.2" fill="#c8f04b"/>
-      <circle cx="24.6" cy="22.6" r="2.2" fill="#c8f04b" opacity="0.7"/>
-      <circle cx="15" cy="27" r="2.2" fill="#c8f04b"/>
-      <circle cx="5.4" cy="22.6" r="2.2" fill="#c8f04b" opacity="0.7"/>
-      <circle cx="3"  cy="15" r="2.2" fill="#c8f04b"/>
-      <circle cx="5.4" cy="7.4" r="2.2" fill="#c8f04b" opacity="0.7"/>
-      <!-- Center node -->
-      <circle cx="15" cy="15" r="3.5" fill="none" stroke="#c8f04b" stroke-width="1.5"/>
-      <!-- Spokes from center to cardinal nodes -->
-      <line x1="15" y1="5.2" x2="15" y2="11.5" stroke="#c8f04b" stroke-width="1.2" stroke-linecap="round"/>
-      <line x1="15" y1="18.5" x2="15" y2="24.8" stroke="#c8f04b" stroke-width="1.2" stroke-linecap="round"/>
-      <line x1="5.2" y1="15" x2="11.5" y2="15" stroke="#c8f04b" stroke-width="1.2" stroke-linecap="round"/>
-      <line x1="18.5" y1="15" x2="24.8" y2="15" stroke="#c8f04b" stroke-width="1.2" stroke-linecap="round"/>
-    </svg>
-    <span class="nav-logo-text">nodo<span>8</span></span>
-  </a>
-  <ul class="nav-links">
-    <li><a href="#servicios">Servicios</a></li>
-    <li><a href="#proceso">Proceso</a></li>
-    <li><a href="#contacto">Contacto</a></li>
-  </ul>
-  <a href="#contacto" class="nav-cta">Agendar llamada</a>
-</nav>
-
-<section class="hero">
-  <div class="hero-grid"></div>
-  <div class="hero-glow"></div>
-  <div class="hero-glow2"></div>
-  <div class="hero-tag">Consultor IT · Guadalajara, MX</div>
-  <h1>Tecnología que <em>funciona</em><br>para tu negocio</h1>
-  <p class="hero-sub">Desarrollo web, cloud, ciberseguridad y soporte técnico. Soluciones reales, sin complicaciones.</p>
-  <div class="hero-actions">
-    <a href="#contacto" class="btn-primary">Agendar consulta gratuita</a>
-    <a href="#servicios" class="btn-ghost">Ver servicios</a>
-  </div>
-  <div class="hero-stats">
-    <div><div class="stat-num">4+</div><div class="stat-lbl">Áreas de servicio</div></div>
-    <div><div class="stat-num">24h</div><div class="stat-lbl">Tiempo de respuesta</div></div>
-    <div><div class="stat-num">100%</div><div class="stat-lbl">Comprometido</div></div>
-  </div>
-</section>
-
-<section id="servicios">
-  <div class="section-header">
-    <div>
-      <div class="section-eyebrow">Lo que ofrezco</div>
-      <div class="section-title">Servicios IT</div>
-    </div>
-    <p class="section-note">Soluciones adaptadas a cada etapa de tu negocio.</p>
-  </div>
-  <div class="services-grid">
-    <div class="service-card">
-      <div class="service-num">01</div>
-      <div class="service-icon-wrap">
-        <svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+    <section class="hero">
+      <div class="hero-grid"></div>
+      <div class="hero-glow"></div>
+      <div class="hero-glow2"></div>
+      <div class="hero-tag">Consultor IT · Guadalajara, MX</div>
+      <h1>Tecnología que <em>funciona</em><br />para tu negocio</h1>
+      <p class="hero-sub">
+        Desarrollo web, cloud, ciberseguridad y soporte técnico. Soluciones
+        reales, sin complicaciones.
+      </p>
+      <div class="hero-actions">
+        <a href="#contacto" class="btn-primary">Agendar consulta gratuita</a>
+        <a href="#servicios" class="btn-ghost">Ver servicios</a>
       </div>
-      <h3>Desarrollo web</h3>
-      <p>Sitios y aplicaciones modernas, rápidas y optimizadas. Desde landing pages hasta sistemas web completos.</p>
-      <div class="service-tags"><span class="tag">React</span><span class="tag">Next.js</span><span class="tag">Node.js</span></div>
-    </div>
-    <div class="service-card">
-      <div class="service-num">02</div>
-      <div class="service-icon-wrap">
-        <svg viewBox="0 0 24 24"><path d="M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9Z"/></svg>
+      <div class="hero-stats">
+        <div>
+          <div class="stat-num">4+</div>
+          <div class="stat-lbl">Áreas de servicio</div>
+        </div>
+        <div>
+          <div class="stat-num">24h</div>
+          <div class="stat-lbl">Tiempo de respuesta</div>
+        </div>
+        <div>
+          <div class="stat-num">100%</div>
+          <div class="stat-lbl">Comprometido</div>
+        </div>
       </div>
-      <h3>Cloud / DevOps</h3>
-      <p>Infraestructura escalable en AWS, GCP o Azure. CI/CD, Docker, Kubernetes y automatización de procesos.</p>
-      <div class="service-tags"><span class="tag">AWS</span><span class="tag">Docker</span><span class="tag">Terraform</span></div>
-    </div>
-    <div class="service-card">
-      <div class="service-num">03</div>
-      <div class="service-icon-wrap">
-        <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-      </div>
-      <h3>Ciberseguridad</h3>
-      <p>Auditorías de seguridad, hardening de sistemas, gestión de vulnerabilidades y protección ante amenazas.</p>
-      <div class="service-tags"><span class="tag">Pentesting</span><span class="tag">OWASP</span><span class="tag">Zero Trust</span></div>
-    </div>
-    <div class="service-card">
-      <div class="service-num">04</div>
-      <div class="service-icon-wrap">
-        <svg viewBox="0 0 24 24"><path d="M12 8V4H8"/><rect x="2" y="2" width="20" height="8" rx="2"/><rect x="2" y="14" width="20" height="8" rx="2"/><path d="M6 18h.01M6 6h.01"/></svg>
-      </div>
-      <h3>Soporte técnico</h3>
-      <p>Mantenimiento preventivo, resolución de incidencias, administración de redes y acompañamiento continuo.</p>
-      <div class="service-tags"><span class="tag">On-site</span><span class="tag">Remoto</span><span class="tag">SLA</span></div>
-    </div>
-  </div>
-</section>
+    </section>
 
-<section id="proceso" style="padding-top: 0;">
-  <div class="section-header">
-    <div>
-      <div class="section-eyebrow">Cómo trabajo</div>
-      <div class="section-title">Proceso simple,<br>resultados claros</div>
-    </div>
-  </div>
-  <div class="process-list">
-    <div class="process-item">
-      <div class="process-num">01</div>
-      <div class="process-content">
-        <h3>Diagnóstico inicial</h3>
-        <p>Una llamada de 30 min para entender tu situación, tus necesidades y definir el alcance del proyecto.</p>
+    <section id="servicios">
+      <div class="section-header">
+        <div>
+          <div class="section-eyebrow">Lo que ofrezco</div>
+          <div class="section-title">Servicios IT</div>
+        </div>
+        <p class="section-note">
+          Soluciones adaptadas a cada etapa de tu negocio.
+        </p>
       </div>
-    </div>
-    <div class="process-item">
-      <div class="process-num">02</div>
-      <div class="process-content">
-        <h3>Propuesta y plan</h3>
-        <p>Te entrego una propuesta clara con alcance, tiempos y costo. Sin letra chica ni sorpresas.</p>
+      <div class="services-grid">
+        <div class="service-card">
+          <div class="service-num">01</div>
+          <div class="service-icon-wrap">
+            <svg viewBox="0 0 24 24">
+              <rect x="2" y="3" width="20" height="14" rx="2" />
+              <path d="M8 21h8M12 17v4" />
+            </svg>
+          </div>
+          <h3>Desarrollo web</h3>
+          <p>
+            Sitios y aplicaciones modernas, rápidas y optimizadas. Desde landing
+            pages hasta sistemas web completos.
+          </p>
+          <div class="service-tags">
+            <span class="tag">React</span><span class="tag">Next.js</span
+            ><span class="tag">Node.js</span>
+          </div>
+        </div>
+        <div class="service-card">
+          <div class="service-num">02</div>
+          <div class="service-icon-wrap">
+            <svg viewBox="0 0 24 24">
+              <path d="M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9Z" />
+            </svg>
+          </div>
+          <h3>Cloud / DevOps</h3>
+          <p>
+            Infraestructura escalable en AWS, GCP o Azure. CI/CD, Docker,
+            Kubernetes y automatización de procesos.
+          </p>
+          <div class="service-tags">
+            <span class="tag">AWS</span><span class="tag">Docker</span
+            ><span class="tag">Terraform</span>
+          </div>
+        </div>
+        <div class="service-card">
+          <div class="service-num">03</div>
+          <div class="service-icon-wrap">
+            <svg viewBox="0 0 24 24">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+            </svg>
+          </div>
+          <h3>Ciberseguridad</h3>
+          <p>
+            Auditorías de seguridad, hardening de sistemas, gestión de
+            vulnerabilidades y protección ante amenazas.
+          </p>
+          <div class="service-tags">
+            <span class="tag">Pentesting</span><span class="tag">OWASP</span
+            ><span class="tag">Zero Trust</span>
+          </div>
+        </div>
+        <div class="service-card">
+          <div class="service-num">04</div>
+          <div class="service-icon-wrap">
+            <svg viewBox="0 0 24 24">
+              <path d="M12 8V4H8" />
+              <rect x="2" y="2" width="20" height="8" rx="2" />
+              <rect x="2" y="14" width="20" height="8" rx="2" />
+              <path d="M6 18h.01M6 6h.01" />
+            </svg>
+          </div>
+          <h3>Soporte técnico</h3>
+          <p>
+            Mantenimiento preventivo, resolución de incidencias, administración
+            de redes y acompañamiento continuo.
+          </p>
+          <div class="service-tags">
+            <span class="tag">On-site</span><span class="tag">Remoto</span
+            ><span class="tag">SLA</span>
+          </div>
+        </div>
       </div>
-    </div>
-    <div class="process-item">
-      <div class="process-num">03</div>
-      <div class="process-content">
-        <h3>Ejecución y seguimiento</h3>
-        <p>Trabajo con comunicación constante, reportes de avance y entregas puntuales.</p>
-      </div>
-    </div>
-    <div class="process-item">
-      <div class="process-num">04</div>
-      <div class="process-content">
-        <h3>Soporte post-entrega</h3>
-        <p>No desaparezco al terminar. Ofrezco acompañamiento y soporte para asegurar que todo funcione.</p>
-      </div>
-    </div>
-  </div>
-</section>
+    </section>
 
-<section id="contacto">
-  <div class="contact-section">
-    <div class="contact-left">
-      <div class="section-eyebrow" style="margin-bottom: 1rem;">Hablemos</div>
-      <h2>¿Tienes un proyecto en mente?</h2>
-      <p style="margin-top: 1rem;">Escríbeme y te respondo en menos de 24 horas para agendar una llamada sin costo.</p>
-      <div style="margin-top: 2rem; display: flex; flex-direction: column; gap: 0.6rem;">
-        <p class="contact-detail">✉ hola@nodo8.mx</p>
-        <p class="contact-detail">📍 Guadalajara, Jalisco — México</p>
+    <section id="proceso" style="padding-top: 0">
+      <div class="section-header">
+        <div>
+          <div class="section-eyebrow">Cómo trabajo</div>
+          <div class="section-title">
+            Proceso simple,<br />resultados claros
+          </div>
+        </div>
       </div>
-    </div>
-    <div class="contact-form">
-      <div class="form-group">
-        <label>Nombre</label>
-        <input type="text" placeholder="Tu nombre" />
+      <div class="process-list">
+        <div class="process-item">
+          <div class="process-num">01</div>
+          <div class="process-content">
+            <h3>Diagnóstico inicial</h3>
+            <p>
+              Una llamada de 30 min para entender tu situación, tus necesidades
+              y definir el alcance del proyecto.
+            </p>
+          </div>
+        </div>
+        <div class="process-item">
+          <div class="process-num">02</div>
+          <div class="process-content">
+            <h3>Propuesta y plan</h3>
+            <p>
+              Te entrego una propuesta clara con alcance, tiempos y costo. Sin
+              letra chica ni sorpresas.
+            </p>
+          </div>
+        </div>
+        <div class="process-item">
+          <div class="process-num">03</div>
+          <div class="process-content">
+            <h3>Ejecución y seguimiento</h3>
+            <p>
+              Trabajo con comunicación constante, reportes de avance y entregas
+              puntuales.
+            </p>
+          </div>
+        </div>
+        <div class="process-item">
+          <div class="process-num">04</div>
+          <div class="process-content">
+            <h3>Soporte post-entrega</h3>
+            <p>
+              No desaparezco al terminar. Ofrezco acompañamiento y soporte para
+              asegurar que todo funcione.
+            </p>
+          </div>
+        </div>
       </div>
-      <div class="form-group">
-        <label>Correo</label>
-        <input type="email" placeholder="tu@correo.com" />
-      </div>
-      <div class="form-group">
-        <label>Mensaje</label>
-        <textarea rows="4" placeholder="Cuéntame sobre tu proyecto..."></textarea>
-      </div>
-      <button class="btn-primary" style="width: 100%; text-align: center;">Enviar mensaje</button>
-    </div>
-  </div>
-</section>
+    </section>
 
-<footer>
-  <div class="footer-brand">
-    <svg width="18" height="18" viewBox="0 0 30 30" fill="none">
-      <circle cx="15" cy="3"  r="2.2" fill="#c8f04b"/>
-      <circle cx="24.6" cy="7.4" r="2.2" fill="#c8f04b" opacity="0.6"/>
-      <circle cx="27" cy="15" r="2.2" fill="#c8f04b"/>
-      <circle cx="24.6" cy="22.6" r="2.2" fill="#c8f04b" opacity="0.6"/>
-      <circle cx="15" cy="27" r="2.2" fill="#c8f04b"/>
-      <circle cx="5.4" cy="22.6" r="2.2" fill="#c8f04b" opacity="0.6"/>
-      <circle cx="3"  cy="15" r="2.2" fill="#c8f04b"/>
-      <circle cx="5.4" cy="7.4" r="2.2" fill="#c8f04b" opacity="0.6"/>
-      <circle cx="15" cy="15" r="3.5" fill="none" stroke="#c8f04b" stroke-width="1.5"/>
-      <line x1="15" y1="5.2" x2="15" y2="11.5" stroke="#c8f04b" stroke-width="1.2" stroke-linecap="round"/>
-      <line x1="15" y1="18.5" x2="15" y2="24.8" stroke="#c8f04b" stroke-width="1.2" stroke-linecap="round"/>
-      <line x1="5.2" y1="15" x2="11.5" y2="15" stroke="#c8f04b" stroke-width="1.2" stroke-linecap="round"/>
-      <line x1="18.5" y1="15" x2="24.8" y2="15" stroke="#c8f04b" stroke-width="1.2" stroke-linecap="round"/>
-    </svg>
-    <span class="footer-brand-text">nodo<span>8</span></span>
-  </div>
-  <div class="footer-copy">© 2026 nodo8 · Guadalajara, México</div>
-  <div class="footer-links">
-    <a href="#servicios">Servicios</a>
-    <a href="#proceso">Proceso</a>
-    <a href="#contacto">Contacto</a>
-  </div>
-</footer>
+    <section id="contacto">
+      <div class="contact-section">
+        <div class="contact-left">
+          <div class="section-eyebrow" style="margin-bottom: 1rem">
+            Hablemos
+          </div>
+          <h2>¿Tienes un proyecto en mente?</h2>
+          <p style="margin-top: 1rem">
+            Escríbeme y te respondo en menos de 24 horas para agendar una
+            llamada sin costo.
+          </p>
+          <div
+            style="
+              margin-top: 2rem;
+              display: flex;
+              flex-direction: column;
+              gap: 0.6rem;
+            "
+          >
+            <p class="contact-detail">✉ hola@nodo8.net</p>
+            <p class="contact-detail">📍 Guadalajara, Jalisco — México</p>
+          </div>
+        </div>
+        <form
+          class="contact-form"
+          action="https://formspree.io/f/mzdkebnz"
+          method="POST"
+          id="contact-form"
+        >
+          <div class="form-group">
+            <label for="nombre">Nombre</label>
+            <input
+              type="text"
+              id="nombre"
+              name="nombre"
+              placeholder="Tu nombre"
+              required
+            />
+          </div>
+          <div class="form-group">
+            <label for="email">Correo</label>
+            <input
+              type="email"
+              id="email"
+              name="email"
+              placeholder="tu@correo.com"
+              required
+            />
+          </div>
+          <div class="form-group">
+            <label for="mensaje">Mensaje</label>
+            <textarea
+              id="mensaje"
+              name="mensaje"
+              rows="4"
+              placeholder="Cuéntame sobre tu proyecto..."
+              required
+            ></textarea>
+          </div>
+          <button
+            type="submit"
+            class="btn-primary"
+            style="width: 100%; text-align: center"
+            id="submit-btn"
+          >
+            Enviar mensaje
+          </button>
+          <p
+            id="form-status"
+            style="font-size: 0.85rem; margin-top: 8px; display: none"
+          ></p>
+        </form>
+        <script>
+          const form = document.getElementById("contact-form");
+          const status = document.getElementById("form-status");
+          const btn = document.getElementById("submit-btn");
+          form.addEventListener("submit", async function (e) {
+            e.preventDefault();
+            btn.textContent = "Enviando...";
+            btn.style.opacity = "0.7";
+            btn.disabled = true;
+            const data = new FormData(form);
+            try {
+              const res = await fetch(form.action, {
+                method: "POST",
+                body: data,
+                headers: { Accept: "application/json" },
+              });
+              if (res.ok) {
+                status.textContent =
+                  "¡Mensaje enviado! Te respondo en menos de 24 horas.";
+                status.style.color = "#c8f04b";
+                status.style.display = "block";
+                form.reset();
+                btn.textContent = "Enviado";
+              } else {
+                throw new Error();
+              }
+            } catch {
+              status.textContent =
+                "Hubo un error. Escríbeme directo a hola@nodo8.net";
+              status.style.color = "#f04b4b";
+              status.style.display = "block";
+              btn.textContent = "Enviar mensaje";
+              btn.style.opacity = "1";
+              btn.disabled = false;
+            }
+          });
+        </script>
+      </div>
+    </section>
 
-</body>
+    <footer>
+      <div class="footer-brand">
+        <svg width="18" height="18" viewBox="0 0 30 30" fill="none">
+          <circle cx="15" cy="3" r="2.2" fill="#c8f04b" />
+          <circle cx="24.6" cy="7.4" r="2.2" fill="#c8f04b" opacity="0.6" />
+          <circle cx="27" cy="15" r="2.2" fill="#c8f04b" />
+          <circle cx="24.6" cy="22.6" r="2.2" fill="#c8f04b" opacity="0.6" />
+          <circle cx="15" cy="27" r="2.2" fill="#c8f04b" />
+          <circle cx="5.4" cy="22.6" r="2.2" fill="#c8f04b" opacity="0.6" />
+          <circle cx="3" cy="15" r="2.2" fill="#c8f04b" />
+          <circle cx="5.4" cy="7.4" r="2.2" fill="#c8f04b" opacity="0.6" />
+          <circle
+            cx="15"
+            cy="15"
+            r="3.5"
+            fill="none"
+            stroke="#c8f04b"
+            stroke-width="1.5"
+          />
+          <line
+            x1="15"
+            y1="5.2"
+            x2="15"
+            y2="11.5"
+            stroke="#c8f04b"
+            stroke-width="1.2"
+            stroke-linecap="round"
+          />
+          <line
+            x1="15"
+            y1="18.5"
+            x2="15"
+            y2="24.8"
+            stroke="#c8f04b"
+            stroke-width="1.2"
+            stroke-linecap="round"
+          />
+          <line
+            x1="5.2"
+            y1="15"
+            x2="11.5"
+            y2="15"
+            stroke="#c8f04b"
+            stroke-width="1.2"
+            stroke-linecap="round"
+          />
+          <line
+            x1="18.5"
+            y1="15"
+            x2="24.8"
+            y2="15"
+            stroke="#c8f04b"
+            stroke-width="1.2"
+            stroke-linecap="round"
+          />
+        </svg>
+        <span class="footer-brand-text">nodo<span>8</span></span>
+      </div>
+      <div class="footer-copy">© 2026 nodo8 · Guadalajara, México</div>
+      <div class="footer-links">
+        <a href="#servicios">Servic </a>
+      </div>
+    </footer>
+  </body>
 </html>
