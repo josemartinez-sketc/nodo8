@@ -10,28 +10,26 @@
       rel="stylesheet"
     />
     <style>
+      /* ─────────────────────────────────────────
+         TOKENS
+      ───────────────────────────────────────── */
       :root {
         --bg: #0a0a0a;
         --surface: #111111;
         --surface2: #181818;
+        --surface3: #1e1e1e;
         --border: rgba(255, 255, 255, 0.07);
         --accent: #c8f04b;
         --accent-dim: rgba(200, 240, 75, 0.12);
+        --accent-glow: rgba(200, 240, 75, 0.06);
         --text: #f0f0ec;
         --muted: #888880;
         --font-display: "Syne", sans-serif;
         --font-body: "DM Sans", sans-serif;
       }
-      *,
-      *::before,
-      *::after {
-        box-sizing: border-box;
-        margin: 0;
-        padding: 0;
-      }
-      html {
-        scroll-behavior: smooth;
-      }
+
+      *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+      html { scroll-behavior: smooth; }
       body {
         background: var(--bg);
         color: var(--text);
@@ -41,13 +39,13 @@
         overflow-x: hidden;
       }
 
-      /* ── NAV ── */
+      /* ─────────────────────────────────────────
+         NAV
+      ───────────────────────────────────────── */
       nav {
         position: fixed;
-        top: 0;
-        left: 0;
-        right: 0;
-        z-index: 100;
+        top: 0; left: 0; right: 0;
+        z-index: 200;
         display: flex;
         align-items: center;
         justify-content: space-between;
@@ -69,9 +67,7 @@
         color: var(--text);
         letter-spacing: -0.02em;
       }
-      .nav-logo-text span {
-        color: var(--accent);
-      }
+      .nav-logo-text span { color: var(--accent); }
       .nav-links {
         display: flex;
         gap: 2rem;
@@ -84,12 +80,8 @@
         letter-spacing: 0.03em;
         transition: color 0.2s;
       }
-      .nav-links a:hover {
-        color: var(--text);
-      }
-      .nav-links a.active {
-        color: var(--accent);
-      }
+      .nav-links a:hover { color: var(--text); }
+      .nav-links a.active { color: var(--accent); }
       .nav-cta {
         font-family: var(--font-body);
         font-size: 0.85rem;
@@ -103,19 +95,108 @@
         text-decoration: none;
         transition: opacity 0.2s;
       }
-      .nav-cta:hover {
-        opacity: 0.88;
+      .nav-cta:hover { opacity: 0.88; }
+
+      /* ─────────────────────────────────────────
+         BUTTONS
+      ───────────────────────────────────────── */
+      .btn-primary {
+        font-family: var(--font-body);
+        font-size: 0.9rem;
+        font-weight: 500;
+        color: var(--bg);
+        background: var(--accent);
+        border: none;
+        padding: 0.85rem 2rem;
+        border-radius: 4px;
+        cursor: pointer;
+        text-decoration: none;
+        transition: opacity 0.2s, transform 0.2s;
+        display: inline-block;
+      }
+      .btn-primary:hover { opacity: 0.88; transform: translateY(-1px); }
+      .btn-ghost {
+        font-family: var(--font-body);
+        font-size: 0.9rem;
+        font-weight: 400;
+        color: var(--muted);
+        background: transparent;
+        border: 1px solid var(--border);
+        padding: 0.85rem 2rem;
+        border-radius: 4px;
+        cursor: pointer;
+        text-decoration: none;
+        transition: color 0.2s, border-color 0.2s;
+        display: inline-block;
+      }
+      .btn-ghost:hover { color: var(--text); border-color: rgba(255,255,255,0.2); }
+
+      /* ─────────────────────────────────────────
+         SECTION SHARED
+      ───────────────────────────────────────── */
+      section { padding: 6rem 2.5rem; }
+      .section-eyebrow {
+        font-size: 0.75rem;
+        color: var(--accent);
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        margin-bottom: 0.5rem;
+      }
+      .section-title {
+        font-family: var(--font-display);
+        font-size: clamp(1.8rem, 4vw, 2.8rem);
+        font-weight: 700;
+        line-height: 1.1;
+        letter-spacing: -0.02em;
+      }
+      .section-header {
+        display: flex;
+        align-items: flex-end;
+        justify-content: space-between;
+        margin-bottom: 3rem;
+        flex-wrap: wrap;
+        gap: 1rem;
+      }
+      .section-note {
+        font-size: 0.9rem;
+        color: var(--muted);
+        max-width: 280px;
+        text-align: right;
       }
 
-      /* ── HERO ── */
-      .careers-hero {
-        min-height: 80vh;
+      /* shared card hover top accent */
+      .accent-top {
+        position: relative;
+        transition: background 0.3s;
+      }
+      .accent-top::after {
+        content: "";
+        position: absolute;
+        top: 0; left: 0; right: 0;
+        height: 2px;
+        background: var(--accent);
+        opacity: 0;
+        transition: opacity 0.3s;
+      }
+      .accent-top:hover::after { opacity: 1; }
+
+      /* ─────────────────────────────────────────
+         1. HERO
+      ───────────────────────────────────────── */
+      .hero {
+        min-height: 100vh;
         display: flex;
         flex-direction: column;
         justify-content: flex-end;
         padding: 8rem 2.5rem 5rem;
         position: relative;
         overflow: hidden;
+      }
+      .hero-bg {
+        position: absolute;
+        inset: 0;
+        background:
+          linear-gradient(160deg, #0f1a00 0%, #0a0a0a 40%, #0a0a0a 100%);
       }
       .hero-grid {
         position: absolute;
@@ -124,34 +205,36 @@
           linear-gradient(var(--border) 1px, transparent 1px),
           linear-gradient(90deg, var(--border) 1px, transparent 1px);
         background-size: 60px 60px;
-        opacity: 0.5;
+        opacity: 0.45;
       }
       .hero-glow {
         position: absolute;
-        top: 10%;
-        left: -5%;
+        top: -5%;
+        right: -8%;
         width: 700px;
         height: 700px;
-        background: radial-gradient(
-          circle,
-          rgba(200, 240, 75, 0.06) 0%,
-          transparent 70%
-        );
+        background: radial-gradient(circle, rgba(200,240,75,0.09) 0%, transparent 65%);
         pointer-events: none;
       }
       .hero-glow2 {
         position: absolute;
-        bottom: -10%;
-        right: 5%;
+        bottom: 5%;
+        left: -5%;
         width: 500px;
         height: 500px;
-        background: radial-gradient(
-          circle,
-          rgba(200, 240, 75, 0.04) 0%,
-          transparent 70%
-        );
+        background: radial-gradient(circle, rgba(200,240,75,0.04) 0%, transparent 70%);
         pointer-events: none;
       }
+      /* noise texture overlay */
+      .hero-noise {
+        position: absolute;
+        inset: 0;
+        opacity: 0.03;
+        background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+        background-size: 200px 200px;
+        pointer-events: none;
+      }
+      .hero-content { position: relative; z-index: 1; }
       .hero-tag {
         display: inline-flex;
         align-items: center;
@@ -169,26 +252,24 @@
         height: 1px;
         background: var(--accent);
       }
-      .careers-hero h1 {
+      .hero h1 {
         font-family: var(--font-display);
-        font-size: clamp(2.8rem, 7vw, 5.5rem);
+        font-size: clamp(3rem, 8vw, 6.5rem);
         font-weight: 800;
-        line-height: 1.05;
-        letter-spacing: -0.03em;
-        max-width: 860px;
+        line-height: 1.0;
+        letter-spacing: -0.04em;
+        max-width: 900px;
         margin-bottom: 1.5rem;
         animation: fadeUp 0.6s 0.1s ease both;
       }
-      .careers-hero h1 em {
-        font-style: normal;
-        color: var(--accent);
-      }
+      .hero h1 em { font-style: normal; color: var(--accent); }
       .hero-sub {
-        font-size: 1.05rem;
+        font-size: 1.1rem;
         color: var(--muted);
-        max-width: 560px;
+        max-width: 520px;
         margin-bottom: 2.5rem;
         font-weight: 300;
+        line-height: 1.7;
         animation: fadeUp 0.6s 0.2s ease both;
       }
       .hero-actions {
@@ -197,155 +278,456 @@
         flex-wrap: wrap;
         animation: fadeUp 0.6s 0.3s ease both;
       }
-      .btn-primary {
-        font-family: var(--font-body);
-        font-size: 0.9rem;
-        font-weight: 500;
-        color: var(--bg);
-        background: var(--accent);
-        border: none;
-        padding: 0.85rem 2rem;
-        border-radius: 4px;
-        cursor: pointer;
-        text-decoration: none;
-        transition: opacity 0.2s, transform 0.2s;
-        display: inline-block;
-      }
-      .btn-primary:hover {
-        opacity: 0.88;
-        transform: translateY(-1px);
-      }
-      .btn-ghost {
-        font-family: var(--font-body);
-        font-size: 0.9rem;
-        font-weight: 400;
-        color: var(--muted);
-        background: transparent;
-        border: 1px solid var(--border);
-        padding: 0.85rem 2rem;
-        border-radius: 4px;
-        cursor: pointer;
-        text-decoration: none;
-        transition: color 0.2s, border-color 0.2s;
-        display: inline-block;
-      }
-      .btn-ghost:hover {
-        color: var(--text);
-        border-color: rgba(255, 255, 255, 0.2);
-      }
-
-      /* ── SECTIONS ── */
-      section {
-        padding: 6rem 2.5rem;
-      }
-      .section-header {
+      .scroll-indicator {
+        position: absolute;
+        bottom: 2.5rem;
+        left: 50%;
+        transform: translateX(-50%);
         display: flex;
-        align-items: flex-end;
-        justify-content: space-between;
-        margin-bottom: 3rem;
-        flex-wrap: wrap;
-        gap: 1rem;
+        flex-direction: column;
+        align-items: center;
+        gap: 6px;
+        z-index: 1;
+        animation: fadeUp 0.6s 0.6s ease both;
       }
-      .section-eyebrow {
-        font-size: 0.75rem;
-        color: var(--accent);
-        letter-spacing: 0.12em;
-        text-transform: uppercase;
-        margin-bottom: 0.5rem;
-      }
-      .section-title {
-        font-family: var(--font-display);
-        font-size: clamp(1.8rem, 4vw, 2.8rem);
-        font-weight: 700;
-        line-height: 1.1;
-        letter-spacing: -0.02em;
-      }
-      .section-note {
-        font-size: 0.9rem;
+      .scroll-indicator span {
+        font-size: 0.7rem;
         color: var(--muted);
-        max-width: 280px;
-        text-align: right;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+      }
+      .scroll-mouse {
+        width: 22px;
+        height: 34px;
+        border: 1px solid rgba(255,255,255,0.15);
+        border-radius: 11px;
+        position: relative;
+      }
+      .scroll-mouse::after {
+        content: "";
+        position: absolute;
+        top: 6px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 3px;
+        height: 7px;
+        background: var(--accent);
+        border-radius: 2px;
+        animation: scrollDot 1.6s ease-in-out infinite;
+      }
+      @keyframes scrollDot {
+        0%   { opacity: 1; transform: translateX(-50%) translateY(0); }
+        100% { opacity: 0; transform: translateX(-50%) translateY(10px); }
       }
 
-      /* ── ÁREAS ── */
-      .areas-grid {
+      /* ─────────────────────────────────────────
+         2. WHY NODO8
+      ───────────────────────────────────────── */
+      .why-grid {
         display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
         gap: 1px;
         border: 1px solid var(--border);
         border-radius: 12px;
         overflow: hidden;
       }
-      .area-card {
+      .why-card {
         background: var(--surface);
         padding: 2.2rem 2rem;
-        position: relative;
-        transition: background 0.3s;
-        display: flex;
-        flex-direction: column;
+        accent-top: true;
       }
-      .area-card:hover {
-        background: var(--surface2);
-      }
-      .area-card::after {
-        content: "";
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        height: 2px;
-        background: var(--accent);
-        opacity: 0;
-        transition: opacity 0.3s;
-      }
-      .area-card:hover::after {
-        opacity: 1;
-      }
-      .area-num {
-        font-family: var(--font-display);
-        font-size: 0.7rem;
-        color: var(--muted);
-        letter-spacing: 0.1em;
-        margin-bottom: 1.5rem;
-      }
-      .area-icon-wrap {
-        width: 44px;
-        height: 44px;
+      .why-card:hover { background: var(--surface2); }
+      .why-icon-wrap {
+        width: 46px;
+        height: 46px;
         background: var(--accent-dim);
-        border-radius: 8px;
+        border-radius: 10px;
         display: flex;
         align-items: center;
         justify-content: center;
         margin-bottom: 1.25rem;
       }
-      .area-icon-wrap svg {
-        width: 20px;
-        height: 20px;
+      .why-icon-wrap svg {
+        width: 22px;
+        height: 22px;
         stroke: var(--accent);
         fill: none;
         stroke-width: 1.5;
         stroke-linecap: round;
         stroke-linejoin: round;
       }
-      .area-card h3 {
+      .why-card h3 {
         font-family: var(--font-display);
         font-size: 1rem;
         font-weight: 600;
         color: var(--text);
-        margin-bottom: 0.6rem;
+        margin-bottom: 0.5rem;
       }
-      .area-card p {
+      .why-card p {
         font-size: 0.875rem;
         color: var(--muted);
         line-height: 1.7;
+      }
+
+      /* ─────────────────────────────────────────
+         3. CULTURA
+      ───────────────────────────────────────── */
+      .culture-section { background: var(--surface); }
+      .culture-headline {
+        font-family: var(--font-display);
+        font-size: clamp(2rem, 5vw, 3.8rem);
+        font-weight: 800;
+        line-height: 1.1;
+        letter-spacing: -0.03em;
+        max-width: 780px;
+        margin-bottom: 4rem;
+      }
+      .culture-headline em { font-style: normal; color: var(--accent); }
+      .culture-pillars {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+        gap: 2.5rem;
+        margin-bottom: 4rem;
+      }
+      .pillar {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+        padding-top: 1.5rem;
+        border-top: 1px solid var(--border);
+      }
+      .pillar-icon {
+        width: 52px;
+        height: 52px;
+        background: var(--accent-dim);
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .pillar-icon svg {
+        width: 24px;
+        height: 24px;
+        stroke: var(--accent);
+        fill: none;
+        stroke-width: 1.5;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+      }
+      .pillar h3 {
+        font-family: var(--font-display);
+        font-size: 1.1rem;
+        font-weight: 700;
+        color: var(--text);
+      }
+      .pillar p {
+        font-size: 0.9rem;
+        color: var(--muted);
+        line-height: 1.75;
+      }
+      .culture-quote {
+        font-family: var(--font-display);
+        font-size: clamp(1rem, 2.5vw, 1.4rem);
+        font-weight: 600;
+        color: var(--muted);
+        line-height: 1.5;
+        padding: 2rem 0;
+        border-top: 1px solid var(--border);
+        max-width: 680px;
+      }
+      .culture-quote em { font-style: normal; color: var(--text); }
+
+      /* ─────────────────────────────────────────
+         4. NÚMEROS
+      ───────────────────────────────────────── */
+      .numbers-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+        gap: 1px;
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        overflow: hidden;
+      }
+      .number-item {
+        background: var(--surface);
+        padding: 2.5rem 2rem;
+        display: flex;
+        flex-direction: column;
+        gap: 0.4rem;
+        transition: background 0.3s;
+      }
+      .number-item:hover { background: var(--surface2); }
+      .number-val {
+        font-family: var(--font-display);
+        font-size: clamp(2rem, 4vw, 3rem);
+        font-weight: 800;
+        color: var(--accent);
+        line-height: 1;
+      }
+      .number-lbl {
+        font-size: 0.82rem;
+        color: var(--muted);
+        line-height: 1.4;
+      }
+
+      /* ─────────────────────────────────────────
+         5. VIDA EN NODO8
+      ───────────────────────────────────────── */
+      .life-grid {
+        display: grid;
+        grid-template-columns: repeat(12, 1fr);
+        grid-template-rows: auto;
+        gap: 8px;
+      }
+      .life-cell {
+        border-radius: 10px;
+        overflow: hidden;
+        position: relative;
+        min-height: 200px;
+        display: flex;
+        align-items: flex-end;
+      }
+      .life-cell:nth-child(1) { grid-column: span 5; min-height: 280px; }
+      .life-cell:nth-child(2) { grid-column: span 4; }
+      .life-cell:nth-child(3) { grid-column: span 3; }
+      .life-cell:nth-child(4) { grid-column: span 3; }
+      .life-cell:nth-child(5) { grid-column: span 5; min-height: 240px; }
+      .life-cell:nth-child(6) { grid-column: span 4; }
+      .life-bg {
+        position: absolute;
+        inset: 0;
+        transition: transform 0.5s ease;
+      }
+      .life-cell:hover .life-bg { transform: scale(1.03); }
+      .life-bg-1 { background: linear-gradient(135deg, #0f1a00 0%, #1a2800 50%, #0a0a0a 100%); }
+      .life-bg-2 { background: linear-gradient(135deg, #0d1500 0%, #111111 60%, #181818 100%); }
+      .life-bg-3 { background: linear-gradient(135deg, #141400 0%, #1a1a00 50%, #111111 100%); }
+      .life-bg-4 { background: linear-gradient(135deg, #0a1000 0%, #111111 70%, #181818 100%); }
+      .life-bg-5 { background: linear-gradient(135deg, #101800 0%, #1e2800 50%, #0a0a0a 100%); }
+      .life-bg-6 { background: linear-gradient(135deg, #0d1800 0%, #141e00 50%, #111111 100%); }
+      .life-pattern {
+        position: absolute;
+        inset: 0;
+        background-image:
+          linear-gradient(rgba(200,240,75,0.04) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(200,240,75,0.04) 1px, transparent 1px);
+        background-size: 30px 30px;
+      }
+      .life-icon {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -60%);
+        opacity: 0.15;
+      }
+      .life-icon svg {
+        width: 64px;
+        height: 64px;
+        stroke: var(--accent);
+        fill: none;
+        stroke-width: 1;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+      }
+      .life-caption {
+        position: relative;
+        z-index: 1;
+        width: 100%;
+        padding: 1rem 1.25rem;
+        background: linear-gradient(transparent, rgba(0,0,0,0.8));
+      }
+      .life-caption p {
+        font-size: 0.78rem;
+        color: var(--muted);
+        letter-spacing: 0.03em;
+      }
+      .life-caption strong {
+        display: block;
+        font-family: var(--font-display);
+        font-size: 0.9rem;
+        color: var(--text);
+        font-weight: 600;
+        margin-bottom: 2px;
+      }
+
+      /* ─────────────────────────────────────────
+         6. TESTIMONIOS
+      ───────────────────────────────────────── */
+      .testimonials-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 1.5rem;
+      }
+      .testimonial-card {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 2rem;
+        display: flex;
+        flex-direction: column;
+        gap: 1.25rem;
+        transition: background 0.3s, border-color 0.3s;
+      }
+      .testimonial-card:hover {
+        background: var(--surface2);
+        border-color: rgba(200,240,75,0.15);
+      }
+      .t-quote {
+        font-size: 0.95rem;
+        color: var(--text);
+        line-height: 1.75;
+        font-weight: 300;
         flex: 1;
       }
-      .area-tags {
+      .t-quote::before {
+        content: "\201C";
+        font-family: var(--font-display);
+        font-size: 2rem;
+        color: var(--accent);
+        line-height: 0;
+        vertical-align: -0.5rem;
+        margin-right: 4px;
+      }
+      .t-footer {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        padding-top: 1.25rem;
+        border-top: 1px solid var(--border);
+      }
+      .t-avatar {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: var(--accent-dim);
+        border: 1px solid rgba(200,240,75,0.2);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-family: var(--font-display);
+        font-size: 0.8rem;
+        font-weight: 700;
+        color: var(--accent);
+        flex-shrink: 0;
+      }
+      .t-name {
+        font-family: var(--font-display);
+        font-size: 0.9rem;
+        font-weight: 600;
+        color: var(--text);
+      }
+      .t-role { font-size: 0.78rem; color: var(--muted); }
+      .t-years {
+        margin-left: auto;
+        font-size: 0.72rem;
+        color: var(--accent);
+        background: var(--accent-dim);
+        padding: 3px 10px;
+        border-radius: 100px;
+        white-space: nowrap;
+      }
+
+      /* ─────────────────────────────────────────
+         7. POSICIONES ABIERTAS
+      ───────────────────────────────────────── */
+      .jobs-filters {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+        margin-bottom: 2rem;
+      }
+      .filter-btn {
+        font-family: var(--font-body);
+        font-size: 0.8rem;
+        color: var(--muted);
+        background: var(--surface);
+        border: 1px solid var(--border);
+        padding: 0.4rem 1.1rem;
+        border-radius: 100px;
+        cursor: pointer;
+        transition: color 0.2s, border-color 0.2s, background 0.2s;
+      }
+      .filter-btn:hover,
+      .filter-btn.active {
+        color: var(--accent);
+        border-color: rgba(200,240,75,0.3);
+        background: var(--accent-dim);
+      }
+      .jobs-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 1.5rem;
+      }
+      .job-card {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 2rem;
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+        position: relative;
+        overflow: hidden;
+        transition: background 0.3s, border-color 0.3s;
+      }
+      .job-card:hover {
+        background: var(--surface2);
+        border-color: rgba(200,240,75,0.15);
+      }
+      .job-card::before {
+        content: "";
+        position: absolute;
+        top: 0; left: 0; right: 0;
+        height: 2px;
+        background: var(--accent);
+        opacity: 0;
+        transition: opacity 0.3s;
+      }
+      .job-card:hover::before { opacity: 1; }
+      .job-area-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 0.72rem;
+        color: var(--accent);
+        background: var(--accent-dim);
+        padding: 3px 10px;
+        border-radius: 100px;
+        width: fit-content;
+      }
+      .job-title {
+        font-family: var(--font-display);
+        font-size: 1.15rem;
+        font-weight: 700;
+        color: var(--text);
+        line-height: 1.3;
+      }
+      .job-meta {
+        display: flex;
+        gap: 1rem;
+        flex-wrap: wrap;
+      }
+      .job-meta span {
+        font-size: 0.8rem;
+        color: var(--muted);
+        display: flex;
+        align-items: center;
+        gap: 5px;
+      }
+      .job-meta svg {
+        width: 13px;
+        height: 13px;
+        stroke: var(--muted);
+        fill: none;
+        stroke-width: 1.5;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+      }
+      .job-tags {
         display: flex;
         flex-wrap: wrap;
         gap: 6px;
-        margin-top: 1.25rem;
-        margin-bottom: 1.5rem;
+        flex: 1;
       }
       .tag {
         font-size: 0.72rem;
@@ -356,51 +738,71 @@
       }
       .btn-apply {
         font-family: var(--font-body);
-        font-size: 0.8rem;
+        font-size: 0.82rem;
         font-weight: 500;
         color: var(--accent);
         background: transparent;
-        border: 1px solid rgba(200, 240, 75, 0.3);
-        padding: 0.5rem 1.2rem;
+        border: 1px solid rgba(200,240,75,0.3);
+        padding: 0.55rem 1.25rem;
         border-radius: 4px;
         cursor: pointer;
         text-decoration: none;
         transition: background 0.2s, border-color 0.2s;
         display: inline-block;
-        align-self: flex-start;
+        width: fit-content;
+        margin-top: auto;
       }
       .btn-apply:hover {
         background: var(--accent-dim);
         border-color: var(--accent);
       }
 
-      /* ── VALORES ── */
-      .values-section {
-        background: var(--surface);
-        border-radius: 16px;
-        padding: 4rem;
-      }
-      .values-grid {
+      /* ─────────────────────────────────────────
+         8. PROCESO DE SELECCIÓN
+      ───────────────────────────────────────── */
+      .process-track {
+        position: relative;
         display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-        gap: 2.5rem;
-        margin-top: 3rem;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 0;
       }
-      .value-item {
+      .process-track::before {
+        content: "";
+        position: absolute;
+        top: 28px;
+        left: calc(12.5%);
+        right: calc(12.5%);
+        height: 1px;
+        background: linear-gradient(90deg, var(--accent) 0%, rgba(200,240,75,0.2) 100%);
+        z-index: 0;
+      }
+      .process-step {
         display: flex;
         flex-direction: column;
-        gap: 1rem;
+        align-items: center;
+        text-align: center;
+        padding: 0 1rem;
+        position: relative;
+        z-index: 1;
       }
-      .value-icon-wrap {
-        width: 48px;
-        height: 48px;
-        background: var(--accent-dim);
-        border-radius: 10px;
+      .step-dot {
+        width: 56px;
+        height: 56px;
+        border-radius: 50%;
+        background: var(--surface2);
+        border: 1px solid rgba(200,240,75,0.25);
         display: flex;
         align-items: center;
         justify-content: center;
+        margin-bottom: 1.5rem;
+        position: relative;
+        transition: background 0.3s, border-color 0.3s;
       }
-      .value-icon-wrap svg {
+      .process-step:hover .step-dot {
+        background: var(--accent-dim);
+        border-color: var(--accent);
+      }
+      .step-dot svg {
         width: 22px;
         height: 22px;
         stroke: var(--accent);
@@ -409,21 +811,41 @@
         stroke-linecap: round;
         stroke-linejoin: round;
       }
-      .value-item h3 {
+      .step-num {
+        position: absolute;
+        top: -6px;
+        right: -6px;
+        width: 20px;
+        height: 20px;
+        background: var(--accent);
+        border-radius: 50%;
         font-family: var(--font-display);
-        font-size: 1.05rem;
+        font-size: 0.65rem;
+        font-weight: 800;
+        color: var(--bg);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .process-step h3 {
+        font-family: var(--font-display);
+        font-size: 0.95rem;
         font-weight: 600;
         color: var(--text);
+        margin-bottom: 0.4rem;
       }
-      .value-item p {
-        font-size: 0.875rem;
+      .process-step p {
+        font-size: 0.8rem;
         color: var(--muted);
-        line-height: 1.7;
+        line-height: 1.6;
+        max-width: 180px;
       }
 
-      /* ── FORMULARIO ── */
-      .apply-section {
-        max-width: 720px;
+      /* ─────────────────────────────────────────
+         9. FORMULARIO
+      ───────────────────────────────────────── */
+      .apply-wrap {
+        max-width: 760px;
         margin: 0 auto;
       }
       .apply-form {
@@ -434,7 +856,7 @@
         display: flex;
         flex-direction: column;
         gap: 16px;
-        margin-top: 2rem;
+        margin-top: 2.5rem;
       }
       .form-row {
         display: grid;
@@ -465,6 +887,7 @@
         transition: border-color 0.2s;
         resize: none;
         appearance: none;
+        -webkit-appearance: none;
       }
       .form-group select {
         background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23888880' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
@@ -473,59 +896,45 @@
         padding-right: 2.5rem;
         cursor: pointer;
       }
-      .form-group select option {
-        background: var(--surface);
-        color: var(--text);
-      }
+      .form-group select option { background: var(--surface); color: var(--text); }
       .form-group input:focus,
       .form-group textarea:focus,
-      .form-group select:focus {
-        border-color: var(--accent);
-      }
+      .form-group select:focus { border-color: var(--accent); }
       .form-group input::placeholder,
-      .form-group textarea::placeholder {
-        color: #555;
-      }
-      .file-input-wrap {
-        position: relative;
-      }
-      .file-input-wrap input[type="file"] {
+      .form-group textarea::placeholder { color: #555; }
+      .file-wrap { position: relative; }
+      .file-wrap input[type="file"] {
         position: absolute;
         inset: 0;
         opacity: 0;
         cursor: pointer;
         z-index: 2;
+        width: 100%;
       }
-      .file-input-label {
+      .file-label {
         display: flex;
         align-items: center;
         gap: 10px;
         background: var(--bg);
-        border: 1px dashed rgba(200, 240, 75, 0.25);
+        border: 1px dashed rgba(200,240,75,0.22);
         border-radius: 6px;
         padding: 0.75rem 1rem;
-        font-size: 0.9rem;
+        font-size: 0.875rem;
         color: #555;
-        cursor: pointer;
         transition: border-color 0.2s, color 0.2s;
+        cursor: pointer;
       }
-      .file-input-wrap:hover .file-input-label,
-      .file-input-wrap input[type="file"]:focus + .file-input-label {
-        border-color: var(--accent);
-        color: var(--muted);
-      }
-      .file-input-label svg {
-        width: 16px;
-        height: 16px;
-        stroke: var(--accent);
-        fill: none;
-        stroke-width: 1.5;
-        stroke-linecap: round;
-        stroke-linejoin: round;
+      .file-wrap:hover .file-label { border-color: var(--accent); color: var(--muted); }
+      .file-label svg {
+        width: 16px; height: 16px;
+        stroke: var(--accent); fill: none;
+        stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round;
         flex-shrink: 0;
       }
 
-      /* ── FOOTER ── */
+      /* ─────────────────────────────────────────
+         FOOTER
+      ───────────────────────────────────────── */
       footer {
         padding: 2.5rem;
         border-top: 1px solid var(--border);
@@ -535,11 +944,7 @@
         flex-wrap: wrap;
         gap: 1rem;
       }
-      .footer-brand {
-        display: flex;
-        align-items: center;
-        gap: 8px;
-      }
+      .footer-brand { display: flex; align-items: center; gap: 8px; }
       .footer-brand-text {
         font-family: var(--font-display);
         font-size: 0.9rem;
@@ -547,79 +952,88 @@
         color: var(--muted);
         letter-spacing: -0.02em;
       }
-      .footer-brand-text span {
-        color: var(--accent);
-      }
-      .footer-copy {
-        font-size: 0.8rem;
-        color: var(--muted);
-      }
-      .footer-links {
-        display: flex;
-        gap: 1.5rem;
-      }
+      .footer-brand-text span { color: var(--accent); }
+      .footer-copy { font-size: 0.8rem; color: var(--muted); }
+      .footer-links { display: flex; gap: 1.5rem; }
       .footer-links a {
         font-size: 0.8rem;
         color: var(--muted);
         text-decoration: none;
         transition: color 0.2s;
       }
-      .footer-links a:hover {
-        color: var(--text);
-      }
+      .footer-links a:hover { color: var(--text); }
 
-      /* ── ANIMATIONS ── */
+      /* ─────────────────────────────────────────
+         ANIMATIONS
+      ───────────────────────────────────────── */
       @keyframes fadeUp {
         from { opacity: 0; transform: translateY(24px); }
         to   { opacity: 1; transform: translateY(0); }
       }
       .reveal {
         opacity: 0;
-        transform: translateY(20px);
-        transition: opacity 0.6s ease, transform 0.6s ease;
+        transform: translateY(28px);
+        transition: opacity 0.65s ease, transform 0.65s ease;
       }
-      .reveal.visible {
-        opacity: 1;
-        transform: translateY(0);
-      }
+      .reveal.visible { opacity: 1; transform: translateY(0); }
+      .reveal-delay-1 { transition-delay: 0.1s; }
+      .reveal-delay-2 { transition-delay: 0.2s; }
+      .reveal-delay-3 { transition-delay: 0.3s; }
 
-      /* ── RESPONSIVE ── */
+      /* ─────────────────────────────────────────
+         RESPONSIVE
+      ───────────────────────────────────────── */
+      @media (max-width: 900px) {
+        .process-track {
+          grid-template-columns: 1fr 1fr;
+          gap: 2rem;
+        }
+        .process-track::before { display: none; }
+        .life-cell:nth-child(n) { grid-column: span 6; }
+        .life-cell:nth-child(1) { grid-column: span 12; min-height: 240px; }
+      }
       @media (max-width: 768px) {
         nav { padding: 1rem 1.5rem; }
         .nav-links { display: none; }
-        .careers-hero { padding: 7rem 1.5rem 3rem; }
+        .hero { padding: 7rem 1.5rem 4rem; }
         section { padding: 4rem 1.5rem; }
-        .values-section { padding: 2.5rem 1.5rem; }
         .apply-form { padding: 2rem 1.5rem; }
         .form-row { grid-template-columns: 1fr; }
         .section-note { text-align: left; }
-        footer {
-          flex-direction: column;
-          align-items: flex-start;
-          padding: 2rem 1.5rem;
-        }
+        .life-grid { grid-template-columns: 1fr 1fr; }
+        .life-cell:nth-child(n) { grid-column: span 1; }
+        .life-cell:nth-child(1) { grid-column: span 2; }
+        .process-track { grid-template-columns: 1fr 1fr; gap: 2rem; }
+        footer { flex-direction: column; align-items: flex-start; padding: 2rem 1.5rem; }
+      }
+      @media (max-width: 480px) {
+        .life-grid { grid-template-columns: 1fr; }
+        .life-cell:nth-child(n) { grid-column: span 1; }
+        .process-track { grid-template-columns: 1fr; }
       }
     </style>
   </head>
   <body>
 
-    <!-- NAV -->
+    <!-- ═══════════════════════════════════════
+         NAV
+    ═══════════════════════════════════════ -->
     <nav>
       <a href="index.html" class="nav-logo">
-        <svg width="30" height="30" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <circle cx="15" cy="3" r="2.2" fill="#c8f04b" />
-          <circle cx="24.6" cy="7.4" r="2.2" fill="#c8f04b" opacity="0.7" />
-          <circle cx="27" cy="15" r="2.2" fill="#c8f04b" />
-          <circle cx="24.6" cy="22.6" r="2.2" fill="#c8f04b" opacity="0.7" />
-          <circle cx="15" cy="27" r="2.2" fill="#c8f04b" />
-          <circle cx="5.4" cy="22.6" r="2.2" fill="#c8f04b" opacity="0.7" />
-          <circle cx="3" cy="15" r="2.2" fill="#c8f04b" />
-          <circle cx="5.4" cy="7.4" r="2.2" fill="#c8f04b" opacity="0.7" />
-          <circle cx="15" cy="15" r="3.5" fill="none" stroke="#c8f04b" stroke-width="1.5" />
-          <line x1="15" y1="5.2" x2="15" y2="11.5" stroke="#c8f04b" stroke-width="1.2" stroke-linecap="round" />
-          <line x1="15" y1="18.5" x2="15" y2="24.8" stroke="#c8f04b" stroke-width="1.2" stroke-linecap="round" />
-          <line x1="5.2" y1="15" x2="11.5" y2="15" stroke="#c8f04b" stroke-width="1.2" stroke-linecap="round" />
-          <line x1="18.5" y1="15" x2="24.8" y2="15" stroke="#c8f04b" stroke-width="1.2" stroke-linecap="round" />
+        <svg width="30" height="30" viewBox="0 0 30 30" fill="none">
+          <circle cx="15" cy="3" r="2.2" fill="#c8f04b"/>
+          <circle cx="24.6" cy="7.4" r="2.2" fill="#c8f04b" opacity="0.7"/>
+          <circle cx="27" cy="15" r="2.2" fill="#c8f04b"/>
+          <circle cx="24.6" cy="22.6" r="2.2" fill="#c8f04b" opacity="0.7"/>
+          <circle cx="15" cy="27" r="2.2" fill="#c8f04b"/>
+          <circle cx="5.4" cy="22.6" r="2.2" fill="#c8f04b" opacity="0.7"/>
+          <circle cx="3" cy="15" r="2.2" fill="#c8f04b"/>
+          <circle cx="5.4" cy="7.4" r="2.2" fill="#c8f04b" opacity="0.7"/>
+          <circle cx="15" cy="15" r="3.5" fill="none" stroke="#c8f04b" stroke-width="1.5"/>
+          <line x1="15" y1="5.2" x2="15" y2="11.5" stroke="#c8f04b" stroke-width="1.2" stroke-linecap="round"/>
+          <line x1="15" y1="18.5" x2="15" y2="24.8" stroke="#c8f04b" stroke-width="1.2" stroke-linecap="round"/>
+          <line x1="5.2" y1="15" x2="11.5" y2="15" stroke="#c8f04b" stroke-width="1.2" stroke-linecap="round"/>
+          <line x1="18.5" y1="15" x2="24.8" y2="15" stroke="#c8f04b" stroke-width="1.2" stroke-linecap="round"/>
         </svg>
         <span class="nav-logo-text">nodo<span>8</span></span>
       </a>
@@ -629,301 +1043,589 @@
         <li><a href="index.html#contacto">Contacto</a></li>
         <li><a href="careers.html" class="active">Careers</a></li>
       </ul>
-      <a href="index.html#contacto" class="nav-cta">Agendar llamada</a>
+      <a href="#aplicar" class="nav-cta">Aplicar ahora</a>
     </nav>
 
-    <!-- HERO -->
-    <section class="careers-hero">
+    <!-- ═══════════════════════════════════════
+         1. HERO
+    ═══════════════════════════════════════ -->
+    <section class="hero">
+      <div class="hero-bg"></div>
       <div class="hero-grid"></div>
       <div class="hero-glow"></div>
       <div class="hero-glow2"></div>
-      <div class="hero-tag">Únete al equipo · Guadalajara, MX</div>
-      <h1>Construye el futuro<br />con <em>nodo8</em></h1>
-      <p class="hero-sub">
-        Buscamos personas apasionadas por la tecnología que quieran resolver
-        problemas reales. Aquí no hay burocracia: hay impacto, aprendizaje
-        continuo y trabajo en equipo.
-      </p>
-      <div class="hero-actions">
-        <a href="#aplicar" class="btn-primary">Ver posiciones abiertas</a>
-        <a href="#valores" class="btn-ghost">Nuestra cultura</a>
+      <div class="hero-noise"></div>
+      <div class="hero-content">
+        <div class="hero-tag">Únete al equipo · Guadalajara, MX</div>
+        <h1>Build the future.<br /><em>Work at nodo8.</em></h1>
+        <p class="hero-sub">
+          Aquí no hay cubículos ni procesos interminables. Hay tecnología de
+          punta, autonomía real y proyectos que dejan huella. Buscamos personas
+          que quieran construir cosas que importen.
+        </p>
+        <div class="hero-actions">
+          <a href="#posiciones" class="btn-primary">Ver posiciones abiertas</a>
+          <a href="#cultura" class="btn-ghost">Conoce el equipo</a>
+        </div>
+      </div>
+      <div class="scroll-indicator">
+        <div class="scroll-mouse"></div>
+        <span>Scroll</span>
       </div>
     </section>
 
-    <!-- ÁREAS DE TRABAJO -->
-    <section id="areas">
+    <!-- ═══════════════════════════════════════
+         2. WHY NODO8
+    ═══════════════════════════════════════ -->
+    <section id="why">
       <div class="section-header reveal">
         <div>
-          <div class="section-eyebrow">Dónde encajas</div>
-          <div class="section-title">Áreas de trabajo</div>
+          <div class="section-eyebrow">Razones reales</div>
+          <div class="section-title">Por qué elegir nodo8</div>
         </div>
-        <p class="section-note">Posiciones remotas y presenciales en Guadalajara.</p>
+        <p class="section-note">No son beneficios de catálogo. Son la forma en que trabajamos todos los días.</p>
       </div>
-      <div class="areas-grid reveal">
+      <div class="why-grid reveal">
 
-        <div class="area-card">
-          <div class="area-num">01</div>
-          <div class="area-icon-wrap">
-            <svg viewBox="0 0 24 24">
-              <rect x="2" y="3" width="20" height="14" rx="2" />
-              <path d="M8 21h8M12 17v4" />
-            </svg>
+        <div class="why-card accent-top">
+          <div class="why-icon-wrap">
+            <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
           </div>
-          <h3>Desarrollo Web</h3>
+          <h3>100% Remoto y horario flexible</h3>
+          <p>Trabaja desde donde quieras, cuando quieras. Lo que importa son los resultados, no el horario.</p>
+        </div>
+
+        <div class="why-card accent-top">
+          <div class="why-icon-wrap">
+            <svg viewBox="0 0 24 24"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+          </div>
+          <h3>Tecnología de punta</h3>
+          <p>AWS, Kubernetes, Next.js, Docker, Terraform. Siempre elegimos las mejores herramientas para cada trabajo.</p>
+        </div>
+
+        <div class="why-card accent-top">
+          <div class="why-icon-wrap">
+            <svg viewBox="0 0 24 24"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+          </div>
+          <h3>Certificaciones pagadas por nodo8</h3>
+          <p>AWS, GCP, CKA, OSCP, y más. Invertimos en tu crecimiento porque tu conocimiento es nuestro capital.</p>
+        </div>
+
+        <div class="why-card accent-top">
+          <div class="why-icon-wrap">
+            <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          </div>
+          <h3>Equipo pequeño, impacto enorme</h3>
+          <p>No eres un número. Cada persona que se suma tiene visibilidad total sobre los proyectos y los clientes.</p>
+        </div>
+
+        <div class="why-card accent-top">
+          <div class="why-icon-wrap">
+            <svg viewBox="0 0 24 24"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+          </div>
+          <h3>Sin burocracia, tus ideas se implementan</h3>
+          <p>¿Tienes una propuesta? La escuchamos, la evaluamos y si tiene sentido, la hacemos realidad esa misma semana.</p>
+        </div>
+
+        <div class="why-card accent-top">
+          <div class="why-icon-wrap">
+            <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="2"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/><path d="M2 12h20"/></svg>
+          </div>
+          <h3>Clientes internacionales, proyectos reales</h3>
+          <p>Trabajamos con empresas en México, USA y Latinoamérica. Cada proyecto es un reto técnico diferente.</p>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════
+         3. CULTURA
+    ═══════════════════════════════════════ -->
+    <section id="cultura" class="culture-section">
+      <div class="culture-headline reveal">
+        No solo construimos software.<br />
+        Construimos <em>equipos que perduran.</em>
+      </div>
+      <div class="culture-pillars">
+
+        <div class="pillar reveal reveal-delay-1">
+          <div class="pillar-icon">
+            <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          </div>
+          <h3>Innovación sin límites</h3>
           <p>
-            Diseña y construye aplicaciones modernas para clientes reales.
-            Trabajarás en proyectos completos, desde el frontend hasta el
-            backend, con total autonomía.
+            Cuestionamos el statu quo constantemente. Si hay una forma mejor de
+            hacer algo, la buscamos. Experimentamos, fallamos rápido y aprendemos
+            más rápido. La tecnología avanza y nosotros avanzamos con ella, no
+            detrás de ella.
           </p>
-          <div class="area-tags">
+        </div>
+
+        <div class="pillar reveal reveal-delay-2">
+          <div class="pillar-icon">
+            <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+          </div>
+          <h3>Colaboración sobre jerarquía</h3>
+          <p>
+            No hay puertas cerradas ni egos. El mejor argumento gana,
+            independientemente de quién lo proponga. Nos ayudamos mutuamente,
+            compartimos lo que sabemos y celebramos los logros del equipo como
+            propios. Juntos llegamos más lejos.
+          </p>
+        </div>
+
+        <div class="pillar reveal reveal-delay-3">
+          <div class="pillar-icon">
+            <svg viewBox="0 0 24 24"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
+          </div>
+          <h3>Crecimiento personal y profesional</h3>
+          <p>
+            Cada persona tiene un plan de carrera real, no uno de catálogo.
+            Certificaciones, conferencias, mentorías internas y proyectos de
+            alto desafío. Aquí no hay techo: el límite lo pones tú y nodo8
+            te da las herramientas para alcanzarlo.
+          </p>
+        </div>
+
+      </div>
+      <div class="culture-quote reveal">
+        <em>"El mejor código que hemos escrito no está en ningún repositorio: está en el equipo que construimos juntos."</em>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════
+         4. NÚMEROS
+    ═══════════════════════════════════════ -->
+    <section id="numeros">
+      <div class="section-header reveal">
+        <div>
+          <div class="section-eyebrow">En números</div>
+          <div class="section-title">Lo que nos define</div>
+        </div>
+      </div>
+      <div class="numbers-grid reveal">
+        <div class="number-item">
+          <div class="number-val" data-target="100" data-suffix="%">0%</div>
+          <div class="number-lbl">Proyectos entregados a tiempo</div>
+        </div>
+        <div class="number-item">
+          <div class="number-val" data-target="10" data-prefix="+">0</div>
+          <div class="number-lbl">Tecnologías dominadas</div>
+        </div>
+        <div class="number-item">
+          <div class="number-val" data-target="4">0</div>
+          <div class="number-lbl">Áreas de especialización</div>
+        </div>
+        <div class="number-item">
+          <div class="number-val" data-target="24" data-suffix="h">0h</div>
+          <div class="number-lbl">Tiempo de respuesta interno</div>
+        </div>
+        <div class="number-item">
+          <div class="number-val" data-target="0">0</div>
+          <div class="number-lbl">Reuniones innecesarias</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════
+         5. VIDA EN NODO8
+    ═══════════════════════════════════════ -->
+    <section id="vida" style="padding-top: 0">
+      <div class="section-header reveal">
+        <div>
+          <div class="section-eyebrow">El día a día</div>
+          <div class="section-title">La vida en nodo8</div>
+        </div>
+        <p class="section-note">Trabajo real, equipo real, impacto real.</p>
+      </div>
+      <div class="life-grid reveal">
+
+        <div class="life-cell">
+          <div class="life-bg life-bg-1"></div>
+          <div class="life-pattern"></div>
+          <div class="life-icon">
+            <svg viewBox="0 0 24 24"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+          </div>
+          <div class="life-caption">
+            <strong>Deep work sessions</strong>
+            <p>Bloques de enfoque sin interrupciones</p>
+          </div>
+        </div>
+
+        <div class="life-cell">
+          <div class="life-bg life-bg-2"></div>
+          <div class="life-pattern"></div>
+          <div class="life-icon">
+            <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+          </div>
+          <div class="life-caption">
+            <strong>Sync asíncrono</strong>
+            <p>Reuniones cortas, decisiones rápidas</p>
+          </div>
+        </div>
+
+        <div class="life-cell">
+          <div class="life-bg life-bg-3"></div>
+          <div class="life-pattern"></div>
+          <div class="life-icon">
+            <svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 13.5a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.6 2.79h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L7.91 9.4a16 16 0 0 0 6.29 6.29l.87-1.84a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 21.73 16z"/></svg>
+          </div>
+          <div class="life-caption">
+            <strong>1:1 semanales</strong>
+            <p>Feedback honesto y continuo</p>
+          </div>
+        </div>
+
+        <div class="life-cell">
+          <div class="life-bg life-bg-4"></div>
+          <div class="life-pattern"></div>
+          <div class="life-icon">
+            <svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+          </div>
+          <div class="life-caption">
+            <strong>Setup remoto pro</strong>
+            <p>Budget para equipar tu espacio de trabajo</p>
+          </div>
+        </div>
+
+        <div class="life-cell">
+          <div class="life-bg life-bg-5"></div>
+          <div class="life-pattern"></div>
+          <div class="life-icon">
+            <svg viewBox="0 0 24 24"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+          </div>
+          <div class="life-caption">
+            <strong>Learning Fridays</strong>
+            <p>Un viernes al mes para aprender lo que quieras</p>
+          </div>
+        </div>
+
+        <div class="life-cell">
+          <div class="life-bg life-bg-6"></div>
+          <div class="life-pattern"></div>
+          <div class="life-icon">
+            <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          </div>
+          <div class="life-caption">
+            <strong>Reconocimiento real</strong>
+            <p>Logros visibles, métricas claras, bonos por impacto</p>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════
+         6. TESTIMONIOS
+    ═══════════════════════════════════════ -->
+    <section id="testimonios" style="padding-top: 0">
+      <div class="section-header reveal">
+        <div>
+          <div class="section-eyebrow">Voz del equipo</div>
+          <div class="section-title">Lo que dice la gente</div>
+        </div>
+      </div>
+      <div class="testimonials-grid">
+
+        <div class="testimonial-card reveal reveal-delay-1">
+          <p class="t-quote">
+            Venía de una empresa donde tardabas semanas en desplegar un cambio.
+            En nodo8 la primera semana ya estaba haciendo deploys a producción.
+            La autonomía que te dan es real, no marketera.
+          </p>
+          <div class="t-footer">
+            <div class="t-avatar">AR</div>
+            <div>
+              <div class="t-name">Andrés Ruiz</div>
+              <div class="t-role">Senior DevOps Engineer</div>
+            </div>
+            <div class="t-years">2 años</div>
+          </div>
+        </div>
+
+        <div class="testimonial-card reveal reveal-delay-2">
+          <p class="t-quote">
+            Lo que más valoro es que aquí nadie te dice cómo hacer las cosas,
+            te dicen qué hay que lograr. Esa libertad creativa me ha hecho
+            crecer más en un año que en tres años anteriores combinados.
+          </p>
+          <div class="t-footer">
+            <div class="t-avatar">MG</div>
+            <div>
+              <div class="t-name">Mariana García</div>
+              <div class="t-role">Frontend Developer</div>
+            </div>
+            <div class="t-years">1.5 años</div>
+          </div>
+        </div>
+
+        <div class="testimonial-card reveal reveal-delay-3">
+          <p class="t-quote">
+            En ciberseguridad es muy fácil quedarte repitiendo los mismos
+            scans. Aquí cada cliente es un reto diferente. Además, nodo8 pagó
+            mi certificación OSCP sin pedirme nada a cambio. Eso dice mucho.
+          </p>
+          <div class="t-footer">
+            <div class="t-avatar">DL</div>
+            <div>
+              <div class="t-name">Diego López</div>
+              <div class="t-role">Security Analyst</div>
+            </div>
+            <div class="t-years">3 años</div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════
+         7. POSICIONES ABIERTAS
+    ═══════════════════════════════════════ -->
+    <section id="posiciones" style="padding-top: 0">
+      <div class="section-header reveal">
+        <div>
+          <div class="section-eyebrow">Ahora mismo</div>
+          <div class="section-title">Posiciones abiertas</div>
+        </div>
+        <p class="section-note">Todas las posiciones son remotas y de tiempo completo.</p>
+      </div>
+      <div class="jobs-filters reveal">
+        <button class="filter-btn active" data-filter="all">Todas</button>
+        <button class="filter-btn" data-filter="web">Desarrollo Web</button>
+        <button class="filter-btn" data-filter="cloud">Cloud / DevOps</button>
+        <button class="filter-btn" data-filter="sec">Ciberseguridad</button>
+        <button class="filter-btn" data-filter="sop">Soporte</button>
+      </div>
+      <div class="jobs-grid reveal">
+
+        <div class="job-card" data-area="web">
+          <div class="job-area-badge">Desarrollo Web</div>
+          <div class="job-title">Frontend Engineer</div>
+          <div class="job-meta">
+            <span>
+              <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="2"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/><path d="M2 12h20"/></svg>
+              Remoto
+            </span>
+            <span>
+              <svg viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/></svg>
+              Tiempo completo
+            </span>
+          </div>
+          <div class="job-tags">
             <span class="tag">React</span>
             <span class="tag">Next.js</span>
-            <span class="tag">Node.js</span>
+            <span class="tag">TypeScript</span>
+            <span class="tag">Tailwind</span>
           </div>
-          <a href="#aplicar" class="btn-apply" data-area="Desarrollo Web">Aplicar</a>
+          <a href="#aplicar" class="btn-apply" data-puesto="Frontend Engineer">Aplicar ahora</a>
         </div>
 
-        <div class="area-card">
-          <div class="area-num">02</div>
-          <div class="area-icon-wrap">
-            <svg viewBox="0 0 24 24">
-              <path d="M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9Z" />
-            </svg>
+        <div class="job-card" data-area="cloud">
+          <div class="job-area-badge">Cloud / DevOps</div>
+          <div class="job-title">Cloud Infrastructure Engineer</div>
+          <div class="job-meta">
+            <span>
+              <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="2"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/><path d="M2 12h20"/></svg>
+              Remoto
+            </span>
+            <span>
+              <svg viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/></svg>
+              Tiempo completo
+            </span>
           </div>
-          <h3>Cloud / DevOps</h3>
-          <p>
-            Diseña infraestructura escalable y automatiza pipelines de
-            despliegue. Ayudarás a nuestros clientes a migrar y optimizar
-            sus sistemas en la nube.
-          </p>
-          <div class="area-tags">
+          <div class="job-tags">
             <span class="tag">AWS</span>
-            <span class="tag">Docker</span>
+            <span class="tag">Kubernetes</span>
             <span class="tag">Terraform</span>
+            <span class="tag">Docker</span>
           </div>
-          <a href="#aplicar" class="btn-apply" data-area="Cloud / DevOps">Aplicar</a>
+          <a href="#aplicar" class="btn-apply" data-puesto="Cloud Infrastructure Engineer">Aplicar ahora</a>
         </div>
 
-        <div class="area-card">
-          <div class="area-num">03</div>
-          <div class="area-icon-wrap">
-            <svg viewBox="0 0 24 24">
-              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
-            </svg>
+        <div class="job-card" data-area="sec">
+          <div class="job-area-badge">Ciberseguridad</div>
+          <div class="job-title">Penetration Tester</div>
+          <div class="job-meta">
+            <span>
+              <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="2"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/><path d="M2 12h20"/></svg>
+              Remoto
+            </span>
+            <span>
+              <svg viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/></svg>
+              Tiempo completo
+            </span>
           </div>
-          <h3>Ciberseguridad</h3>
-          <p>
-            Realiza auditorías, pruebas de penetración y fortalece los
-            sistemas de nuestros clientes. Harás trabajo ofensivo y
-            defensivo en entornos reales.
-          </p>
-          <div class="area-tags">
+          <div class="job-tags">
             <span class="tag">Pentesting</span>
             <span class="tag">OWASP</span>
-            <span class="tag">Zero Trust</span>
+            <span class="tag">Burp Suite</span>
+            <span class="tag">Linux</span>
           </div>
-          <a href="#aplicar" class="btn-apply" data-area="Ciberseguridad">Aplicar</a>
+          <a href="#aplicar" class="btn-apply" data-puesto="Penetration Tester">Aplicar ahora</a>
         </div>
 
-        <div class="area-card">
-          <div class="area-num">04</div>
-          <div class="area-icon-wrap">
-            <svg viewBox="0 0 24 24">
-              <path d="M12 8V4H8" />
-              <rect x="2" y="2" width="20" height="8" rx="2" />
-              <rect x="2" y="14" width="20" height="8" rx="2" />
-              <path d="M6 18h.01M6 6h.01" />
-            </svg>
+        <div class="job-card" data-area="sop">
+          <div class="job-area-badge">Soporte Técnico</div>
+          <div class="job-title">IT Support Specialist</div>
+          <div class="job-meta">
+            <span>
+              <svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+              Guadalajara / Remoto
+            </span>
+            <span>
+              <svg viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/></svg>
+              Tiempo completo
+            </span>
           </div>
-          <h3>Soporte Técnico</h3>
-          <p>
-            Sé el punto de contacto para nuestros clientes. Resolverás
-            incidencias, administrarás redes y garantizarás que los
-            sistemas funcionen sin interrupciones.
-          </p>
-          <div class="area-tags">
-            <span class="tag">On-site</span>
-            <span class="tag">Remoto</span>
-            <span class="tag">SLA</span>
+          <div class="job-tags">
+            <span class="tag">Redes</span>
+            <span class="tag">Windows Server</span>
+            <span class="tag">Linux</span>
+            <span class="tag">ITIL</span>
           </div>
-          <a href="#aplicar" class="btn-apply" data-area="Soporte Técnico">Aplicar</a>
+          <a href="#aplicar" class="btn-apply" data-puesto="IT Support Specialist">Aplicar ahora</a>
         </div>
 
       </div>
     </section>
 
-    <!-- VALORES -->
-    <section id="valores" style="padding-top: 0">
-      <div class="values-section reveal">
-        <div class="section-eyebrow">Nuestra cultura</div>
-        <div class="section-title" style="margin-top: 0.5rem">
-          Lo que nos define
+    <!-- ═══════════════════════════════════════
+         8. PROCESO DE SELECCIÓN
+    ═══════════════════════════════════════ -->
+    <section id="proceso" style="padding-top: 0">
+      <div class="section-header reveal">
+        <div>
+          <div class="section-eyebrow">Sin sorpresas</div>
+          <div class="section-title">Proceso de selección</div>
         </div>
-        <div class="values-grid">
+        <p class="section-note">De inicio a oferta en menos de 2 semanas.</p>
+      </div>
+      <div class="process-track reveal">
 
-          <div class="value-item">
-            <div class="value-icon-wrap">
-              <svg viewBox="0 0 24 24">
-                <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
-              </svg>
-            </div>
-            <h3>Innovación</h3>
-            <p>
-              Apostamos por las mejores herramientas, cuestionamos las
-              soluciones establecidas y buscamos siempre la forma más
-              inteligente de hacer las cosas.
-            </p>
+        <div class="process-step">
+          <div class="step-dot">
+            <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+            <div class="step-num">1</div>
           </div>
-
-          <div class="value-item">
-            <div class="value-icon-wrap">
-              <svg viewBox="0 0 24 24">
-                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
-                <circle cx="9" cy="7" r="4" />
-                <path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75" />
-              </svg>
-            </div>
-            <h3>Colaboración</h3>
-            <p>
-              Trabajamos juntos, compartimos lo que sabemos y nos
-              apoyamos mutuamente. El éxito de uno es el éxito del equipo.
-            </p>
-          </div>
-
-          <div class="value-item">
-            <div class="value-icon-wrap">
-              <svg viewBox="0 0 24 24">
-                <polyline points="23 6 13.5 15.5 8.5 10.5 1 18" />
-                <polyline points="17 6 23 6 23 12" />
-              </svg>
-            </div>
-            <h3>Crecimiento</h3>
-            <p>
-              Invertimos en el desarrollo profesional de cada persona.
-              Aquí siempre tendrás nuevos retos, cursos y proyectos que
-              amplíen tus capacidades.
-            </p>
-          </div>
-
+          <h3>Aplicación</h3>
+          <p>Llena el formulario. Revisamos cada CV personalmente, no hay filtros automáticos.</p>
         </div>
+
+        <div class="process-step">
+          <div class="step-dot">
+            <svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 13.5a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.6 2.79h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 9.4a16 16 0 0 0 6.29 6.29l.87-1.84a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 21.73 16z"/></svg>
+            <div class="step-num">2</div>
+          </div>
+          <h3>Entrevista técnica</h3>
+          <p>45 min de videollamada. Sin puzzles absurdos, solo conversación real sobre tu experiencia.</p>
+        </div>
+
+        <div class="process-step">
+          <div class="step-dot">
+            <svg viewBox="0 0 24 24"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+            <div class="step-num">3</div>
+          </div>
+          <h3>Challenge práctico</h3>
+          <p>Un ejercicio corto (máx. 3h) relacionado al rol. Te pagamos por tu tiempo si decides aplicarlo.</p>
+        </div>
+
+        <div class="process-step">
+          <div class="step-dot">
+            <svg viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+            <div class="step-num">4</div>
+          </div>
+          <h3>Oferta</h3>
+          <p>Si hay match, te enviamos oferta en 48h con compensación clara, sin negociaciones eternas.</p>
+        </div>
+
       </div>
     </section>
 
-    <!-- FORMULARIO DE APLICACIÓN -->
+    <!-- ═══════════════════════════════════════
+         9. FORMULARIO
+    ═══════════════════════════════════════ -->
     <section id="aplicar">
-      <div class="apply-section">
-        <div class="reveal" style="margin-bottom: 0">
-          <div class="section-eyebrow">Únete al equipo</div>
-          <div class="section-title" style="margin-top: 0.5rem">
-            Envía tu aplicación
-          </div>
-          <p style="font-size: 0.9rem; color: var(--muted); margin-top: 0.75rem; max-width: 500px">
-            Cuéntanos sobre ti. Revisamos cada solicitud y respondemos en
-            menos de 5 días hábiles.
+      <div class="apply-wrap">
+        <div class="reveal">
+          <div class="section-eyebrow">Siguiente paso</div>
+          <div class="section-title" style="margin-top: 0.5rem">Da el siguiente paso</div>
+          <p style="font-size: 0.9rem; color: var(--muted); margin-top: 0.75rem; max-width: 500px; line-height: 1.7;">
+            Cuéntanos quién eres. Leemos cada aplicación personalmente y respondemos en máximo 5 días hábiles.
           </p>
         </div>
         <form
           class="apply-form reveal"
+          id="apply-form"
           action="https://formspree.io/f/mzdkebnz"
           method="POST"
-          id="apply-form"
           enctype="multipart/form-data"
         >
           <div class="form-row">
             <div class="form-group">
               <label for="nombre">Nombre completo</label>
-              <input
-                type="text"
-                id="nombre"
-                name="nombre"
-                placeholder="Tu nombre"
-                required
-              />
+              <input type="text" id="nombre" name="nombre" placeholder="Tu nombre completo" required />
             </div>
             <div class="form-group">
               <label for="email">Correo electrónico</label>
-              <input
-                type="email"
-                id="email"
-                name="email"
-                placeholder="tu@correo.com"
-                required
-              />
+              <input type="email" id="email" name="email" placeholder="tu@correo.com" required />
             </div>
           </div>
           <div class="form-group">
-            <label for="area">Área de interés</label>
-            <select id="area" name="area" required>
-              <option value="" disabled selected>Selecciona un área</option>
-              <option value="Desarrollo Web">Desarrollo Web</option>
-              <option value="Cloud / DevOps">Cloud / DevOps</option>
-              <option value="Ciberseguridad">Ciberseguridad</option>
-              <option value="Soporte Técnico">Soporte Técnico</option>
-              <option value="Otro">Otro</option>
+            <label for="puesto">Puesto de interés</label>
+            <select id="puesto" name="puesto" required>
+              <option value="" disabled selected>Selecciona un puesto</option>
+              <option value="Frontend Engineer">Frontend Engineer — Desarrollo Web</option>
+              <option value="Cloud Infrastructure Engineer">Cloud Infrastructure Engineer</option>
+              <option value="Penetration Tester">Penetration Tester — Ciberseguridad</option>
+              <option value="IT Support Specialist">IT Support Specialist</option>
+              <option value="Otro">Otro / Candidatura espontánea</option>
             </select>
           </div>
           <div class="form-group">
+            <label for="linkedin">LinkedIn o portafolio</label>
+            <input type="url" id="linkedin" name="linkedin" placeholder="https://linkedin.com/in/tu-perfil" />
+          </div>
+          <div class="form-group">
             <label>CV / Portafolio</label>
-            <div class="file-input-wrap">
-              <input
-                type="file"
-                name="cv"
-                id="cv"
-                accept=".pdf,.doc,.docx"
-              />
-              <div class="file-input-label" id="file-label">
-                <svg viewBox="0 0 24 24">
-                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-                  <polyline points="17 8 12 3 7 8" />
-                  <line x1="12" y1="3" x2="12" y2="15" />
-                </svg>
-                <span>Adjuntar archivo (PDF, DOC — máx. 5 MB)</span>
+            <div class="file-wrap">
+              <input type="file" name="cv" id="cv" accept=".pdf,.doc,.docx" />
+              <div class="file-label" id="file-label">
+                <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                <span>Adjuntar CV (PDF, DOC — máx. 5 MB)</span>
               </div>
             </div>
           </div>
           <div class="form-group">
-            <label for="mensaje">Cuéntanos sobre ti</label>
-            <textarea
-              id="mensaje"
-              name="mensaje"
-              rows="5"
-              placeholder="¿Por qué quieres unirte a nodo8? ¿Qué te hace diferente?"
-              required
-            ></textarea>
+            <label for="mensaje">¿Por qué quieres trabajar en nodo8?</label>
+            <textarea id="mensaje" name="mensaje" rows="5" placeholder="Cuéntanos qué te atrae de nodo8, qué problema interesante has resuelto y cómo te ves aportando al equipo..." required></textarea>
           </div>
-          <button
-            type="submit"
-            class="btn-primary"
-            style="width: 100%; text-align: center"
-            id="submit-btn"
-          >
+          <button type="submit" class="btn-primary" id="submit-btn" style="width:100%;text-align:center;">
             Enviar aplicación
           </button>
-          <p
-            id="form-status"
-            style="font-size: 0.85rem; margin-top: 4px; display: none"
-          ></p>
+          <p id="form-status" style="font-size:0.85rem;margin-top:4px;display:none;"></p>
         </form>
       </div>
     </section>
 
-    <!-- FOOTER -->
+    <!-- ═══════════════════════════════════════
+         FOOTER
+    ═══════════════════════════════════════ -->
     <footer>
       <div class="footer-brand">
         <svg width="18" height="18" viewBox="0 0 30 30" fill="none">
-          <circle cx="15" cy="3" r="2.2" fill="#c8f04b" />
-          <circle cx="24.6" cy="7.4" r="2.2" fill="#c8f04b" opacity="0.6" />
-          <circle cx="27" cy="15" r="2.2" fill="#c8f04b" />
-          <circle cx="24.6" cy="22.6" r="2.2" fill="#c8f04b" opacity="0.6" />
-          <circle cx="15" cy="27" r="2.2" fill="#c8f04b" />
-          <circle cx="5.4" cy="22.6" r="2.2" fill="#c8f04b" opacity="0.6" />
-          <circle cx="3" cy="15" r="2.2" fill="#c8f04b" />
-          <circle cx="5.4" cy="7.4" r="2.2" fill="#c8f04b" opacity="0.6" />
-          <circle cx="15" cy="15" r="3.5" fill="none" stroke="#c8f04b" stroke-width="1.5" />
-          <line x1="15" y1="5.2" x2="15" y2="11.5" stroke="#c8f04b" stroke-width="1.2" stroke-linecap="round" />
-          <line x1="15" y1="18.5" x2="15" y2="24.8" stroke="#c8f04b" stroke-width="1.2" stroke-linecap="round" />
-          <line x1="5.2" y1="15" x2="11.5" y2="15" stroke="#c8f04b" stroke-width="1.2" stroke-linecap="round" />
-          <line x1="18.5" y1="15" x2="24.8" y2="15" stroke="#c8f04b" stroke-width="1.2" stroke-linecap="round" />
+          <circle cx="15" cy="3" r="2.2" fill="#c8f04b"/>
+          <circle cx="24.6" cy="7.4" r="2.2" fill="#c8f04b" opacity="0.6"/>
+          <circle cx="27" cy="15" r="2.2" fill="#c8f04b"/>
+          <circle cx="24.6" cy="22.6" r="2.2" fill="#c8f04b" opacity="0.6"/>
+          <circle cx="15" cy="27" r="2.2" fill="#c8f04b"/>
+          <circle cx="5.4" cy="22.6" r="2.2" fill="#c8f04b" opacity="0.6"/>
+          <circle cx="3" cy="15" r="2.2" fill="#c8f04b"/>
+          <circle cx="5.4" cy="7.4" r="2.2" fill="#c8f04b" opacity="0.6"/>
+          <circle cx="15" cy="15" r="3.5" fill="none" stroke="#c8f04b" stroke-width="1.5"/>
+          <line x1="15" y1="5.2" x2="15" y2="11.5" stroke="#c8f04b" stroke-width="1.2" stroke-linecap="round"/>
+          <line x1="15" y1="18.5" x2="15" y2="24.8" stroke="#c8f04b" stroke-width="1.2" stroke-linecap="round"/>
+          <line x1="5.2" y1="15" x2="11.5" y2="15" stroke="#c8f04b" stroke-width="1.2" stroke-linecap="round"/>
+          <line x1="18.5" y1="15" x2="24.8" y2="15" stroke="#c8f04b" stroke-width="1.2" stroke-linecap="round"/>
         </svg>
         <span class="footer-brand-text">nodo<span>8</span></span>
       </div>
@@ -935,54 +1637,88 @@
       </div>
     </footer>
 
+    <!-- ═══════════════════════════════════════
+         SCRIPTS
+    ═══════════════════════════════════════ -->
     <script>
-      // Scroll reveal
+      /* ── Scroll reveal ── */
       const reveals = document.querySelectorAll(".reveal");
-      const observer = new IntersectionObserver(
-        (entries) => {
-          entries.forEach((e) => {
-            if (e.isIntersecting) {
-              e.target.classList.add("visible");
-              observer.unobserve(e.target);
-            }
-          });
-        },
-        { threshold: 0.1 }
-      );
-      reveals.forEach((el) => observer.observe(el));
+      const revealObs = new IntersectionObserver((entries) => {
+        entries.forEach((e) => {
+          if (e.isIntersecting) {
+            e.target.classList.add("visible");
+            revealObs.unobserve(e.target);
+          }
+        });
+      }, { threshold: 0.08 });
+      reveals.forEach((el) => revealObs.observe(el));
 
-      // Pre-fill área al hacer click en "Aplicar"
-      document.querySelectorAll(".btn-apply").forEach((btn) => {
+      /* ── Count-up numbers ── */
+      const countEls = document.querySelectorAll(".number-val[data-target]");
+      const countObs = new IntersectionObserver((entries) => {
+        entries.forEach((e) => {
+          if (!e.isIntersecting) return;
+          const el = e.target;
+          const target = parseInt(el.getAttribute("data-target"), 10);
+          const prefix = el.getAttribute("data-prefix") || "";
+          const suffix = el.getAttribute("data-suffix") || "";
+          const duration = 1400;
+          const start = performance.now();
+          function step(now) {
+            const elapsed = now - start;
+            const progress = Math.min(elapsed / duration, 1);
+            const eased = 1 - Math.pow(1 - progress, 3);
+            const val = Math.round(eased * target);
+            el.textContent = prefix + val + suffix;
+            if (progress < 1) requestAnimationFrame(step);
+          }
+          requestAnimationFrame(step);
+          countObs.unobserve(el);
+        });
+      }, { threshold: 0.5 });
+      countEls.forEach((el) => countObs.observe(el));
+
+      /* ── Jobs filter ── */
+      document.querySelectorAll(".filter-btn").forEach((btn) => {
         btn.addEventListener("click", () => {
-          const area = btn.getAttribute("data-area");
-          const select = document.getElementById("area");
-          if (select && area) select.value = area;
+          document.querySelectorAll(".filter-btn").forEach((b) => b.classList.remove("active"));
+          btn.classList.add("active");
+          const filter = btn.getAttribute("data-filter");
+          document.querySelectorAll(".job-card").forEach((card) => {
+            const show = filter === "all" || card.getAttribute("data-area") === filter;
+            card.style.display = show ? "flex" : "none";
+          });
         });
       });
 
-      // Mostrar nombre del archivo seleccionado
-      document.getElementById("cv").addEventListener("change", function () {
-        const label = document.getElementById("file-label");
-        const name = this.files[0]?.name;
-        if (name) {
-          label.querySelector("span").textContent = name;
-        }
+      /* ── Pre-fill puesto desde "Aplicar ahora" ── */
+      document.querySelectorAll(".btn-apply").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          const puesto = btn.getAttribute("data-puesto");
+          const sel = document.getElementById("puesto");
+          if (sel && puesto) sel.value = puesto;
+        });
       });
 
-      // Envío del formulario
-      const form = document.getElementById("apply-form");
+      /* ── File input label ── */
+      document.getElementById("cv").addEventListener("change", function () {
+        const name = this.files[0]?.name;
+        if (name) document.getElementById("file-label").querySelector("span").textContent = name;
+      });
+
+      /* ── Form submit ── */
+      const form   = document.getElementById("apply-form");
       const status = document.getElementById("form-status");
-      const btn = document.getElementById("submit-btn");
-      form.addEventListener("submit", async function (e) {
+      const btn    = document.getElementById("submit-btn");
+      form.addEventListener("submit", async (e) => {
         e.preventDefault();
         btn.textContent = "Enviando...";
         btn.style.opacity = "0.7";
         btn.disabled = true;
-        const data = new FormData(form);
         try {
           const res = await fetch(form.action, {
             method: "POST",
-            body: data,
+            body: new FormData(form),
             headers: { Accept: "application/json" },
           });
           if (res.ok) {
@@ -990,9 +1726,8 @@
             status.style.color = "#c8f04b";
             status.style.display = "block";
             form.reset();
-            document.getElementById("file-label").querySelector("span").textContent =
-              "Adjuntar archivo (PDF, DOC — máx. 5 MB)";
-            btn.textContent = "Enviada";
+            document.getElementById("file-label").querySelector("span").textContent = "Adjuntar CV (PDF, DOC — máx. 5 MB)";
+            btn.textContent = "Enviada ✓";
           } else {
             throw new Error();
           }
