@@ -1,0 +1,1156 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Industrias — nodo8</title>
+    <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:wght@300;400;500&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      /* ─────────────────────────────────────────
+         TOKENS
+      ───────────────────────────────────────── */
+      :root {
+        --bg: #0a0a0a;
+        --surface: #111111;
+        --surface2: #181818;
+        --surface3: #1e1e1e;
+        --border: rgba(255, 255, 255, 0.07);
+        --accent: #c8f04b;
+        --accent-dim: rgba(200, 240, 75, 0.12);
+        --accent-glow: rgba(200, 240, 75, 0.06);
+        --text: #f0f0ec;
+        --muted: #888880;
+        --font-display: "Syne", sans-serif;
+        --font-body: "DM Sans", sans-serif;
+        --nav-h: 68px;
+      }
+      *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+      html { scroll-behavior: smooth; }
+      body {
+        background: var(--bg);
+        color: var(--text);
+        font-family: var(--font-body);
+        font-size: 16px;
+        line-height: 1.7;
+        overflow-x: hidden;
+      }
+
+      /* ─────────────────────────────────────────
+         NAV
+      ───────────────────────────────────────── */
+      nav {
+        position: fixed;
+        top: 0; left: 0; right: 0;
+        z-index: 300;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 1.25rem 2.5rem;
+        border-bottom: 1px solid var(--border);
+        background: rgba(10, 10, 10, 0.9);
+        backdrop-filter: blur(14px);
+        height: var(--nav-h);
+      }
+      .nav-logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+      .nav-logo-text { font-family: var(--font-display); font-size: 1.1rem; font-weight: 800; color: var(--text); letter-spacing: -0.02em; }
+      .nav-logo-text span { color: var(--accent); }
+      .nav-links { display: flex; gap: 2rem; list-style: none; }
+      .nav-links a { font-size: 0.85rem; color: var(--muted); text-decoration: none; letter-spacing: 0.03em; transition: color 0.2s; }
+      .nav-links a:hover { color: var(--text); }
+      .nav-links a.active { color: var(--accent); }
+      .nav-cta { font-family: var(--font-body); font-size: 0.85rem; font-weight: 500; color: var(--bg); background: var(--accent); border: none; padding: 0.55rem 1.25rem; border-radius: 4px; cursor: pointer; text-decoration: none; transition: opacity 0.2s; }
+      .nav-cta:hover { opacity: 0.88; }
+
+      /* ─────────────────────────────────────────
+         BUTTONS
+      ───────────────────────────────────────── */
+      .btn-primary { font-family: var(--font-body); font-size: 0.9rem; font-weight: 500; color: var(--bg); background: var(--accent); border: none; padding: 0.85rem 2rem; border-radius: 4px; cursor: pointer; text-decoration: none; transition: opacity 0.2s, transform 0.2s; display: inline-block; }
+      .btn-primary:hover { opacity: 0.88; transform: translateY(-1px); }
+      .btn-ghost { font-family: var(--font-body); font-size: 0.9rem; font-weight: 400; color: var(--muted); background: transparent; border: 1px solid var(--border); padding: 0.85rem 2rem; border-radius: 4px; cursor: pointer; text-decoration: none; transition: color 0.2s, border-color 0.2s; display: inline-block; }
+      .btn-ghost:hover { color: var(--text); border-color: rgba(255,255,255,0.2); }
+
+      /* ─────────────────────────────────────────
+         SHARED
+      ───────────────────────────────────────── */
+      .section-eyebrow { font-size: 0.75rem; color: var(--accent); letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 0.5rem; }
+      .section-title { font-family: var(--font-display); font-size: clamp(1.8rem, 4vw, 2.8rem); font-weight: 700; line-height: 1.1; letter-spacing: -0.02em; }
+      .section-header { display: flex; align-items: flex-end; justify-content: space-between; margin-bottom: 3rem; flex-wrap: wrap; gap: 1rem; }
+      .section-note { font-size: 0.9rem; color: var(--muted); max-width: 280px; text-align: right; }
+      .tag { font-size: 0.72rem; color: var(--accent); background: var(--accent-dim); padding: 3px 10px; border-radius: 100px; }
+
+      /* ─────────────────────────────────────────
+         1. HERO
+      ───────────────────────────────────────── */
+      .hero {
+        min-height: 88vh;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-end;
+        padding: 8rem 2.5rem 5rem;
+        position: relative;
+        overflow: hidden;
+      }
+      .hero-bg { position: absolute; inset: 0; background: linear-gradient(150deg, #0d1800 0%, #0a0a0a 50%); }
+      .hero-grid {
+        position: absolute; inset: 0;
+        background-image: linear-gradient(var(--border) 1px, transparent 1px), linear-gradient(90deg, var(--border) 1px, transparent 1px);
+        background-size: 60px 60px;
+        opacity: 0.4;
+      }
+      .hero-glow { position: absolute; top: 0; right: -8%; width: 700px; height: 700px; background: radial-gradient(circle, rgba(200,240,75,0.08) 0%, transparent 65%); pointer-events: none; }
+      .hero-glow2 { position: absolute; bottom: -10%; left: -5%; width: 500px; height: 500px; background: radial-gradient(circle, rgba(200,240,75,0.04) 0%, transparent 70%); pointer-events: none; }
+      /* floating industry icons grid */
+      .hero-icons-grid {
+        position: absolute;
+        inset: 0;
+        display: grid;
+        grid-template-columns: repeat(6, 1fr);
+        grid-template-rows: repeat(3, 1fr);
+        pointer-events: none;
+        overflow: hidden;
+      }
+      .hero-icon-cell {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        opacity: 0;
+        animation: iconFade 8s ease-in-out infinite;
+      }
+      .hero-icon-cell:nth-child(1)  { animation-delay: 0s; }
+      .hero-icon-cell:nth-child(2)  { animation-delay: 1.2s; }
+      .hero-icon-cell:nth-child(3)  { animation-delay: 2.4s; }
+      .hero-icon-cell:nth-child(4)  { animation-delay: 3.6s; }
+      .hero-icon-cell:nth-child(5)  { animation-delay: 4.8s; }
+      .hero-icon-cell:nth-child(6)  { animation-delay: 0.6s; }
+      .hero-icon-cell:nth-child(7)  { animation-delay: 1.8s; }
+      .hero-icon-cell:nth-child(8)  { animation-delay: 3s; }
+      .hero-icon-cell:nth-child(9)  { animation-delay: 4.2s; }
+      .hero-icon-cell:nth-child(10) { animation-delay: 5.4s; }
+      .hero-icon-cell:nth-child(11) { animation-delay: 2s; }
+      .hero-icon-cell:nth-child(12) { animation-delay: 3.3s; }
+      .hero-icon-cell svg { width: 36px; height: 36px; stroke: var(--accent); fill: none; stroke-width: 0.7; stroke-linecap: round; stroke-linejoin: round; opacity: 0.08; }
+      @keyframes iconFade {
+        0%, 100% { opacity: 0; transform: scale(0.8); }
+        20%, 60%  { opacity: 1; transform: scale(1); }
+        80%       { opacity: 0; transform: scale(1.05); }
+      }
+      .hero-content { position: relative; z-index: 1; }
+      .hero-tag { display: inline-flex; align-items: center; gap: 8px; font-size: 0.78rem; color: var(--accent); letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 1.5rem; animation: fadeUp 0.6s ease both; }
+      .hero-tag::before { content: ""; width: 24px; height: 1px; background: var(--accent); }
+      .hero h1 { font-family: var(--font-display); font-size: clamp(2.6rem, 7vw, 5.2rem); font-weight: 800; line-height: 1.05; letter-spacing: -0.035em; max-width: 860px; margin-bottom: 1.5rem; animation: fadeUp 0.6s 0.1s ease both; }
+      .hero h1 em { font-style: normal; color: var(--accent); }
+      .hero-sub { font-size: 1.05rem; color: var(--muted); max-width: 540px; margin-bottom: 2.5rem; font-weight: 300; line-height: 1.75; animation: fadeUp 0.6s 0.2s ease both; }
+      .hero-industry-pills { display: flex; gap: 8px; flex-wrap: wrap; animation: fadeUp 0.6s 0.3s ease both; }
+      .industry-pill {
+        display: inline-flex; align-items: center; gap: 7px;
+        font-size: 0.8rem; color: var(--muted);
+        background: var(--surface); border: 1px solid var(--border);
+        padding: 0.4rem 1rem; border-radius: 100px;
+        text-decoration: none;
+        transition: color 0.2s, border-color 0.2s, background 0.2s;
+      }
+      .industry-pill:hover { color: var(--accent); border-color: rgba(200,240,75,0.3); background: var(--accent-dim); }
+      .industry-pill svg { width: 14px; height: 14px; stroke: currentColor; fill: none; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
+
+      /* ─────────────────────────────────────────
+         INDUSTRY LAYOUT (sticky sidenav + content)
+      ───────────────────────────────────────── */
+      .industries-wrapper {
+        display: grid;
+        grid-template-columns: 220px 1fr;
+        gap: 0;
+        align-items: start;
+        padding: 0 2.5rem 6rem;
+      }
+      /* sticky side nav */
+      .industry-sidenav {
+        position: sticky;
+        top: calc(var(--nav-h) + 2rem);
+        padding: 2rem 2rem 2rem 0;
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+      }
+      .sidenav-label { font-size: 0.68rem; color: var(--muted); letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 0.75rem; padding-left: 12px; }
+      .sidenav-link {
+        display: flex; align-items: center; gap: 10px;
+        font-size: 0.85rem; color: var(--muted);
+        text-decoration: none;
+        padding: 0.5rem 0.75rem;
+        border-radius: 6px;
+        border-left: 2px solid transparent;
+        transition: color 0.2s, border-color 0.2s, background 0.2s;
+      }
+      .sidenav-link svg { width: 15px; height: 15px; stroke: currentColor; fill: none; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; flex-shrink: 0; }
+      .sidenav-link:hover { color: var(--text); background: var(--surface); }
+      .sidenav-link.active { color: var(--accent); border-left-color: var(--accent); background: var(--accent-dim); }
+
+      /* mobile tabs (hidden on desktop) */
+      .industry-tabs-mobile { display: none; overflow-x: auto; gap: 8px; padding: 0 1.5rem 1.5rem; }
+      .ind-tab-btn {
+        font-family: var(--font-body); font-size: 0.82rem;
+        color: var(--muted); background: var(--surface);
+        border: 1px solid var(--border); padding: 0.45rem 1.1rem;
+        border-radius: 100px; cursor: pointer; white-space: nowrap;
+        transition: color 0.2s, border-color 0.2s, background 0.2s;
+      }
+      .ind-tab-btn.active { color: var(--accent); border-color: rgba(200,240,75,0.3); background: var(--accent-dim); }
+
+      /* industry content area */
+      .industry-sections { border-left: 1px solid var(--border); }
+
+      /* single industry block */
+      .industry-block {
+        padding: 5rem 0 5rem 4rem;
+        border-bottom: 1px solid var(--border);
+        position: relative;
+      }
+      .industry-block:last-child { border-bottom: none; }
+      .industry-block-inner {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 4rem;
+        align-items: start;
+      }
+      /* left column */
+      .industry-left {}
+      .industry-icon-wrap {
+        width: 64px; height: 64px;
+        background: var(--accent-dim);
+        border: 1px solid rgba(200,240,75,0.2);
+        border-radius: 14px;
+        display: flex; align-items: center; justify-content: center;
+        margin-bottom: 1.75rem;
+      }
+      .industry-icon-wrap svg { width: 30px; height: 30px; stroke: var(--accent); fill: none; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
+      .industry-num { font-family: var(--font-display); font-size: 0.68rem; color: var(--muted); letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 0.6rem; }
+      .industry-title { font-family: var(--font-display); font-size: clamp(1.8rem, 3.5vw, 2.5rem); font-weight: 800; letter-spacing: -0.03em; line-height: 1.1; margin-bottom: 1rem; }
+      .industry-problem { font-size: 0.95rem; color: var(--muted); line-height: 1.8; margin-bottom: 2rem; max-width: 420px; }
+      .industry-metric {
+        display: inline-flex; align-items: center; gap: 10px;
+        background: var(--surface2);
+        border: 1px solid var(--border);
+        border-left: 3px solid var(--accent);
+        padding: 0.9rem 1.25rem;
+        border-radius: 0 8px 8px 0;
+        margin-bottom: 2rem;
+      }
+      .metric-val { font-family: var(--font-display); font-size: 1.5rem; font-weight: 800; color: var(--accent); line-height: 1; }
+      .metric-lbl { font-size: 0.8rem; color: var(--muted); line-height: 1.4; max-width: 160px; }
+      .industry-cta {
+        display: inline-flex; align-items: center; gap: 8px;
+        font-size: 0.85rem; font-weight: 500;
+        color: var(--accent);
+        background: var(--accent-dim);
+        border: 1px solid rgba(200,240,75,0.25);
+        padding: 0.65rem 1.4rem;
+        border-radius: 4px;
+        text-decoration: none;
+        transition: background 0.2s, border-color 0.2s, gap 0.2s;
+      }
+      .industry-cta:hover { background: rgba(200,240,75,0.2); border-color: var(--accent); gap: 12px; }
+      .industry-cta svg { width: 14px; height: 14px; stroke: var(--accent); fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+      /* right column */
+      .industry-right {}
+      .industry-services { margin-bottom: 2rem; }
+      .industry-services h4 { font-family: var(--font-display); font-size: 0.72rem; font-weight: 600; color: var(--muted); letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 1rem; }
+      .service-list { display: flex; flex-direction: column; gap: 0; }
+      .service-item {
+        display: flex; align-items: flex-start; gap: 12px;
+        padding: 0.85rem 0;
+        border-bottom: 1px solid var(--border);
+        font-size: 0.9rem; color: var(--text); line-height: 1.5;
+        transition: color 0.2s;
+      }
+      .service-item:last-child { border-bottom: none; }
+      .service-item::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: var(--accent); flex-shrink: 0; margin-top: 7px; }
+      .service-item:hover { color: var(--accent); }
+      .industry-stack { }
+      .industry-stack h4 { font-family: var(--font-display); font-size: 0.72rem; font-weight: 600; color: var(--muted); letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 0.85rem; }
+      .stack-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+
+      /* ─────────────────────────────────────────
+         POR QUÉ NODO8
+      ───────────────────────────────────────── */
+      .why-section { padding: 6rem 2.5rem; }
+      .why-grid-3 {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 1px;
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        overflow: hidden;
+      }
+      .why-card {
+        background: var(--surface);
+        padding: 2.5rem 2rem;
+        position: relative;
+        transition: background 0.3s;
+      }
+      .why-card:hover { background: var(--surface2); }
+      .why-card::after { content: ""; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: var(--accent); opacity: 0; transition: opacity 0.3s; }
+      .why-card:hover::after { opacity: 1; }
+      .why-icon { width: 48px; height: 48px; background: var(--accent-dim); border-radius: 10px; display: flex; align-items: center; justify-content: center; margin-bottom: 1.5rem; }
+      .why-icon svg { width: 22px; height: 22px; stroke: var(--accent); fill: none; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
+      .why-card h3 { font-family: var(--font-display); font-size: 1.05rem; font-weight: 700; color: var(--text); margin-bottom: 0.6rem; }
+      .why-card p { font-size: 0.875rem; color: var(--muted); line-height: 1.75; }
+
+      /* ─────────────────────────────────────────
+         CASOS DE ÉXITO
+      ───────────────────────────────────────── */
+      .cases-section { padding: 6rem 2.5rem; padding-top: 0; }
+      .cases-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 1.5rem;
+      }
+      .case-card {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 14px;
+        padding: 2.2rem;
+        display: flex; flex-direction: column; gap: 1.25rem;
+        position: relative; overflow: hidden;
+        transition: border-color 0.3s, background 0.3s;
+      }
+      .case-card:hover { border-color: rgba(200,240,75,0.18); background: var(--surface2); }
+      .case-card::before { content: ""; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: var(--accent); opacity: 0; transition: opacity 0.3s; }
+      .case-card:hover::before { opacity: 1; }
+      .case-industry-badge { display: inline-flex; align-items: center; gap: 6px; font-size: 0.72rem; color: var(--accent); background: var(--accent-dim); padding: 3px 10px; border-radius: 100px; width: fit-content; }
+      .case-title { font-family: var(--font-display); font-size: 1.05rem; font-weight: 700; color: var(--text); line-height: 1.3; }
+      .case-body { flex: 1; display: flex; flex-direction: column; gap: 0.75rem; }
+      .case-row { display: flex; gap: 0.75rem; }
+      .case-row-label { font-size: 0.72rem; color: var(--accent); letter-spacing: 0.08em; text-transform: uppercase; min-width: 68px; padding-top: 1px; }
+      .case-row-val { font-size: 0.85rem; color: var(--muted); line-height: 1.6; }
+      .case-result {
+        display: flex; align-items: center; gap: 14px;
+        background: var(--surface3); border-radius: 8px; padding: 1rem 1.25rem;
+        margin-top: auto;
+      }
+      .case-result-num { font-family: var(--font-display); font-size: 1.8rem; font-weight: 800; color: var(--accent); line-height: 1; }
+      .case-result-desc { font-size: 0.8rem; color: var(--muted); line-height: 1.4; }
+
+      /* ─────────────────────────────────────────
+         CTA FINAL
+      ───────────────────────────────────────── */
+      .cta-section { padding: 0 2.5rem 6rem; }
+      .cta-box {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        padding: 4rem;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 4rem;
+        align-items: center;
+        position: relative;
+        overflow: hidden;
+      }
+      .cta-box::before { content: ""; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, var(--accent) 0%, transparent 70%); }
+      .cta-glow { position: absolute; top: -40%; right: -10%; width: 400px; height: 400px; background: radial-gradient(circle, var(--accent-glow) 0%, transparent 70%); pointer-events: none; }
+      .cta-left h2 { font-family: var(--font-display); font-size: clamp(1.6rem, 3vw, 2.2rem); font-weight: 800; line-height: 1.15; letter-spacing: -0.02em; margin-bottom: 0.75rem; }
+      .cta-left h2 em { font-style: normal; color: var(--accent); }
+      .cta-left p { font-size: 0.9rem; color: var(--muted); line-height: 1.75; }
+      .cta-form { display: flex; flex-direction: column; gap: 12px; position: relative; z-index: 1; }
+      .form-group { display: flex; flex-direction: column; gap: 6px; }
+      .form-group label { font-size: 0.78rem; color: var(--muted); letter-spacing: 0.05em; }
+      .form-group input,
+      .form-group textarea,
+      .form-group select {
+        background: var(--bg); border: 1px solid var(--border); border-radius: 6px;
+        padding: 0.72rem 1rem; font-family: var(--font-body); font-size: 0.9rem;
+        color: var(--text); outline: none; transition: border-color 0.2s;
+        resize: none; appearance: none; -webkit-appearance: none;
+      }
+      .form-group select {
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23888880' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+        background-repeat: no-repeat; background-position: right 1rem center; padding-right: 2.5rem; cursor: pointer;
+      }
+      .form-group select option { background: var(--surface); color: var(--text); }
+      .form-group input:focus, .form-group textarea:focus, .form-group select:focus { border-color: var(--accent); }
+      .form-group input::placeholder, .form-group textarea::placeholder { color: #555; }
+      .cta-success { display: none; flex-direction: column; align-items: center; text-align: center; gap: 1rem; padding: 2rem; }
+      .cta-success-icon { width: 54px; height: 54px; background: var(--accent-dim); border: 1px solid rgba(200,240,75,0.3); border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+      .cta-success-icon svg { width: 24px; height: 24px; stroke: var(--accent); fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+      .cta-success-title { font-family: var(--font-display); font-size: 1.1rem; font-weight: 700; color: var(--text); }
+      .cta-success-sub { font-size: 0.85rem; color: var(--muted); }
+
+      /* ─────────────────────────────────────────
+         FOOTER
+      ───────────────────────────────────────── */
+      footer { padding: 2.5rem; border-top: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem; }
+      .footer-brand { display: flex; align-items: center; gap: 8px; }
+      .footer-brand-text { font-family: var(--font-display); font-size: 0.9rem; font-weight: 800; color: var(--muted); letter-spacing: -0.02em; }
+      .footer-brand-text span { color: var(--accent); }
+      .footer-copy { font-size: 0.8rem; color: var(--muted); }
+      .footer-links { display: flex; gap: 1.5rem; }
+      .footer-links a { font-size: 0.8rem; color: var(--muted); text-decoration: none; transition: color 0.2s; }
+      .footer-links a:hover { color: var(--text); }
+
+      /* ─────────────────────────────────────────
+         ANIMATIONS
+      ───────────────────────────────────────── */
+      @keyframes fadeUp {
+        from { opacity: 0; transform: translateY(24px); }
+        to   { opacity: 1; transform: translateY(0); }
+      }
+      .reveal { opacity: 0; transform: translateY(28px); transition: opacity 0.65s ease, transform 0.65s ease; }
+      .reveal.visible { opacity: 1; transform: translateY(0); }
+      .reveal-delay-1 { transition-delay: 0.1s; }
+      .reveal-delay-2 { transition-delay: 0.2s; }
+      .reveal-delay-3 { transition-delay: 0.3s; }
+
+      /* ─────────────────────────────────────────
+         RESPONSIVE
+      ───────────────────────────────────────── */
+      @media (max-width: 1024px) {
+        .industries-wrapper { grid-template-columns: 1fr; padding: 0; }
+        .industry-sidenav { display: none; }
+        .industry-tabs-mobile { display: flex; padding: 2rem 1.5rem 1rem; }
+        .industry-sections { border-left: none; border-top: 1px solid var(--border); }
+        .industry-block { padding: 3.5rem 1.5rem; }
+        .industry-block-inner { grid-template-columns: 1fr; gap: 2.5rem; }
+        .cta-box { grid-template-columns: 1fr; gap: 2.5rem; padding: 2.5rem 2rem; }
+      }
+      @media (max-width: 768px) {
+        nav { padding: 1rem 1.5rem; }
+        .nav-links { display: none; }
+        .hero { padding: 7rem 1.5rem 3.5rem; }
+        .why-section, .cases-section, .cta-section { padding-left: 1.5rem; padding-right: 1.5rem; }
+        footer { flex-direction: column; align-items: flex-start; padding: 2rem 1.5rem; }
+        .section-note { text-align: left; }
+      }
+    </style>
+  </head>
+  <body>
+
+    <!-- ═══════════════════════════════════════
+         NAV
+    ═══════════════════════════════════════ -->
+    <nav>
+      <a href="index.html" class="nav-logo">
+        <svg width="30" height="30" viewBox="0 0 30 30" fill="none">
+          <circle cx="15" cy="3" r="2.2" fill="#c8f04b"/>
+          <circle cx="24.6" cy="7.4" r="2.2" fill="#c8f04b" opacity="0.7"/>
+          <circle cx="27" cy="15" r="2.2" fill="#c8f04b"/>
+          <circle cx="24.6" cy="22.6" r="2.2" fill="#c8f04b" opacity="0.7"/>
+          <circle cx="15" cy="27" r="2.2" fill="#c8f04b"/>
+          <circle cx="5.4" cy="22.6" r="2.2" fill="#c8f04b" opacity="0.7"/>
+          <circle cx="3" cy="15" r="2.2" fill="#c8f04b"/>
+          <circle cx="5.4" cy="7.4" r="2.2" fill="#c8f04b" opacity="0.7"/>
+          <circle cx="15" cy="15" r="3.5" fill="none" stroke="#c8f04b" stroke-width="1.5"/>
+          <line x1="15" y1="5.2" x2="15" y2="11.5" stroke="#c8f04b" stroke-width="1.2" stroke-linecap="round"/>
+          <line x1="15" y1="18.5" x2="15" y2="24.8" stroke="#c8f04b" stroke-width="1.2" stroke-linecap="round"/>
+          <line x1="5.2" y1="15" x2="11.5" y2="15" stroke="#c8f04b" stroke-width="1.2" stroke-linecap="round"/>
+          <line x1="18.5" y1="15" x2="24.8" y2="15" stroke="#c8f04b" stroke-width="1.2" stroke-linecap="round"/>
+        </svg>
+        <span class="nav-logo-text">nodo<span>8</span></span>
+      </a>
+      <ul class="nav-links">
+        <li><a href="index.html#servicios">Servicios</a></li>
+        <li><a href="industries.html" class="active">Industrias</a></li>
+        <li><a href="contact.html">Contacto</a></li>
+        <li><a href="careers.html">Careers</a></li>
+      </ul>
+      <a href="contact.html" class="nav-cta">Agendar llamada</a>
+    </nav>
+
+    <!-- ═══════════════════════════════════════
+         1. HERO
+    ═══════════════════════════════════════ -->
+    <section class="hero">
+      <div class="hero-bg"></div>
+      <div class="hero-grid"></div>
+      <div class="hero-glow"></div>
+      <div class="hero-glow2"></div>
+      <!-- animated icon grid background -->
+      <div class="hero-icons-grid" aria-hidden="true">
+        <!-- Retail -->
+        <div class="hero-icon-cell"><svg viewBox="0 0 24 24"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg></div>
+        <!-- Banca -->
+        <div class="hero-icon-cell"><svg viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></div>
+        <!-- Airlines -->
+        <div class="hero-icon-cell"><svg viewBox="0 0 24 24"><path d="M17.8 19.2L16 11l3.5-3.5C21 6 21 4 19 4c-1 0-2 1-3.5 2.5L9 8.2l-4.7-1.6c-.5-.2-1.1.1-1.3.6l-.4.9c-.2.5 0 1.1.5 1.3L8 11l-3 4.5-3-1v2l4 2 2 4 2-3 2 .5 1.7 4.4c.3.7 1 1.1 1.7.8l.9-.4c.6-.2.8-.8.5-1.6z"/></svg></div>
+        <!-- Logística -->
+        <div class="hero-icon-cell"><svg viewBox="0 0 24 24"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg></div>
+        <!-- ERP -->
+        <div class="hero-icon-cell"><svg viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="8" rx="2"/><rect x="2" y="14" width="20" height="8" rx="2"/><line x1="6" y1="6" x2="6.01" y2="6"/><line x1="6" y1="18" x2="6.01" y2="18"/></svg></div>
+        <!-- CRM -->
+        <div class="hero-icon-cell"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
+        <!-- row 2 -->
+        <div class="hero-icon-cell"><svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div>
+        <div class="hero-icon-cell"><svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
+        <div class="hero-icon-cell"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="2"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/><path d="M2 12h20"/></svg></div>
+        <div class="hero-icon-cell"><svg viewBox="0 0 24 24"><path d="M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9Z"/></svg></div>
+        <div class="hero-icon-cell"><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></div>
+        <div class="hero-icon-cell"><svg viewBox="0 0 24 24"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg></div>
+      </div>
+      <div class="hero-content">
+        <div class="hero-tag">Soluciones verticales</div>
+        <h1>Tecnología especializada<br />para cada <em>industria</em></h1>
+        <p class="hero-sub">
+          No aplicamos la misma solución a todos los problemas. Entendemos a fondo
+          los retos de cada sector y construimos tecnología que encaja con la
+          realidad operativa de tu industria.
+        </p>
+        <div class="hero-industry-pills">
+          <a href="#retail" class="industry-pill">
+            <svg viewBox="0 0 24 24"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+            Retail
+          </a>
+          <a href="#banca" class="industry-pill">
+            <svg viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+            Banca
+          </a>
+          <a href="#airlines" class="industry-pill">
+            <svg viewBox="0 0 24 24"><path d="M17.8 19.2L16 11l3.5-3.5C21 6 21 4 19 4c-1 0-2 1-3.5 2.5L9 8.2l-4.7-1.6c-.5-.2-1.1.1-1.3.6l-.4.9c-.2.5 0 1.1.5 1.3L8 11l-3 4.5-3-1v2l4 2 2 4 2-3 2 .5 1.7 4.4c.3.7 1 1.1 1.7.8l.9-.4c.6-.2.8-.8.5-1.6z"/></svg>
+            Airlines
+          </a>
+          <a href="#logistica" class="industry-pill">
+            <svg viewBox="0 0 24 24"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+            Logística
+          </a>
+          <a href="#erp" class="industry-pill">
+            <svg viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="8" rx="2"/><rect x="2" y="14" width="20" height="8" rx="2"/><line x1="6" y1="6" x2="6.01" y2="6"/><line x1="6" y1="18" x2="6.01" y2="18"/></svg>
+            ERP
+          </a>
+          <a href="#crm" class="industry-pill">
+            <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+            CRM
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════
+         INDUSTRY SECTIONS (sidenav + content)
+    ═══════════════════════════════════════ -->
+    <!-- mobile tabs -->
+    <div class="industry-tabs-mobile" id="ind-tabs-mobile">
+      <button class="ind-tab-btn active" data-target="retail">Retail</button>
+      <button class="ind-tab-btn" data-target="banca">Banca</button>
+      <button class="ind-tab-btn" data-target="airlines">Airlines</button>
+      <button class="ind-tab-btn" data-target="logistica">Logística</button>
+      <button class="ind-tab-btn" data-target="erp">ERP</button>
+      <button class="ind-tab-btn" data-target="crm">CRM</button>
+    </div>
+
+    <div class="industries-wrapper">
+      <!-- Sticky side nav (desktop) -->
+      <nav class="industry-sidenav" aria-label="Industrias">
+        <div class="sidenav-label">Industrias</div>
+        <a href="#retail" class="sidenav-link active" data-section="retail">
+          <svg viewBox="0 0 24 24"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+          Retail
+        </a>
+        <a href="#banca" class="sidenav-link" data-section="banca">
+          <svg viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+          Banca
+        </a>
+        <a href="#airlines" class="sidenav-link" data-section="airlines">
+          <svg viewBox="0 0 24 24"><path d="M17.8 19.2L16 11l3.5-3.5C21 6 21 4 19 4c-1 0-2 1-3.5 2.5L9 8.2l-4.7-1.6c-.5-.2-1.1.1-1.3.6l-.4.9c-.2.5 0 1.1.5 1.3L8 11l-3 4.5-3-1v2l4 2 2 4 2-3 2 .5 1.7 4.4c.3.7 1 1.1 1.7.8l.9-.4c.6-.2.8-.8.5-1.6z"/></svg>
+          Airlines
+        </a>
+        <a href="#logistica" class="sidenav-link" data-section="logistica">
+          <svg viewBox="0 0 24 24"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+          Logística
+        </a>
+        <a href="#erp" class="sidenav-link" data-section="erp">
+          <svg viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="8" rx="2"/><rect x="2" y="14" width="20" height="8" rx="2"/><line x1="6" y1="6" x2="6.01" y2="6"/><line x1="6" y1="18" x2="6.01" y2="18"/></svg>
+          ERP
+        </a>
+        <a href="#crm" class="sidenav-link" data-section="crm">
+          <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+          CRM
+        </a>
+      </nav>
+
+      <!-- Industry content -->
+      <div class="industry-sections">
+
+        <!-- ── RETAIL ── -->
+        <div class="industry-block reveal" id="retail">
+          <div class="industry-block-inner">
+            <div class="industry-left">
+              <div class="industry-icon-wrap">
+                <svg viewBox="0 0 24 24"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+              </div>
+              <div class="industry-num">01 / 06</div>
+              <div class="industry-title">Retail</div>
+              <p class="industry-problem">
+                La digitalización del comercio ha dejado a muchos retailers con
+                sistemas fragmentados, sin visibilidad de inventario en tiempo real
+                y sin la capacidad de ofrecer experiencias de compra coherentes
+                entre canales físicos y digitales.
+              </p>
+              <div class="industry-metric">
+                <div class="metric-val">35%</div>
+                <div class="metric-lbl">aumento promedio en tasa de conversión digital</div>
+              </div>
+              <a href="contact.html?industria=retail" class="industry-cta">
+                Hablar con un experto en Retail
+                <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+              </a>
+            </div>
+            <div class="industry-right">
+              <div class="industry-services">
+                <h4>Servicios</h4>
+                <div class="service-list">
+                  <div class="service-item">E-commerce a medida con catálogo dinámico y pagos integrados</div>
+                  <div class="service-item">Estrategia omnichannel: punto de venta, web y app unificados</div>
+                  <div class="service-item">Analytics de ventas con dashboards en tiempo real</div>
+                  <div class="service-item">Inventario inteligente con alertas automáticas y predicción de demanda</div>
+                </div>
+              </div>
+              <div class="industry-stack">
+                <h4>Stack tecnológico</h4>
+                <div class="stack-tags">
+                  <span class="tag">Next.js</span>
+                  <span class="tag">Shopify</span>
+                  <span class="tag">AWS</span>
+                  <span class="tag">PostgreSQL</span>
+                  <span class="tag">Redis</span>
+                  <span class="tag">Stripe</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ── BANCA ── -->
+        <div class="industry-block reveal" id="banca">
+          <div class="industry-block-inner">
+            <div class="industry-left">
+              <div class="industry-icon-wrap">
+                <svg viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+              </div>
+              <div class="industry-num">02 / 06</div>
+              <div class="industry-title">Banca</div>
+              <p class="industry-problem">
+                Las instituciones financieras cargan con sistemas legacy costosos
+                de mantener, regulaciones en constante cambio y usuarios que
+                exigen la misma experiencia digital que obtienen de fintech nativas.
+                Modernizar sin interrumpir es el reto central.
+              </p>
+              <div class="industry-metric">
+                <div class="metric-val">60%</div>
+                <div class="metric-lbl">reducción en tiempo de onboarding digital</div>
+              </div>
+              <a href="contact.html?industria=banca" class="industry-cta">
+                Hablar con un experto en Banca
+                <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+              </a>
+            </div>
+            <div class="industry-right">
+              <div class="industry-services">
+                <h4>Servicios</h4>
+                <div class="service-list">
+                  <div class="service-item">Open banking: APIs seguras para integración con terceros</div>
+                  <div class="service-item">Seguridad financiera: cifrado, MFA y detección de fraude</div>
+                  <div class="service-item">Apps móviles bancarias con biometría y pagos instantáneos</div>
+                  <div class="service-item">Dashboards de riesgo y compliance en tiempo real</div>
+                </div>
+              </div>
+              <div class="industry-stack">
+                <h4>Stack tecnológico</h4>
+                <div class="stack-tags">
+                  <span class="tag">Node.js</span>
+                  <span class="tag">Kubernetes</span>
+                  <span class="tag">Azure</span>
+                  <span class="tag">Cifrado E2E</span>
+                  <span class="tag">OAuth 2.0</span>
+                  <span class="tag">Kafka</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ── AIRLINES ── -->
+        <div class="industry-block reveal" id="airlines">
+          <div class="industry-block-inner">
+            <div class="industry-left">
+              <div class="industry-icon-wrap">
+                <svg viewBox="0 0 24 24"><path d="M17.8 19.2L16 11l3.5-3.5C21 6 21 4 19 4c-1 0-2 1-3.5 2.5L9 8.2l-4.7-1.6c-.5-.2-1.1.1-1.3.6l-.4.9c-.2.5 0 1.1.5 1.3L8 11l-3 4.5-3-1v2l4 2 2 4 2-3 2 .5 1.7 4.4c.3.7 1 1.1 1.7.8l.9-.4c.6-.2.8-.8.5-1.6z"/></svg>
+              </div>
+              <div class="industry-num">03 / 06</div>
+              <div class="industry-title">Airlines</div>
+              <p class="industry-problem">
+                Las aerolíneas operan con márgenes ajustados y sistemas de reserva
+                que datan de los años 90. Optimizar la experiencia del pasajero,
+                desde la búsqueda de vuelos hasta el desembarque, requiere
+                integración en tiempo real entre docenas de sistemas dispares.
+              </p>
+              <div class="industry-metric">
+                <div class="metric-val">28%</div>
+                <div class="metric-lbl">reducción en tiempos de check-in con solución digital</div>
+              </div>
+              <a href="contact.html?industria=airlines" class="industry-cta">
+                Hablar con un experto en Airlines
+                <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+              </a>
+            </div>
+            <div class="industry-right">
+              <div class="industry-services">
+                <h4>Servicios</h4>
+                <div class="service-list">
+                  <div class="service-item">Sistemas de reserva modernos con disponibilidad en tiempo real</div>
+                  <div class="service-item">Check-in digital y boarding pass en app con QR dinámico</div>
+                  <div class="service-item">Tracking de vuelos y notificaciones automáticas al pasajero</div>
+                  <div class="service-item">APIs de integración con GDS, aeropuertos y sistemas de equipaje</div>
+                </div>
+              </div>
+              <div class="industry-stack">
+                <h4>Stack tecnológico</h4>
+                <div class="stack-tags">
+                  <span class="tag">React</span>
+                  <span class="tag">AWS</span>
+                  <span class="tag">Microservicios</span>
+                  <span class="tag">REST APIs</span>
+                  <span class="tag">WebSockets</span>
+                  <span class="tag">Redis</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ── LOGÍSTICA ── -->
+        <div class="industry-block reveal" id="logistica">
+          <div class="industry-block-inner">
+            <div class="industry-left">
+              <div class="industry-icon-wrap">
+                <svg viewBox="0 0 24 24"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+              </div>
+              <div class="industry-num">04 / 06</div>
+              <div class="industry-title">Logística</div>
+              <p class="industry-problem">
+                La cadena de suministro moderna exige visibilidad total: saber dónde
+                está cada paquete, predecir retrasos antes de que ocurran y optimizar
+                rutas en tiempo real. Sin datos conectados, cada kilómetro cuesta más
+                de lo que debería.
+              </p>
+              <div class="industry-metric">
+                <div class="metric-val">22%</div>
+                <div class="metric-lbl">reducción en costos de última milla con rutas optimizadas</div>
+              </div>
+              <a href="contact.html?industria=logistica" class="industry-cta">
+                Hablar con un experto en Logística
+                <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+              </a>
+            </div>
+            <div class="industry-right">
+              <div class="industry-services">
+                <h4>Servicios</h4>
+                <div class="service-list">
+                  <div class="service-item">Tracking GPS en tiempo real para flotas y paquetería</div>
+                  <div class="service-item">Automatización de rutas con optimización por variables dinámicas</div>
+                  <div class="service-item">Dashboards operativos con alertas de SLA y KPIs de entrega</div>
+                  <div class="service-item">Integración con WMS, TMS y plataformas de e-commerce</div>
+                </div>
+              </div>
+              <div class="industry-stack">
+                <h4>Stack tecnológico</h4>
+                <div class="stack-tags">
+                  <span class="tag">IoT</span>
+                  <span class="tag">Docker</span>
+                  <span class="tag">GCP</span>
+                  <span class="tag">Python</span>
+                  <span class="tag">MQTT</span>
+                  <span class="tag">BigQuery</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ── ERP ── -->
+        <div class="industry-block reveal" id="erp">
+          <div class="industry-block-inner">
+            <div class="industry-left">
+              <div class="industry-icon-wrap">
+                <svg viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="8" rx="2"/><rect x="2" y="14" width="20" height="8" rx="2"/><line x1="6" y1="6" x2="6.01" y2="6"/><line x1="6" y1="18" x2="6.01" y2="18"/></svg>
+              </div>
+              <div class="industry-num">05 / 06</div>
+              <div class="industry-title">ERP</div>
+              <p class="industry-problem">
+                Las empresas medianas y grandes operan con sistemas aislados que no
+                se hablan entre sí: contabilidad por un lado, inventario por otro,
+                RRHH en una hoja de Excel. La integración ERP es compleja, costosa
+                y suele fallar por falta de acompañamiento real.
+              </p>
+              <div class="industry-metric">
+                <div class="metric-val">40%</div>
+                <div class="metric-lbl">reducción en horas manuales tras implementación ERP</div>
+              </div>
+              <a href="contact.html?industria=erp" class="industry-cta">
+                Hablar con un experto en ERP
+                <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+              </a>
+            </div>
+            <div class="industry-right">
+              <div class="industry-services">
+                <h4>Servicios</h4>
+                <div class="service-list">
+                  <div class="service-item">Implementación y configuración de ERP (SAP, Oracle, Odoo)</div>
+                  <div class="service-item">Migración de datos legados con validación y limpieza</div>
+                  <div class="service-item">Desarrollo de módulos personalizados y APIs de integración</div>
+                  <div class="service-item">Capacitación de equipos y soporte post go-live</div>
+                </div>
+              </div>
+              <div class="industry-stack">
+                <h4>Stack tecnológico</h4>
+                <div class="stack-tags">
+                  <span class="tag">SAP</span>
+                  <span class="tag">Oracle</span>
+                  <span class="tag">Odoo</span>
+                  <span class="tag">Node.js</span>
+                  <span class="tag">REST APIs</span>
+                  <span class="tag">ETL</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ── CRM ── -->
+        <div class="industry-block reveal" id="crm">
+          <div class="industry-block-inner">
+            <div class="industry-left">
+              <div class="industry-icon-wrap">
+                <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+              </div>
+              <div class="industry-num">06 / 06</div>
+              <div class="industry-title">CRM</div>
+              <p class="industry-problem">
+                Muchas empresas tienen un CRM instalado pero no lo usan bien: datos
+                desactualizados, procesos manuales que debieran ser automáticos y
+                equipos de ventas que no confían en el sistema. El problema no es
+                el software: es la implementación y la adopción.
+              </p>
+              <div class="industry-metric">
+                <div class="metric-val">3x</div>
+                <div class="metric-lbl">más leads calificados con automatización de ventas</div>
+              </div>
+              <a href="contact.html?industria=crm" class="industry-cta">
+                Hablar con un experto en CRM
+                <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+              </a>
+            </div>
+            <div class="industry-right">
+              <div class="industry-services">
+                <h4>Servicios</h4>
+                <div class="service-list">
+                  <div class="service-item">Implementación y configuración de CRM (Salesforce, HubSpot)</div>
+                  <div class="service-item">Automatización de flujos de ventas, nurturing y seguimiento</div>
+                  <div class="service-item">Analytics de pipeline, forecasting y reportes ejecutivos</div>
+                  <div class="service-item">Integraciones con ERP, e-commerce, soporte y marketing</div>
+                </div>
+              </div>
+              <div class="industry-stack">
+                <h4>Stack tecnológico</h4>
+                <div class="stack-tags">
+                  <span class="tag">Salesforce</span>
+                  <span class="tag">HubSpot</span>
+                  <span class="tag">Custom CRM</span>
+                  <span class="tag">React</span>
+                  <span class="tag">Zapier</span>
+                  <span class="tag">Node.js</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div><!-- /industry-sections -->
+    </div><!-- /industries-wrapper -->
+
+    <!-- ═══════════════════════════════════════
+         4. POR QUÉ NODO8
+    ═══════════════════════════════════════ -->
+    <section class="why-section">
+      <div class="section-header reveal">
+        <div>
+          <div class="section-eyebrow">Diferenciadores</div>
+          <div class="section-title">Por qué nodo8 entiende<br />tu industria</div>
+        </div>
+        <p class="section-note">No somos generalistas. Cada área tiene su equipo especializado.</p>
+      </div>
+      <div class="why-grid-3 reveal">
+
+        <div class="why-card">
+          <div class="why-icon">
+            <svg viewBox="0 0 24 24"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>
+          </div>
+          <h3>Experiencia vertical real</h3>
+          <p>
+            Hemos trabajado en los procesos internos de cada industria, no solo
+            en la capa tecnológica. Entendemos los flujos de negocio, las
+            regulaciones y los puntos de dolor reales antes de escribir una
+            sola línea de código.
+          </p>
+        </div>
+
+        <div class="why-card">
+          <div class="why-icon">
+            <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+          </div>
+          <h3>Equipo especializado por sector</h3>
+          <p>
+            No asignamos el mismo equipo a todo. Cada industria tiene ingenieros
+            y consultores con experiencia específica en ese dominio, lo que reduce
+            la curva de aprendizaje y acelera los tiempos de entrega.
+          </p>
+        </div>
+
+        <div class="why-card">
+          <div class="why-icon">
+            <svg viewBox="0 0 24 24"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
+          </div>
+          <h3>Metodología ágil con foco en ROI</h3>
+          <p>
+            Trabajamos en sprints de dos semanas con entregables medibles.
+            Cada decisión técnica se evalúa por su impacto en el negocio,
+            no por preferencias tecnológicas. El objetivo es siempre retorno
+            real sobre la inversión.
+          </p>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════
+         5. CASOS DE ÉXITO
+    ═══════════════════════════════════════ -->
+    <section class="cases-section">
+      <div class="section-header reveal">
+        <div>
+          <div class="section-eyebrow">Resultados reales</div>
+          <div class="section-title">Casos de éxito</div>
+        </div>
+        <p class="section-note">Proyectos representativos. Nombres ficticios, resultados reales.</p>
+      </div>
+      <div class="cases-grid">
+
+        <div class="case-card reveal reveal-delay-1">
+          <div class="case-industry-badge">Retail</div>
+          <div class="case-title">Plataforma omnichannel para cadena de moda con 80 tiendas</div>
+          <div class="case-body">
+            <div class="case-row">
+              <div class="case-row-label">Reto</div>
+              <div class="case-row-val">Inventario desincronizado entre tiendas físicas y tienda online, resultando en sobreventa y pérdida de clientes.</div>
+            </div>
+            <div class="case-row">
+              <div class="case-row-label">Solución</div>
+              <div class="case-row-val">Sistema de inventario centralizado en tiempo real con integración a POS, e-commerce y app móvil. Desplegado en AWS con arquitectura serverless.</div>
+            </div>
+          </div>
+          <div class="case-result">
+            <div class="case-result-num">35%</div>
+            <div class="case-result-desc">aumento en ventas online en los primeros 3 meses post-lanzamiento</div>
+          </div>
+        </div>
+
+        <div class="case-card reveal reveal-delay-2">
+          <div class="case-industry-badge">Logística</div>
+          <div class="case-title">Optimización de rutas para operador de última milla en CDMX</div>
+          <div class="case-body">
+            <div class="case-row">
+              <div class="case-row-label">Reto</div>
+              <div class="case-row-val">Operadores asignaban rutas manualmente cada mañana, sin considerar tráfico, ventanas de entrega ni capacidad de vehículo.</div>
+            </div>
+            <div class="case-row">
+              <div class="case-row-label">Solución</div>
+              <div class="case-row-val">Motor de optimización de rutas con IoT en flotilla, integración a Waze API y dashboard en tiempo real para supervisores.</div>
+            </div>
+          </div>
+          <div class="case-result">
+            <div class="case-result-num">22%</div>
+            <div class="case-result-desc">reducción en costo de combustible y 18% más entregas por operador al día</div>
+          </div>
+        </div>
+
+        <div class="case-card reveal reveal-delay-3">
+          <div class="case-industry-badge">Banca</div>
+          <div class="case-title">App bancaria móvil para fintech regional con 200k usuarios</div>
+          <div class="case-body">
+            <div class="case-row">
+              <div class="case-row-label">Reto</div>
+              <div class="case-row-val">App legacy con calificación 2.1 en App Store, proceso de onboarding de 3 días y alta tasa de abandono en apertura de cuenta.</div>
+            </div>
+            <div class="case-row">
+              <div class="case-row-label">Solución</div>
+              <div class="case-row-val">Rediseño completo con onboarding biométrico, arquitectura de microservicios en Azure y cifrado end-to-end en todas las transacciones.</div>
+            </div>
+          </div>
+          <div class="case-result">
+            <div class="case-result-num">4.7★</div>
+            <div class="case-result-desc">nueva calificación en App Store y 60% reducción en tiempo de alta de cliente</div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════
+         6. CTA FINAL
+    ═══════════════════════════════════════ -->
+    <section class="cta-section">
+      <div class="cta-box reveal">
+        <div class="cta-glow"></div>
+        <div class="cta-left">
+          <div class="section-eyebrow" style="margin-bottom:0.75rem">Hablemos</div>
+          <h2>¿Tu industria<br />no está <em>aquí?</em></h2>
+          <p style="margin-top:1rem">
+            Trabajamos con cualquier sector que tenga un problema tecnológico
+            real. Cuéntanos el reto y en 24 horas te respondemos si podemos
+            ayudarte y cómo.
+          </p>
+        </div>
+        <div>
+          <form class="cta-form" id="cta-form" action="https://formspree.io/f/mzdkebnz" method="POST">
+            <div class="form-group">
+              <label for="cta-nombre">Nombre y empresa</label>
+              <input type="text" id="cta-nombre" name="nombre" placeholder="Tu nombre · Tu empresa" required />
+            </div>
+            <div class="form-group">
+              <label for="cta-email">Correo</label>
+              <input type="email" id="cta-email" name="email" placeholder="tu@correo.com" required />
+            </div>
+            <div class="form-group">
+              <label for="cta-industria">Industria</label>
+              <select id="cta-industria" name="industria">
+                <option value="" disabled selected>Selecciona tu sector</option>
+                <option>Retail</option><option>Banca</option><option>Airlines</option>
+                <option>Logística</option><option>ERP</option><option>CRM</option>
+                <option>Salud</option><option>Educación</option><option>Manufactura</option>
+                <option>Otro</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="cta-reto">¿Cuál es tu reto?</label>
+              <textarea id="cta-reto" name="mensaje" rows="3" placeholder="Descríbenos el problema en 2-3 líneas..." required></textarea>
+            </div>
+            <button type="submit" class="btn-primary" id="cta-btn" style="width:100%;text-align:center;">
+              Enviar mensaje
+            </button>
+            <p id="cta-error" style="font-size:0.82rem;color:#f04b4b;display:none;margin-top:4px;">Error al enviar. Escríbenos a hola@nodo8.net</p>
+          </form>
+          <div class="cta-success" id="cta-success">
+            <div class="cta-success-icon"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
+            <div class="cta-success-title">¡Recibido!</div>
+            <div class="cta-success-sub">Te respondemos en menos de 24 horas hábiles.</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════
+         FOOTER
+    ═══════════════════════════════════════ -->
+    <footer>
+      <div class="footer-brand">
+        <svg width="18" height="18" viewBox="0 0 30 30" fill="none">
+          <circle cx="15" cy="3" r="2.2" fill="#c8f04b"/>
+          <circle cx="24.6" cy="7.4" r="2.2" fill="#c8f04b" opacity="0.6"/>
+          <circle cx="27" cy="15" r="2.2" fill="#c8f04b"/>
+          <circle cx="24.6" cy="22.6" r="2.2" fill="#c8f04b" opacity="0.6"/>
+          <circle cx="15" cy="27" r="2.2" fill="#c8f04b"/>
+          <circle cx="5.4" cy="22.6" r="2.2" fill="#c8f04b" opacity="0.6"/>
+          <circle cx="3" cy="15" r="2.2" fill="#c8f04b"/>
+          <circle cx="5.4" cy="7.4" r="2.2" fill="#c8f04b" opacity="0.6"/>
+          <circle cx="15" cy="15" r="3.5" fill="none" stroke="#c8f04b" stroke-width="1.5"/>
+          <line x1="15" y1="5.2" x2="15" y2="11.5" stroke="#c8f04b" stroke-width="1.2" stroke-linecap="round"/>
+          <line x1="15" y1="18.5" x2="15" y2="24.8" stroke="#c8f04b" stroke-width="1.2" stroke-linecap="round"/>
+          <line x1="5.2" y1="15" x2="11.5" y2="15" stroke="#c8f04b" stroke-width="1.2" stroke-linecap="round"/>
+          <line x1="18.5" y1="15" x2="24.8" y2="15" stroke="#c8f04b" stroke-width="1.2" stroke-linecap="round"/>
+        </svg>
+        <span class="footer-brand-text">nodo<span>8</span></span>
+      </div>
+      <div class="footer-copy">© 2026 nodo8 · Guadalajara, México</div>
+      <div class="footer-links">
+        <a href="index.html">Inicio</a>
+        <a href="contact.html">Contacto</a>
+        <a href="careers.html">Careers</a>
+      </div>
+    </footer>
+
+    <!-- ═══════════════════════════════════════
+         SCRIPTS
+    ═══════════════════════════════════════ -->
+    <script>
+      /* ── Scroll reveal ── */
+      const revealObs = new IntersectionObserver(
+        (entries) => entries.forEach((e) => {
+          if (e.isIntersecting) { e.target.classList.add("visible"); revealObs.unobserve(e.target); }
+        }),
+        { threshold: 0.07 }
+      );
+      document.querySelectorAll(".reveal").forEach((el) => revealObs.observe(el));
+
+      /* ── Sticky sidenav active state on scroll ── */
+      const sections = ["retail","banca","airlines","logistica","erp","crm"];
+      const sideLinks = document.querySelectorAll(".sidenav-link[data-section]");
+      const mobileBtns = document.querySelectorAll(".ind-tab-btn[data-target]");
+
+      function setActive(id) {
+        sideLinks.forEach((l) => l.classList.toggle("active", l.dataset.section === id));
+        mobileBtns.forEach((b) => b.classList.toggle("active", b.dataset.target === id));
+      }
+
+      const sectObs = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((e) => {
+            if (e.isIntersecting) setActive(e.target.id);
+          });
+        },
+        { rootMargin: "-40% 0px -55% 0px" }
+      );
+      sections.forEach((id) => {
+        const el = document.getElementById(id);
+        if (el) sectObs.observe(el);
+      });
+
+      /* ── Mobile tab scroll ── */
+      mobileBtns.forEach((btn) => {
+        btn.addEventListener("click", () => {
+          const target = document.getElementById(btn.dataset.target);
+          if (target) target.scrollIntoView({ behavior: "smooth", block: "start" });
+        });
+      });
+
+      /* ── CTA form submit ── */
+      const ctaForm    = document.getElementById("cta-form");
+      const ctaErr     = document.getElementById("cta-error");
+      const ctaSuccess = document.getElementById("cta-success");
+      const ctaBtn     = document.getElementById("cta-btn");
+      ctaForm.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        ctaBtn.textContent = "Enviando...";
+        ctaBtn.style.opacity = "0.7";
+        ctaBtn.disabled = true;
+        ctaErr.style.display = "none";
+        try {
+          const res = await fetch(ctaForm.action, {
+            method: "POST",
+            body: new FormData(ctaForm),
+            headers: { Accept: "application/json" },
+          });
+          if (res.ok) {
+            ctaForm.style.display = "none";
+            ctaSuccess.style.display = "flex";
+          } else throw new Error();
+        } catch {
+          ctaErr.style.display = "block";
+          ctaBtn.textContent = "Enviar mensaje";
+          ctaBtn.style.opacity = "1";
+          ctaBtn.disabled = false;
+        }
+      });
+    </script>
+  </body>
+</html>

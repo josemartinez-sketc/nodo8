@@ -1,0 +1,1166 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Inteligencia Artificial — nodo8</title>
+    <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:wght@300;400;500&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      /* ─────────────────────────────────────────
+         TOKENS
+      ───────────────────────────────────────── */
+      :root {
+        --bg: #0a0a0a;
+        --surface: #111111;
+        --surface2: #181818;
+        --surface3: #1e1e1e;
+        --border: rgba(255, 255, 255, 0.07);
+        --accent: #c8f04b;
+        --accent-dim: rgba(200, 240, 75, 0.12);
+        --accent-glow: rgba(200, 240, 75, 0.06);
+        --text: #f0f0ec;
+        --muted: #888880;
+        --font-display: "Syne", sans-serif;
+        --font-body: "DM Sans", sans-serif;
+        --nav-h: 68px;
+      }
+      *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+      html { scroll-behavior: smooth; }
+      body {
+        background: var(--bg);
+        color: var(--text);
+        font-family: var(--font-body);
+        font-size: 16px;
+        line-height: 1.7;
+        overflow-x: hidden;
+      }
+
+      /* ─────────────────────────────────────────
+         NAV
+      ───────────────────────────────────────── */
+      nav {
+        position: fixed; top: 0; left: 0; right: 0; z-index: 300;
+        display: flex; align-items: center; justify-content: space-between;
+        padding: 1.25rem 2.5rem;
+        border-bottom: 1px solid var(--border);
+        background: rgba(10, 10, 10, 0.9);
+        backdrop-filter: blur(14px);
+        height: var(--nav-h);
+      }
+      .nav-logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+      .nav-logo-text { font-family: var(--font-display); font-size: 1.1rem; font-weight: 800; color: var(--text); letter-spacing: -0.02em; }
+      .nav-logo-text span { color: var(--accent); }
+      .nav-links { display: flex; gap: 2rem; list-style: none; }
+      .nav-links a { font-size: 0.85rem; color: var(--muted); text-decoration: none; letter-spacing: 0.03em; transition: color 0.2s; }
+      .nav-links a:hover { color: var(--text); }
+      .nav-links a.active { color: var(--accent); }
+      .nav-cta { font-family: var(--font-body); font-size: 0.85rem; font-weight: 500; color: var(--bg); background: var(--accent); border: none; padding: 0.55rem 1.25rem; border-radius: 4px; cursor: pointer; text-decoration: none; transition: opacity 0.2s; }
+      .nav-cta:hover { opacity: 0.88; }
+
+      /* ─────────────────────────────────────────
+         BUTTONS
+      ───────────────────────────────────────── */
+      .btn-primary { font-family: var(--font-body); font-size: 0.9rem; font-weight: 500; color: var(--bg); background: var(--accent); border: none; padding: 0.85rem 2rem; border-radius: 4px; cursor: pointer; text-decoration: none; transition: opacity 0.2s, transform 0.2s; display: inline-block; }
+      .btn-primary:hover { opacity: 0.88; transform: translateY(-1px); }
+      .btn-ghost { font-family: var(--font-body); font-size: 0.9rem; font-weight: 400; color: var(--muted); background: transparent; border: 1px solid var(--border); padding: 0.85rem 2rem; border-radius: 4px; cursor: pointer; text-decoration: none; transition: color 0.2s, border-color 0.2s; display: inline-block; }
+      .btn-ghost:hover { color: var(--text); border-color: rgba(255,255,255,0.2); }
+
+      /* ─────────────────────────────────────────
+         SHARED
+      ───────────────────────────────────────── */
+      section { padding: 6rem 2.5rem; }
+      .section-eyebrow { font-size: 0.75rem; color: var(--accent); letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 0.5rem; }
+      .section-title { font-family: var(--font-display); font-size: clamp(1.8rem, 4vw, 2.8rem); font-weight: 700; line-height: 1.1; letter-spacing: -0.02em; }
+      .section-header { display: flex; align-items: flex-end; justify-content: space-between; margin-bottom: 3rem; flex-wrap: wrap; gap: 1rem; }
+      .section-note { font-size: 0.9rem; color: var(--muted); max-width: 280px; text-align: right; }
+      .tag { font-size: 0.72rem; color: var(--accent); background: var(--accent-dim); padding: 3px 10px; border-radius: 100px; }
+
+      /* ─────────────────────────────────────────
+         1. HERO
+      ───────────────────────────────────────── */
+      .hero {
+        min-height: 100vh;
+        display: flex; flex-direction: column; justify-content: flex-end;
+        padding: 8rem 2.5rem 5rem;
+        position: relative; overflow: hidden;
+      }
+      #neural-canvas {
+        position: absolute; inset: 0;
+        width: 100%; height: 100%;
+        z-index: 0;
+      }
+      .hero-overlay {
+        position: absolute; inset: 0;
+        background: linear-gradient(to top, rgba(10,10,10,0.97) 0%, rgba(10,10,10,0.6) 50%, rgba(10,10,10,0.3) 100%);
+        z-index: 1;
+      }
+      .hero-content { position: relative; z-index: 2; }
+      .hero-badge {
+        display: inline-flex; align-items: center; gap: 9px;
+        font-size: 0.72rem; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase;
+        color: var(--bg);
+        background: var(--accent);
+        padding: 0.35rem 1rem; border-radius: 100px;
+        margin-bottom: 1.75rem;
+        animation: fadeUp 0.5s ease both;
+        position: relative;
+        overflow: hidden;
+      }
+      .hero-badge::after {
+        content: "";
+        position: absolute; inset: 0;
+        background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+        transform: translateX(-100%);
+        animation: shimmer 2.5s ease-in-out infinite 1s;
+      }
+      @keyframes shimmer { to { transform: translateX(100%); } }
+      .badge-dot {
+        width: 7px; height: 7px; border-radius: 50%; background: var(--bg);
+        animation: badgePulse 1.5s ease-in-out infinite;
+      }
+      @keyframes badgePulse { 0%,100%{transform:scale(1);opacity:1} 50%{transform:scale(1.4);opacity:0.6} }
+      .hero h1 {
+        font-family: var(--font-display);
+        font-size: clamp(2.8rem, 8vw, 6.5rem);
+        font-weight: 800; line-height: 1.0; letter-spacing: -0.04em;
+        max-width: 960px; margin-bottom: 1.5rem;
+        animation: fadeUp 0.6s 0.1s ease both;
+      }
+      .hero h1 em { font-style: normal; color: var(--accent); }
+      .hero-sub {
+        font-size: 1.1rem; color: var(--muted); max-width: 540px;
+        margin-bottom: 2.5rem; font-weight: 300; line-height: 1.75;
+        animation: fadeUp 0.6s 0.2s ease both;
+      }
+      .hero-actions { display: flex; gap: 1rem; flex-wrap: wrap; animation: fadeUp 0.6s 0.3s ease both; }
+      .hero-scroll {
+        position: absolute; bottom: 2.5rem; left: 50%; transform: translateX(-50%);
+        display: flex; flex-direction: column; align-items: center; gap: 6px; z-index: 2;
+        animation: fadeUp 0.6s 0.7s ease both;
+      }
+      .hero-scroll span { font-size: 0.68rem; color: var(--muted); letter-spacing: 0.12em; text-transform: uppercase; }
+      .scroll-mouse { width: 22px; height: 34px; border: 1px solid rgba(255,255,255,0.15); border-radius: 11px; position: relative; }
+      .scroll-mouse::after { content: ""; position: absolute; top: 6px; left: 50%; transform: translateX(-50%); width: 3px; height: 7px; background: var(--accent); border-radius: 2px; animation: scrollDot 1.6s ease-in-out infinite; }
+      @keyframes scrollDot { 0%{opacity:1;transform:translateX(-50%) translateY(0)} 100%{opacity:0;transform:translateX(-50%) translateY(10px)} }
+
+      /* ─────────────────────────────────────────
+         2. CÓMO USAMOS LA IA
+      ───────────────────────────────────────── */
+      .use-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 1px;
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        overflow: hidden;
+      }
+      .use-card {
+        background: var(--surface); padding: 2.25rem 2rem;
+        position: relative; transition: background 0.3s;
+      }
+      .use-card:hover { background: var(--surface2); }
+      .use-card::after { content: ""; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: var(--accent); opacity: 0; transition: opacity 0.3s; }
+      .use-card:hover::after { opacity: 1; }
+      .use-icon { width: 46px; height: 46px; background: var(--accent-dim); border-radius: 10px; display: flex; align-items: center; justify-content: center; margin-bottom: 1.25rem; }
+      .use-icon svg { width: 22px; height: 22px; stroke: var(--accent); fill: none; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
+      .use-card h3 { font-family: var(--font-display); font-size: 0.98rem; font-weight: 600; color: var(--text); margin-bottom: 0.5rem; }
+      .use-card p { font-size: 0.875rem; color: var(--muted); line-height: 1.72; }
+
+      /* ─────────────────────────────────────────
+         3. STACK DE IA
+      ───────────────────────────────────────── */
+      .stack-section { background: var(--surface); }
+      .stack-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        gap: 1px;
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        overflow: hidden;
+      }
+      .stack-item {
+        background: var(--surface2); padding: 1.75rem 1.5rem;
+        display: flex; flex-direction: column; gap: 0.6rem;
+        position: relative; transition: background 0.3s;
+        border-right: 1px solid var(--border);
+        border-bottom: 1px solid var(--border);
+      }
+      .stack-item:hover { background: var(--surface3); }
+      .stack-item-header { display: flex; align-items: center; gap: 10px; }
+      .stack-logo {
+        width: 34px; height: 34px; border-radius: 8px;
+        background: var(--accent-dim);
+        border: 1px solid rgba(200,240,75,0.18);
+        display: flex; align-items: center; justify-content: center;
+        font-family: var(--font-display); font-size: 0.65rem; font-weight: 800;
+        color: var(--accent); letter-spacing: -0.02em; flex-shrink: 0;
+      }
+      .stack-name { font-family: var(--font-display); font-size: 0.9rem; font-weight: 700; color: var(--text); }
+      .stack-use { font-size: 0.78rem; color: var(--muted); line-height: 1.55; }
+      .stack-category { font-size: 0.65rem; color: var(--accent); letter-spacing: 0.1em; text-transform: uppercase; margin-top: auto; }
+
+      /* ─────────────────────────────────────────
+         4. IA POR SERVICIO (tabs)
+      ───────────────────────────────────────── */
+      .service-ai-section { padding-top: 0; }
+      .service-tabs {
+        display: flex; gap: 6px; margin-bottom: 2rem; flex-wrap: wrap;
+      }
+      .svc-tab {
+        font-family: var(--font-body); font-size: 0.85rem;
+        color: var(--muted); background: var(--surface);
+        border: 1px solid var(--border); padding: 0.55rem 1.4rem;
+        border-radius: 4px; cursor: pointer;
+        transition: color 0.2s, border-color 0.2s, background 0.2s;
+      }
+      .svc-tab:hover { color: var(--text); }
+      .svc-tab.active { color: var(--accent); border-color: rgba(200,240,75,0.3); background: var(--accent-dim); }
+      .svc-panels { }
+      .svc-panel {
+        display: none;
+        background: var(--surface); border: 1px solid var(--border);
+        border-radius: 12px; overflow: hidden;
+      }
+      .svc-panel.active { display: grid; grid-template-columns: 1fr 1fr; }
+      .svc-panel-left { padding: 3rem; border-right: 1px solid var(--border); }
+      .svc-panel-left h3 { font-family: var(--font-display); font-size: 1.4rem; font-weight: 700; color: var(--text); margin-bottom: 0.75rem; letter-spacing: -0.02em; }
+      .svc-panel-left p { font-size: 0.9rem; color: var(--muted); line-height: 1.8; margin-bottom: 2rem; }
+      .svc-features { display: flex; flex-direction: column; gap: 0; }
+      .svc-feature { display: flex; align-items: flex-start; gap: 12px; padding: 0.9rem 0; border-bottom: 1px solid var(--border); font-size: 0.875rem; color: var(--text); }
+      .svc-feature:last-child { border-bottom: none; }
+      .svc-feature-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--accent); flex-shrink: 0; margin-top: 7px; }
+      .svc-panel-right { padding: 3rem; display: flex; flex-direction: column; gap: 1.25rem; }
+      .svc-panel-right h4 { font-family: var(--font-display); font-size: 0.72rem; font-weight: 600; color: var(--muted); letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 0.25rem; }
+      .svc-metric {
+        background: var(--surface2); border: 1px solid var(--border);
+        border-left: 3px solid var(--accent);
+        padding: 1rem 1.25rem; border-radius: 0 8px 8px 0;
+        display: flex; flex-direction: column; gap: 4px;
+      }
+      .svc-metric-val { font-family: var(--font-display); font-size: 2rem; font-weight: 800; color: var(--accent); line-height: 1; }
+      .svc-metric-lbl { font-size: 0.8rem; color: var(--muted); line-height: 1.4; }
+      .svc-tools { display: flex; flex-wrap: wrap; gap: 6px; }
+
+      /* ─────────────────────────────────────────
+         5. CASOS DE USO REALES
+      ───────────────────────────────────────── */
+      .cases-grid {
+        display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 1.5rem;
+      }
+      .case-card {
+        background: var(--surface); border: 1px solid var(--border);
+        border-radius: 14px; padding: 2.25rem;
+        display: flex; flex-direction: column; gap: 1.25rem;
+        position: relative; overflow: hidden;
+        transition: border-color 0.3s, background 0.3s;
+      }
+      .case-card:hover { border-color: rgba(200,240,75,0.18); background: var(--surface2); }
+      .case-card::before { content: ""; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: var(--accent); opacity: 0; transition: opacity 0.3s; }
+      .case-card:hover::before { opacity: 1; }
+      .case-badge { display: inline-flex; align-items: center; gap: 6px; font-size: 0.72rem; color: var(--accent); background: var(--accent-dim); padding: 3px 10px; border-radius: 100px; width: fit-content; }
+      .case-title { font-family: var(--font-display); font-size: 1.05rem; font-weight: 700; color: var(--text); line-height: 1.35; }
+      .case-desc { font-size: 0.875rem; color: var(--muted); line-height: 1.75; flex: 1; }
+      .case-result {
+        display: flex; align-items: center; gap: 14px;
+        background: var(--surface3); border-radius: 8px; padding: 1rem 1.25rem;
+      }
+      .case-num { font-family: var(--font-display); font-size: 2rem; font-weight: 800; color: var(--accent); line-height: 1; }
+      .case-lbl { font-size: 0.8rem; color: var(--muted); line-height: 1.4; }
+
+      /* ─────────────────────────────────────────
+         6. AI ROADMAP
+      ───────────────────────────────────────── */
+      .roadmap-section { background: var(--surface); }
+      .roadmap-track { position: relative; max-width: 760px; margin: 0 auto; }
+      .roadmap-track::before {
+        content: "";
+        position: absolute; top: 0; bottom: 0; left: 27px;
+        width: 1px;
+        background: linear-gradient(to bottom, var(--accent) 0%, rgba(200,240,75,0.1) 100%);
+      }
+      .roadmap-item {
+        display: flex; gap: 2.5rem;
+        padding: 2rem 0;
+        position: relative;
+        align-items: flex-start;
+      }
+      .roadmap-dot-wrap {
+        display: flex; flex-direction: column; align-items: center;
+        flex-shrink: 0; width: 56px;
+        position: relative; z-index: 1;
+      }
+      .roadmap-dot {
+        width: 56px; height: 56px; border-radius: 50%;
+        background: var(--surface2);
+        border: 1px solid rgba(200,240,75,0.25);
+        display: flex; align-items: center; justify-content: center;
+        transition: background 0.3s, border-color 0.3s;
+      }
+      .roadmap-item:hover .roadmap-dot { background: var(--accent-dim); border-color: var(--accent); }
+      .roadmap-dot svg { width: 22px; height: 22px; stroke: var(--accent); fill: none; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
+      .roadmap-dot.done { background: var(--accent-dim); border-color: var(--accent); }
+      .roadmap-body { flex: 1; padding-top: 14px; }
+      .roadmap-year { font-family: var(--font-display); font-size: 0.72rem; font-weight: 700; color: var(--accent); letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 0.35rem; }
+      .roadmap-title { font-family: var(--font-display); font-size: 1.1rem; font-weight: 700; color: var(--text); margin-bottom: 0.5rem; }
+      .roadmap-desc { font-size: 0.875rem; color: var(--muted); line-height: 1.75; max-width: 520px; }
+      .roadmap-status {
+        display: inline-flex; align-items: center; gap: 6px;
+        font-size: 0.7rem; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase;
+        padding: 3px 10px; border-radius: 100px; margin-top: 0.75rem;
+      }
+      .status-done { color: var(--accent); background: var(--accent-dim); }
+      .status-live { color: #4baaff; background: rgba(75,170,255,0.12); }
+      .status-upcoming { color: var(--muted); background: var(--surface3); }
+
+      /* ─────────────────────────────────────────
+         7. ÉTICA
+      ───────────────────────────────────────── */
+      .ethics-section { padding-top: 0; }
+      .ethics-grid {
+        display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+        gap: 1.5rem;
+      }
+      .ethics-card {
+        background: var(--surface); border: 1px solid var(--border);
+        border-radius: 12px; padding: 2.25rem;
+        position: relative; transition: border-color 0.3s;
+      }
+      .ethics-card:hover { border-color: rgba(200,240,75,0.15); }
+      .ethics-icon { width: 52px; height: 52px; background: var(--accent-dim); border-radius: 12px; display: flex; align-items: center; justify-content: center; margin-bottom: 1.5rem; }
+      .ethics-icon svg { width: 24px; height: 24px; stroke: var(--accent); fill: none; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
+      .ethics-card h3 { font-family: var(--font-display); font-size: 1.05rem; font-weight: 700; color: var(--text); margin-bottom: 0.6rem; }
+      .ethics-card p { font-size: 0.875rem; color: var(--muted); line-height: 1.75; }
+      .ethics-note {
+        margin-top: 3rem; padding: 2rem;
+        background: var(--surface2); border: 1px solid var(--border);
+        border-left: 3px solid var(--accent);
+        border-radius: 0 12px 12px 0;
+        font-size: 0.95rem; color: var(--muted); line-height: 1.75;
+        max-width: 680px;
+      }
+      .ethics-note strong { color: var(--text); }
+
+      /* ─────────────────────────────────────────
+         8. CTA FINAL
+      ───────────────────────────────────────── */
+      .cta-final {
+        padding: 0 2.5rem 6rem;
+      }
+      .cta-box {
+        border-radius: 16px; padding: 5rem 4rem;
+        text-align: center; position: relative; overflow: hidden;
+        background: var(--surface);
+        border: 1px solid var(--border);
+      }
+      .cta-box::before { content: ""; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, transparent, var(--accent), transparent); }
+      .cta-glow { position: absolute; top: -30%; left: 50%; transform: translateX(-50%); width: 600px; height: 400px; background: radial-gradient(ellipse, rgba(200,240,75,0.07) 0%, transparent 70%); pointer-events: none; }
+      .cta-grid-bg { position: absolute; inset: 0; background-image: linear-gradient(var(--border) 1px, transparent 1px), linear-gradient(90deg, var(--border) 1px, transparent 1px); background-size: 40px 40px; opacity: 0.3; }
+      .cta-content { position: relative; z-index: 1; }
+      .cta-content h2 { font-family: var(--font-display); font-size: clamp(2rem, 5vw, 3.5rem); font-weight: 800; letter-spacing: -0.03em; line-height: 1.1; margin-bottom: 1rem; }
+      .cta-content h2 em { font-style: normal; color: var(--accent); }
+      .cta-content p { font-size: 1rem; color: var(--muted); margin-bottom: 2.5rem; line-height: 1.7; max-width: 480px; margin-left: auto; margin-right: auto; }
+      .cta-actions { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; margin-bottom: 1.5rem; }
+      .cta-note { font-size: 0.8rem; color: var(--muted); display: flex; align-items: center; gap: 7px; justify-content: center; }
+      .cta-note::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: var(--accent); display: inline-block; }
+
+      /* ─────────────────────────────────────────
+         FOOTER
+      ───────────────────────────────────────── */
+      footer { padding: 2.5rem; border-top: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem; }
+      .footer-brand { display: flex; align-items: center; gap: 8px; }
+      .footer-brand-text { font-family: var(--font-display); font-size: 0.9rem; font-weight: 800; color: var(--muted); letter-spacing: -0.02em; }
+      .footer-brand-text span { color: var(--accent); }
+      .footer-copy { font-size: 0.8rem; color: var(--muted); }
+      .footer-links { display: flex; gap: 1.5rem; }
+      .footer-links a { font-size: 0.8rem; color: var(--muted); text-decoration: none; transition: color 0.2s; }
+      .footer-links a:hover { color: var(--text); }
+
+      /* ─────────────────────────────────────────
+         ANIMATIONS
+      ───────────────────────────────────────── */
+      @keyframes fadeUp {
+        from { opacity: 0; transform: translateY(24px); }
+        to   { opacity: 1; transform: translateY(0); }
+      }
+      .reveal { opacity: 0; transform: translateY(28px); transition: opacity 0.65s ease, transform 0.65s ease; }
+      .reveal.visible { opacity: 1; transform: translateY(0); }
+      .reveal-delay-1 { transition-delay: 0.1s; }
+      .reveal-delay-2 { transition-delay: 0.2s; }
+      .reveal-delay-3 { transition-delay: 0.3s; }
+
+      /* ─────────────────────────────────────────
+         RESPONSIVE
+      ───────────────────────────────────────── */
+      @media (max-width: 900px) {
+        .svc-panel.active { grid-template-columns: 1fr; }
+        .svc-panel-left { border-right: none; border-bottom: 1px solid var(--border); }
+      }
+      @media (max-width: 768px) {
+        nav { padding: 1rem 1.5rem; }
+        .nav-links { display: none; }
+        .hero { padding: 7rem 1.5rem 4rem; }
+        section { padding: 4rem 1.5rem; }
+        .cta-final { padding: 0 1.5rem 4rem; }
+        .cta-box { padding: 3rem 1.75rem; }
+        .roadmap-track::before { left: 27px; }
+        footer { flex-direction: column; align-items: flex-start; padding: 2rem 1.5rem; }
+        .section-note { text-align: left; }
+      }
+    </style>
+  </head>
+  <body>
+
+    <!-- ═══════════════════════════════════════
+         NAV
+    ═══════════════════════════════════════ -->
+    <nav>
+      <a href="index.html" class="nav-logo">
+        <svg width="30" height="30" viewBox="0 0 30 30" fill="none">
+          <circle cx="15" cy="3" r="2.2" fill="#c8f04b"/>
+          <circle cx="24.6" cy="7.4" r="2.2" fill="#c8f04b" opacity="0.7"/>
+          <circle cx="27" cy="15" r="2.2" fill="#c8f04b"/>
+          <circle cx="24.6" cy="22.6" r="2.2" fill="#c8f04b" opacity="0.7"/>
+          <circle cx="15" cy="27" r="2.2" fill="#c8f04b"/>
+          <circle cx="5.4" cy="22.6" r="2.2" fill="#c8f04b" opacity="0.7"/>
+          <circle cx="3" cy="15" r="2.2" fill="#c8f04b"/>
+          <circle cx="5.4" cy="7.4" r="2.2" fill="#c8f04b" opacity="0.7"/>
+          <circle cx="15" cy="15" r="3.5" fill="none" stroke="#c8f04b" stroke-width="1.5"/>
+          <line x1="15" y1="5.2" x2="15" y2="11.5" stroke="#c8f04b" stroke-width="1.2" stroke-linecap="round"/>
+          <line x1="15" y1="18.5" x2="15" y2="24.8" stroke="#c8f04b" stroke-width="1.2" stroke-linecap="round"/>
+          <line x1="5.2" y1="15" x2="11.5" y2="15" stroke="#c8f04b" stroke-width="1.2" stroke-linecap="round"/>
+          <line x1="18.5" y1="15" x2="24.8" y2="15" stroke="#c8f04b" stroke-width="1.2" stroke-linecap="round"/>
+        </svg>
+        <span class="nav-logo-text">nodo<span>8</span></span>
+      </a>
+      <ul class="nav-links">
+        <li><a href="index.html#servicios">Servicios</a></li>
+        <li><a href="industries.html">Industrias</a></li>
+        <li><a href="ai.html" class="active">IA</a></li>
+        <li><a href="contact.html">Contacto</a></li>
+        <li><a href="careers.html">Careers</a></li>
+      </ul>
+      <a href="contact.html" class="nav-cta">Agendar llamada</a>
+    </nav>
+
+    <!-- ═══════════════════════════════════════
+         1. HERO
+    ═══════════════════════════════════════ -->
+    <section class="hero">
+      <canvas id="neural-canvas"></canvas>
+      <div class="hero-overlay"></div>
+      <div class="hero-content">
+        <div class="hero-badge">
+          <span class="badge-dot"></span>
+          AI-Powered Company
+        </div>
+        <h1>IA no es el futuro.<br />Es cómo <em>trabajamos</em> hoy.</h1>
+        <p class="hero-sub">
+          nodo8 integra inteligencia artificial en desarrollo, seguridad, cloud
+          y soporte. No como tendencia: como ventaja operativa real que entrega
+          resultados más rápido y con mayor precisión.
+        </p>
+        <div class="hero-actions">
+          <a href="#casos" class="btn-primary">Ver casos de uso</a>
+          <a href="contact.html" class="btn-ghost">Hablar con nosotros</a>
+        </div>
+      </div>
+      <div class="hero-scroll">
+        <div class="scroll-mouse"></div>
+        <span>Scroll</span>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════
+         2. CÓMO USAMOS LA IA
+    ═══════════════════════════════════════ -->
+    <section id="como">
+      <div class="section-header reveal">
+        <div>
+          <div class="section-eyebrow">En cada proyecto</div>
+          <div class="section-title">IA integrada en todo<br />lo que hacemos</div>
+        </div>
+        <p class="section-note">No es una capa adicional. Es parte del proceso desde el día uno.</p>
+      </div>
+      <div class="use-grid reveal">
+
+        <div class="use-card">
+          <div class="use-icon">
+            <svg viewBox="0 0 24 24"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+          </div>
+          <h3>Desarrollo acelerado con Copilot y Claude</h3>
+          <p>Nuestros ingenieros usan GitHub Copilot y Claude como par de programación. Menos tiempo escribiendo boilerplate, más tiempo resolviendo problemas reales de arquitectura.</p>
+        </div>
+
+        <div class="use-card">
+          <div class="use-icon">
+            <svg viewBox="0 0 24 24"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+          </div>
+          <h3>Code review automático con IA</h3>
+          <p>Antes de que un humano revise el PR, un agente de IA analiza patrones de bugs, problemas de seguridad, deuda técnica y calidad del código. El review humano llega ya informado.</p>
+        </div>
+
+        <div class="use-card">
+          <div class="use-icon">
+            <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          </div>
+          <h3>Detección de vulnerabilidades con ML</h3>
+          <p>Modelos entrenados en CVEs y patrones de ataque analizan el código y la infraestructura en busca de vectores de riesgo antes de que lleguen a producción.</p>
+        </div>
+
+        <div class="use-card">
+          <div class="use-icon">
+            <svg viewBox="0 0 24 24"><path d="M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9Z"/></svg>
+          </div>
+          <h3>Infraestructura auto-escalable con IA predictiva</h3>
+          <p>En lugar de escalar reactivamente, usamos modelos de forecasting que anticipan la carga y ajustan la infraestructura antes de que el tráfico llegue. Cero sorpresas, máxima eficiencia.</p>
+        </div>
+
+        <div class="use-card">
+          <div class="use-icon">
+            <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+          </div>
+          <h3>Soporte técnico con agentes IA 24/7</h3>
+          <p>Agentes entrenados en la documentación y el historial de cada cliente resuelven el 70% de los tickets de nivel 1 sin intervención humana, a cualquier hora.</p>
+        </div>
+
+        <div class="use-card">
+          <div class="use-icon">
+            <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+          </div>
+          <h3>Generación de documentación automática</h3>
+          <p>Cada función, endpoint y componente se documenta automáticamente a partir del código. La documentación siempre está actualizada y los equipos la mantienen sin esfuerzo extra.</p>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════
+         3. STACK DE IA
+    ═══════════════════════════════════════ -->
+    <section class="stack-section">
+      <div class="section-header reveal">
+        <div>
+          <div class="section-eyebrow">Herramientas</div>
+          <div class="section-title">Nuestro stack de IA</div>
+        </div>
+        <p class="section-note">Elegimos las mejores herramientas, no las de moda.</p>
+      </div>
+      <div class="stack-grid reveal">
+
+        <div class="stack-item">
+          <div class="stack-item-header">
+            <div class="stack-logo">Cl</div>
+            <div class="stack-name">Claude</div>
+          </div>
+          <div class="stack-use">Agente principal para code review, generación de código, análisis de requerimientos y documentación técnica.</div>
+          <div class="stack-category">Anthropic · LLM</div>
+        </div>
+
+        <div class="stack-item">
+          <div class="stack-item-header">
+            <div class="stack-logo">GP</div>
+            <div class="stack-name">ChatGPT</div>
+          </div>
+          <div class="stack-use">Brainstorming de arquitectura, generación de casos de prueba y asistente de comunicación técnica con clientes.</div>
+          <div class="stack-category">OpenAI · LLM</div>
+        </div>
+
+        <div class="stack-item">
+          <div class="stack-item-header">
+            <div class="stack-logo">Co</div>
+            <div class="stack-name">Copilot</div>
+          </div>
+          <div class="stack-use">Autocompletado inteligente en VS Code y JetBrains. Reduce hasta 40% el tiempo de escritura de código repetitivo.</div>
+          <div class="stack-category">GitHub · Code AI</div>
+        </div>
+
+        <div class="stack-item">
+          <div class="stack-item-header">
+            <div class="stack-logo">TF</div>
+            <div class="stack-name">TensorFlow</div>
+          </div>
+          <div class="stack-use">Modelos de clasificación y detección de fraude para proyectos de banca y seguridad, entrenados con datos del cliente.</div>
+          <div class="stack-category">Google · ML Framework</div>
+        </div>
+
+        <div class="stack-item">
+          <div class="stack-item-header">
+            <div class="stack-logo">Pt</div>
+            <div class="stack-name">PyTorch</div>
+          </div>
+          <div class="stack-use">Modelos de series temporales para predicción de demanda, rutas y mantenimiento predictivo en logística e industria.</div>
+          <div class="stack-category">Meta · ML Framework</div>
+        </div>
+
+        <div class="stack-item">
+          <div class="stack-item-header">
+            <div class="stack-logo">SM</div>
+            <div class="stack-name">SageMaker</div>
+          </div>
+          <div class="stack-use">Pipeline completo de entrenamiento, evaluación y despliegue de modelos ML en proyectos con stack AWS.</div>
+          <div class="stack-category">AWS · MLOps</div>
+        </div>
+
+        <div class="stack-item">
+          <div class="stack-item-header">
+            <div class="stack-logo">VA</div>
+            <div class="stack-name">Vertex AI</div>
+          </div>
+          <div class="stack-use">Modelos de visión artificial y NLP para proyectos con stack GCP. Integración nativa con BigQuery y Dataflow.</div>
+          <div class="stack-category">Google · MLOps</div>
+        </div>
+
+        <div class="stack-item">
+          <div class="stack-item-header">
+            <div class="stack-logo">LC</div>
+            <div class="stack-name">LangChain</div>
+          </div>
+          <div class="stack-use">Orquestación de agentes y cadenas de razonamiento. Base para los agentes de soporte y análisis de documentos de clientes.</div>
+          <div class="stack-category">LangChain · Agents</div>
+        </div>
+
+        <div class="stack-item">
+          <div class="stack-item-header">
+            <div class="stack-logo">HF</div>
+            <div class="stack-name">Hugging Face</div>
+          </div>
+          <div class="stack-use">Fine-tuning de modelos open source para casos donde la privacidad de datos requiere ejecución on-premise o en VPC privada.</div>
+          <div class="stack-category">HF · Open Source</div>
+        </div>
+
+        <div class="stack-item">
+          <div class="stack-item-header">
+            <div class="stack-logo">Cr</div>
+            <div class="stack-name">Cursor</div>
+          </div>
+          <div class="stack-use">IDE IA-first para flujos de refactoring masivo y exploración de codebases grandes. Acelera la incorporación a proyectos legacy.</div>
+          <div class="stack-category">Anysphere · IDE</div>
+        </div>
+
+        <div class="stack-item">
+          <div class="stack-item-header">
+            <div class="stack-logo">v0</div>
+            <div class="stack-name">v0 / Bolt</div>
+          </div>
+          <div class="stack-use">Prototipado ultrarrápido de UI. En horas tenemos un prototipo funcional para validar con el cliente antes de invertir en desarrollo.</div>
+          <div class="stack-category">Vercel · UI Gen</div>
+        </div>
+
+        <div class="stack-item">
+          <div class="stack-item-header">
+            <div class="stack-logo">CC</div>
+            <div class="stack-name">Claude Code</div>
+          </div>
+          <div class="stack-use">Agente autónomo de terminal para refactoring, migraciones y análisis de repositorios completos sin intervención manual constante.</div>
+          <div class="stack-category">Anthropic · Agentic</div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════
+         4. IA POR SERVICIO
+    ═══════════════════════════════════════ -->
+    <section class="service-ai-section" id="servicios-ia" style="padding-top:0">
+      <div class="section-header reveal">
+        <div>
+          <div class="section-eyebrow">Aplicación práctica</div>
+          <div class="section-title">IA por servicio</div>
+        </div>
+      </div>
+      <div class="service-tabs reveal">
+        <button class="svc-tab active" data-panel="dev">Desarrollo Web</button>
+        <button class="svc-tab" data-panel="cloud">Cloud / DevOps</button>
+        <button class="svc-tab" data-panel="sec">Ciberseguridad</button>
+        <button class="svc-tab" data-panel="sop">Soporte Técnico</button>
+      </div>
+      <div class="svc-panels reveal">
+
+        <!-- Desarrollo Web -->
+        <div class="svc-panel active" id="panel-dev">
+          <div class="svc-panel-left">
+            <h3>IA en Desarrollo Web</h3>
+            <p>Desde el diseño de la arquitectura hasta el último bug fix, la IA está presente en cada etapa del ciclo de desarrollo. No reemplaza al ingeniero: lo potencia.</p>
+            <div class="svc-features">
+              <div class="svc-feature"><span class="svc-feature-dot"></span>Generación de componentes React a partir de diseños Figma con IA</div>
+              <div class="svc-feature"><span class="svc-feature-dot"></span>Detección automática de regresiones y bugs antes del merge</div>
+              <div class="svc-feature"><span class="svc-feature-dot"></span>Sugerencias de optimización de performance en tiempo real</div>
+              <div class="svc-feature"><span class="svc-feature-dot"></span>Generación de tests unitarios e2e con cobertura predictiva</div>
+            </div>
+          </div>
+          <div class="svc-panel-right">
+            <h4>Métricas de impacto</h4>
+            <div class="svc-metric">
+              <div class="svc-metric-val" data-target="50" data-suffix="%">0%</div>
+              <div class="svc-metric-lbl">más rápido en ciclos de desarrollo</div>
+            </div>
+            <div class="svc-metric">
+              <div class="svc-metric-val" data-target="70" data-suffix="%">0%</div>
+              <div class="svc-metric-lbl">reducción de bugs encontrados en QA</div>
+            </div>
+            <div class="svc-metric">
+              <div class="svc-metric-val" data-target="3" data-suffix="x">0x</div>
+              <div class="svc-metric-lbl">más cobertura de tests automatizados</div>
+            </div>
+            <h4>Herramientas</h4>
+            <div class="svc-tools">
+              <span class="tag">Claude</span><span class="tag">Copilot</span>
+              <span class="tag">Cursor</span><span class="tag">v0</span><span class="tag">Bolt</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Cloud / DevOps -->
+        <div class="svc-panel" id="panel-cloud">
+          <div class="svc-panel-left">
+            <h3>IA en Cloud / DevOps</h3>
+            <p>La inteligencia predictiva transforma la infraestructura de reactiva a proactiva. Los sistemas aprenden los patrones de tu negocio y se adaptan antes de que los problemas ocurran.</p>
+            <div class="svc-features">
+              <div class="svc-feature"><span class="svc-feature-dot"></span>Auto-scaling predictivo basado en patrones históricos de tráfico</div>
+              <div class="svc-feature"><span class="svc-feature-dot"></span>Anomaly detection en métricas de infraestructura con alertas inteligentes</div>
+              <div class="svc-feature"><span class="svc-feature-dot"></span>Optimización automática de costos cloud (rightsizing con ML)</div>
+              <div class="svc-feature"><span class="svc-feature-dot"></span>Generación de IaC (Terraform/CDK) desde descripciones en lenguaje natural</div>
+            </div>
+          </div>
+          <div class="svc-panel-right">
+            <h4>Métricas de impacto</h4>
+            <div class="svc-metric">
+              <div class="svc-metric-val" data-target="35" data-suffix="%">0%</div>
+              <div class="svc-metric-lbl">reducción en costos de infraestructura cloud</div>
+            </div>
+            <div class="svc-metric">
+              <div class="svc-metric-val" data-target="90" data-suffix="%">0%</div>
+              <div class="svc-metric-lbl">menos downtime con monitoreo predictivo</div>
+            </div>
+            <div class="svc-metric">
+              <div class="svc-metric-val" data-target="10" data-suffix="x">0x</div>
+              <div class="svc-metric-lbl">más rápido en respuesta ante incidentes</div>
+            </div>
+            <h4>Herramientas</h4>
+            <div class="svc-tools">
+              <span class="tag">SageMaker</span><span class="tag">Vertex AI</span>
+              <span class="tag">Claude</span><span class="tag">TensorFlow</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Ciberseguridad -->
+        <div class="svc-panel" id="panel-sec">
+          <div class="svc-panel-left">
+            <h3>IA en Ciberseguridad</h3>
+            <p>Los ataques modernos se mueven a velocidad máquina. La única respuesta efectiva es defensa a velocidad máquina. Nuestros modelos detectan lo que los humanos no pueden ver a tiempo.</p>
+            <div class="svc-features">
+              <div class="svc-feature"><span class="svc-feature-dot"></span>Análisis estático de código con ML para detección de vulnerabilidades</div>
+              <div class="svc-feature"><span class="svc-feature-dot"></span>Detección de anomalías en logs y tráfico de red en tiempo real</div>
+              <div class="svc-feature"><span class="svc-feature-dot"></span>Simulación de ataques con agentes IA para pruebas de penetración automatizadas</div>
+              <div class="svc-feature"><span class="svc-feature-dot"></span>Clasificación automática de severidad de vulnerabilidades (CVSS + contexto)</div>
+            </div>
+          </div>
+          <div class="svc-panel-right">
+            <h4>Métricas de impacto</h4>
+            <div class="svc-metric">
+              <div class="svc-metric-val" data-target="95" data-suffix="%">0%</div>
+              <div class="svc-metric-lbl">precisión en detección de amenazas</div>
+            </div>
+            <div class="svc-metric">
+              <div class="svc-metric-val" data-target="80" data-suffix="%">0%</div>
+              <div class="svc-metric-lbl">reducción en falsos positivos de alertas</div>
+            </div>
+            <div class="svc-metric">
+              <div class="svc-metric-val" data-target="4" data-suffix="x">0x</div>
+              <div class="svc-metric-lbl">más vulnerabilidades detectadas por auditoría</div>
+            </div>
+            <h4>Herramientas</h4>
+            <div class="svc-tools">
+              <span class="tag">TensorFlow</span><span class="tag">PyTorch</span>
+              <span class="tag">LangChain</span><span class="tag">Claude</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Soporte -->
+        <div class="svc-panel" id="panel-sop">
+          <div class="svc-panel-left">
+            <h3>IA en Soporte Técnico</h3>
+            <p>El soporte de nivel 1 está completamente automatizado. Los agentes aprenden del historial de cada cliente y resuelven problemas en segundos, no en horas. El equipo humano se enfoca en lo complejo.</p>
+            <div class="svc-features">
+              <div class="svc-feature"><span class="svc-feature-dot"></span>Agentes conversacionales entrenados en la documentación de cada cliente</div>
+              <div class="svc-feature"><span class="svc-feature-dot"></span>Clasificación y enrutamiento automático de tickets por severidad e impacto</div>
+              <div class="svc-feature"><span class="svc-feature-dot"></span>Diagnóstico predictivo: el sistema propone solución antes de que el técnico abra el ticket</div>
+              <div class="svc-feature"><span class="svc-feature-dot"></span>Análisis de tendencias en tickets para detectar problemas sistémicos</div>
+            </div>
+          </div>
+          <div class="svc-panel-right">
+            <h4>Métricas de impacto</h4>
+            <div class="svc-metric">
+              <div class="svc-metric-val" data-target="70" data-suffix="%">0%</div>
+              <div class="svc-metric-lbl">de tickets L1 resueltos sin intervención humana</div>
+            </div>
+            <div class="svc-metric">
+              <div class="svc-metric-val" data-target="85" data-suffix="%">0%</div>
+              <div class="svc-metric-lbl">reducción en tiempo de primera respuesta</div>
+            </div>
+            <div class="svc-metric">
+              <div class="svc-metric-val" data-target="98" data-suffix="%">0%</div>
+              <div class="svc-metric-lbl">de satisfacción en tickets resueltos por IA</div>
+            </div>
+            <h4>Herramientas</h4>
+            <div class="svc-tools">
+              <span class="tag">LangChain</span><span class="tag">Claude</span>
+              <span class="tag">Hugging Face</span><span class="tag">ChatGPT</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════
+         5. CASOS DE USO REALES
+    ═══════════════════════════════════════ -->
+    <section id="casos" style="padding-top:0">
+      <div class="section-header reveal">
+        <div>
+          <div class="section-eyebrow">Resultados comprobados</div>
+          <div class="section-title">Casos de uso reales</div>
+        </div>
+        <p class="section-note">Proyectos representativos. Resultados reales.</p>
+      </div>
+      <div class="cases-grid">
+
+        <div class="case-card reveal reveal-delay-1">
+          <div class="case-badge">Retail · IA Predictiva</div>
+          <div class="case-title">Predicción de inventario para cadena de supermercados</div>
+          <p class="case-desc">
+            Modelos LSTM entrenados sobre 3 años de ventas, estacionalidad, eventos y datos externos (clima, días festivos) predicen la demanda por tienda y por SKU con 7 días de anticipación. Los pedidos a proveedores se generan automáticamente.
+          </p>
+          <div class="case-result">
+            <div class="case-num">40%</div>
+            <div class="case-lbl">reducción en merma y sobrestock en los primeros 6 meses</div>
+          </div>
+        </div>
+
+        <div class="case-card reveal reveal-delay-2">
+          <div class="case-badge">Banca · ML Fraud</div>
+          <div class="case-title">Detección de fraude en tiempo real para fintech B2B</div>
+          <p class="case-desc">
+            Sistema de scoring de transacciones con gradient boosting analiza 47 variables en menos de 80ms por transacción. Aprende continuamente de nuevos patrones de fraude y se adapta a los esquemas de ataque emergentes sin reentrenamiento manual.
+          </p>
+          <div class="case-result">
+            <div class="case-num">95%</div>
+            <div class="case-lbl">precisión en detección con menos del 0.3% de falsos positivos</div>
+          </div>
+        </div>
+
+        <div class="case-card reveal reveal-delay-3">
+          <div class="case-badge">Logística · Optimización</div>
+          <div class="case-title">Enrutamiento dinámico para operador de última milla</div>
+          <p class="case-desc">
+            Algoritmo de optimización combinatorial con reinforcement learning que recalcula rutas en tiempo real considerando tráfico, nuevos pedidos entrantes, capacidad del vehículo y ventanas de entrega. Corre en GCP con latencia &lt;2s.
+          </p>
+          <div class="case-result">
+            <div class="case-num">30%</div>
+            <div class="case-lbl">ahorro en combustible y 25% más entregas por turno</div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════
+         6. AI ROADMAP
+    ═══════════════════════════════════════ -->
+    <section class="roadmap-section">
+      <div class="section-header reveal">
+        <div>
+          <div class="section-eyebrow">Visión a largo plazo</div>
+          <div class="section-title">AI Roadmap de nodo8</div>
+        </div>
+        <p class="section-note">Hacia dónde vamos. Sin letra chica.</p>
+      </div>
+      <div class="roadmap-track">
+
+        <div class="roadmap-item reveal">
+          <div class="roadmap-dot-wrap">
+            <div class="roadmap-dot done">
+              <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+            </div>
+          </div>
+          <div class="roadmap-body">
+            <div class="roadmap-year">2024</div>
+            <div class="roadmap-title">IA integrada en todos los proyectos</div>
+            <p class="roadmap-desc">Adoptamos GitHub Copilot, Claude y herramientas de code review automático en el 100% de nuestros proyectos activos. Formamos a todo el equipo en prompt engineering y flujos de trabajo IA-first.</p>
+            <span class="roadmap-status status-done">Completado</span>
+          </div>
+        </div>
+
+        <div class="roadmap-item reveal">
+          <div class="roadmap-dot-wrap">
+            <div class="roadmap-dot done">
+              <svg viewBox="0 0 24 24"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+            </div>
+          </div>
+          <div class="roadmap-body">
+            <div class="roadmap-year">2025</div>
+            <div class="roadmap-title">Agentes IA propios para clientes</div>
+            <p class="roadmap-desc">Desarrollamos y desplegamos agentes IA personalizados para cada cliente: soporte automatizado, análisis de datos de negocio, alertas inteligentes y asistentes técnicos entrenados con su propia documentación e historial.</p>
+            <span class="roadmap-status status-live">En progreso</span>
+          </div>
+        </div>
+
+        <div class="roadmap-item reveal">
+          <div class="roadmap-dot-wrap">
+            <div class="roadmap-dot">
+              <svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+            </div>
+          </div>
+          <div class="roadmap-body">
+            <div class="roadmap-year">2026</div>
+            <div class="roadmap-title">Plataforma nodo8 AI para PYMEs mexicanas</div>
+            <p class="roadmap-desc">Lanzamos una plataforma SaaS que democratiza el acceso a IA empresarial para PYMEs en México: automatización de procesos, análisis de clientes, forecasting y agentes de soporte. Sin necesidad de un equipo de data science interno.</p>
+            <span class="roadmap-status status-upcoming">Próximamente</span>
+          </div>
+        </div>
+
+        <div class="roadmap-item reveal">
+          <div class="roadmap-dot-wrap">
+            <div class="roadmap-dot">
+              <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="2"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/><path d="M2 12h20"/></svg>
+            </div>
+          </div>
+          <div class="roadmap-body">
+            <div class="roadmap-year">2027</div>
+            <div class="roadmap-title">IA multimodal en operaciones críticas</div>
+            <p class="roadmap-desc">Integramos modelos multimodales (visión, audio, texto y datos estructurados) en operaciones críticas: inspección visual automatizada en manufactura, análisis de llamadas de soporte en tiempo real y detección de incidentes por video en logística.</p>
+            <span class="roadmap-status status-upcoming">Visión</span>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════
+         7. ÉTICA Y RESPONSABILIDAD
+    ═══════════════════════════════════════ -->
+    <section class="ethics-section">
+      <div class="section-header reveal">
+        <div>
+          <div class="section-eyebrow">IA responsable</div>
+          <div class="section-title">Ética y responsabilidad<br />en IA</div>
+        </div>
+        <p class="section-note">El poder de la IA sin la ética que la acompaña es solo un riesgo disfrazado de eficiencia.</p>
+      </div>
+      <div class="ethics-grid">
+
+        <div class="ethics-card reveal reveal-delay-1">
+          <div class="ethics-icon">
+            <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+          </div>
+          <h3>Transparencia total</h3>
+          <p>Siempre explicamos qué modelo estamos usando, qué datos procesa y cómo toma sus decisiones. Nunca utilizamos IA como caja negra en decisiones críticas sin un humano que la supervise y valide.</p>
+        </div>
+
+        <div class="ethics-card reveal reveal-delay-2">
+          <div class="ethics-icon">
+            <svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+          </div>
+          <h3>Privacidad de datos</h3>
+          <p>Los datos de nuestros clientes nunca se usan para entrenar modelos de terceros. Para proyectos con datos sensibles, desplegamos modelos en infraestructura privada del cliente, sin que los datos salgan de su entorno.</p>
+        </div>
+
+        <div class="ethics-card reveal reveal-delay-3">
+          <div class="ethics-icon">
+            <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+          </div>
+          <h3>IA sin sesgos</h3>
+          <p>Auditamos los datasets de entrenamiento y los outputs de los modelos para detectar y mitigar sesgos. En modelos de decisión que afectan personas (crédito, selección, diagnóstico), aplicamos fairness metrics antes del despliegue.</p>
+        </div>
+
+      </div>
+      <div class="ethics-note reveal">
+        <strong>El humano siempre decide.</strong> La IA en nodo8 es una herramienta de amplificación, no de reemplazo. Toda decisión crítica pasa por un revisor humano. Usamos IA para hacer a las personas más capaces, no para eliminarlas del proceso.
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════
+         8. CTA FINAL
+    ═══════════════════════════════════════ -->
+    <section class="cta-final">
+      <div class="cta-box reveal">
+        <div class="cta-glow"></div>
+        <div class="cta-grid-bg"></div>
+        <div class="cta-content">
+          <div class="section-eyebrow" style="margin-bottom:0.75rem">Da el siguiente paso</div>
+          <h2>¿Listo para potenciar<br />tu empresa con <em>IA</em>?</h2>
+          <p>Cuéntanos el reto y en 24 horas te mostramos cómo la IA puede resolverlo. Sin tecnobabble, sin propuestas genéricas.</p>
+          <div class="cta-actions">
+            <a href="contact.html" class="btn-primary">Agendar consulta de IA</a>
+            <a href="industries.html" class="btn-ghost">Ver por industria</a>
+          </div>
+          <div class="cta-note">Primera consulta de IA sin costo</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════
+         FOOTER
+    ═══════════════════════════════════════ -->
+    <footer>
+      <div class="footer-brand">
+        <svg width="18" height="18" viewBox="0 0 30 30" fill="none">
+          <circle cx="15" cy="3" r="2.2" fill="#c8f04b"/>
+          <circle cx="24.6" cy="7.4" r="2.2" fill="#c8f04b" opacity="0.6"/>
+          <circle cx="27" cy="15" r="2.2" fill="#c8f04b"/>
+          <circle cx="24.6" cy="22.6" r="2.2" fill="#c8f04b" opacity="0.6"/>
+          <circle cx="15" cy="27" r="2.2" fill="#c8f04b"/>
+          <circle cx="5.4" cy="22.6" r="2.2" fill="#c8f04b" opacity="0.6"/>
+          <circle cx="3" cy="15" r="2.2" fill="#c8f04b"/>
+          <circle cx="5.4" cy="7.4" r="2.2" fill="#c8f04b" opacity="0.6"/>
+          <circle cx="15" cy="15" r="3.5" fill="none" stroke="#c8f04b" stroke-width="1.5"/>
+          <line x1="15" y1="5.2" x2="15" y2="11.5" stroke="#c8f04b" stroke-width="1.2" stroke-linecap="round"/>
+          <line x1="15" y1="18.5" x2="15" y2="24.8" stroke="#c8f04b" stroke-width="1.2" stroke-linecap="round"/>
+          <line x1="5.2" y1="15" x2="11.5" y2="15" stroke="#c8f04b" stroke-width="1.2" stroke-linecap="round"/>
+          <line x1="18.5" y1="15" x2="24.8" y2="15" stroke="#c8f04b" stroke-width="1.2" stroke-linecap="round"/>
+        </svg>
+        <span class="footer-brand-text">nodo<span>8</span></span>
+      </div>
+      <div class="footer-copy">© 2026 nodo8 · Guadalajara, México</div>
+      <div class="footer-links">
+        <a href="index.html">Inicio</a>
+        <a href="industries.html">Industrias</a>
+        <a href="contact.html">Contacto</a>
+        <a href="careers.html">Careers</a>
+      </div>
+    </footer>
+
+    <!-- ═══════════════════════════════════════
+         SCRIPTS
+    ═══════════════════════════════════════ -->
+    <script>
+      /* ── Neural Network Canvas ── */
+      (function () {
+        const canvas = document.getElementById("neural-canvas");
+        const ctx = canvas.getContext("2d");
+        const ACCENT = "200,240,75";
+        let W, H, nodes = [], animId;
+
+        function resize() {
+          W = canvas.width  = canvas.offsetWidth;
+          H = canvas.height = canvas.offsetHeight;
+        }
+
+        function Node() {
+          this.x   = Math.random() * W;
+          this.y   = Math.random() * H;
+          this.vx  = (Math.random() - 0.5) * 0.35;
+          this.vy  = (Math.random() - 0.5) * 0.35;
+          this.r   = Math.random() * 1.8 + 0.8;
+          this.opacity = Math.random() * 0.5 + 0.2;
+        }
+
+        function init() {
+          resize();
+          const count = Math.min(Math.floor((W * H) / 12000), 90);
+          nodes = Array.from({ length: count }, () => new Node());
+        }
+
+        function draw() {
+          ctx.clearRect(0, 0, W, H);
+          const maxDist = 140;
+
+          for (let i = 0; i < nodes.length; i++) {
+            const a = nodes[i];
+            a.x += a.vx;
+            a.y += a.vy;
+            if (a.x < 0 || a.x > W) a.vx *= -1;
+            if (a.y < 0 || a.y > H) a.vy *= -1;
+
+            for (let j = i + 1; j < nodes.length; j++) {
+              const b = nodes[j];
+              const dx = a.x - b.x, dy = a.y - b.y;
+              const dist = Math.sqrt(dx*dx + dy*dy);
+              if (dist < maxDist) {
+                const alpha = (1 - dist / maxDist) * 0.18;
+                ctx.beginPath();
+                ctx.moveTo(a.x, a.y);
+                ctx.lineTo(b.x, b.y);
+                ctx.strokeStyle = `rgba(${ACCENT},${alpha})`;
+                ctx.lineWidth = 0.6;
+                ctx.stroke();
+              }
+            }
+
+            ctx.beginPath();
+            ctx.arc(a.x, a.y, a.r, 0, Math.PI * 2);
+            ctx.fillStyle = `rgba(${ACCENT},${a.opacity})`;
+            ctx.fill();
+          }
+
+          animId = requestAnimationFrame(draw);
+        }
+
+        init();
+        draw();
+        window.addEventListener("resize", () => { cancelAnimationFrame(animId); init(); draw(); });
+      })();
+
+      /* ── Scroll reveal ── */
+      const revealObs = new IntersectionObserver(
+        (entries) => entries.forEach((e) => {
+          if (e.isIntersecting) { e.target.classList.add("visible"); revealObs.unobserve(e.target); }
+        }),
+        { threshold: 0.07 }
+      );
+      document.querySelectorAll(".reveal").forEach((el) => revealObs.observe(el));
+
+      /* ── Count-up (metrics in tabs + general) ── */
+      function startCountUp(el) {
+        const target  = parseFloat(el.getAttribute("data-target"));
+        const prefix  = el.getAttribute("data-prefix") || "";
+        const suffix  = el.getAttribute("data-suffix") || "";
+        const dur     = 1200;
+        const start   = performance.now();
+        function step(now) {
+          const p = Math.min((now - start) / dur, 1);
+          const eased = 1 - Math.pow(1 - p, 3);
+          const val = Number.isInteger(target) ? Math.round(eased * target) : (eased * target).toFixed(1);
+          el.textContent = prefix + val + suffix;
+          if (p < 1) requestAnimationFrame(step);
+        }
+        requestAnimationFrame(step);
+      }
+
+      const countObs = new IntersectionObserver((entries) => {
+        entries.forEach((e) => {
+          if (e.isIntersecting) { startCountUp(e.target); countObs.unobserve(e.target); }
+        });
+      }, { threshold: 0.5 });
+      document.querySelectorAll(".svc-metric-val[data-target]").forEach((el) => countObs.observe(el));
+
+      /* ── Service tabs ── */
+      const tabs   = document.querySelectorAll(".svc-tab");
+      const panels = document.querySelectorAll(".svc-panel");
+      tabs.forEach((tab) => {
+        tab.addEventListener("click", () => {
+          tabs.forEach((t) => t.classList.remove("active"));
+          panels.forEach((p) => p.classList.remove("active"));
+          tab.classList.add("active");
+          const panel = document.getElementById("panel-" + tab.dataset.panel);
+          if (panel) {
+            panel.classList.add("active");
+            // trigger count-up for newly visible metrics
+            panel.querySelectorAll(".svc-metric-val[data-target]").forEach((el) => {
+              el.textContent = (el.getAttribute("data-prefix") || "") + "0" + (el.getAttribute("data-suffix") || "");
+              startCountUp(el);
+            });
+          }
+        });
+      });
+    </script>
+  </body>
+</html>

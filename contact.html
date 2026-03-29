@@ -1,0 +1,1265 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Contacto — nodo8</title>
+    <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:wght@300;400;500&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      /* ─────────────────────────────────────────
+         TOKENS
+      ───────────────────────────────────────── */
+      :root {
+        --bg: #0a0a0a;
+        --surface: #111111;
+        --surface2: #181818;
+        --surface3: #1e1e1e;
+        --border: rgba(255, 255, 255, 0.07);
+        --accent: #c8f04b;
+        --accent-dim: rgba(200, 240, 75, 0.12);
+        --text: #f0f0ec;
+        --muted: #888880;
+        --font-display: "Syne", sans-serif;
+        --font-body: "DM Sans", sans-serif;
+      }
+      *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+      html { scroll-behavior: smooth; }
+      body {
+        background: var(--bg);
+        color: var(--text);
+        font-family: var(--font-body);
+        font-size: 16px;
+        line-height: 1.7;
+        overflow-x: hidden;
+      }
+
+      /* ─────────────────────────────────────────
+         NAV
+      ───────────────────────────────────────── */
+      nav {
+        position: fixed;
+        top: 0; left: 0; right: 0;
+        z-index: 200;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 1.25rem 2.5rem;
+        border-bottom: 1px solid var(--border);
+        background: rgba(10, 10, 10, 0.88);
+        backdrop-filter: blur(12px);
+      }
+      .nav-logo {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        text-decoration: none;
+      }
+      .nav-logo-text {
+        font-family: var(--font-display);
+        font-size: 1.1rem;
+        font-weight: 800;
+        color: var(--text);
+        letter-spacing: -0.02em;
+      }
+      .nav-logo-text span { color: var(--accent); }
+      .nav-links { display: flex; gap: 2rem; list-style: none; }
+      .nav-links a {
+        font-size: 0.85rem;
+        color: var(--muted);
+        text-decoration: none;
+        letter-spacing: 0.03em;
+        transition: color 0.2s;
+      }
+      .nav-links a:hover { color: var(--text); }
+      .nav-links a.active { color: var(--accent); }
+      .nav-cta {
+        font-family: var(--font-body);
+        font-size: 0.85rem;
+        font-weight: 500;
+        color: var(--bg);
+        background: var(--accent);
+        border: none;
+        padding: 0.55rem 1.25rem;
+        border-radius: 4px;
+        cursor: pointer;
+        text-decoration: none;
+        transition: opacity 0.2s;
+      }
+      .nav-cta:hover { opacity: 0.88; }
+
+      /* ─────────────────────────────────────────
+         BUTTONS
+      ───────────────────────────────────────── */
+      .btn-primary {
+        font-family: var(--font-body);
+        font-size: 0.9rem;
+        font-weight: 500;
+        color: var(--bg);
+        background: var(--accent);
+        border: none;
+        padding: 0.85rem 2rem;
+        border-radius: 4px;
+        cursor: pointer;
+        text-decoration: none;
+        transition: opacity 0.2s, transform 0.2s;
+        display: inline-block;
+      }
+      .btn-primary:hover { opacity: 0.88; transform: translateY(-1px); }
+      .btn-ghost {
+        font-family: var(--font-body);
+        font-size: 0.9rem;
+        font-weight: 400;
+        color: var(--muted);
+        background: transparent;
+        border: 1px solid var(--border);
+        padding: 0.85rem 2rem;
+        border-radius: 4px;
+        cursor: pointer;
+        text-decoration: none;
+        transition: color 0.2s, border-color 0.2s;
+        display: inline-block;
+      }
+      .btn-ghost:hover { color: var(--text); border-color: rgba(255,255,255,0.2); }
+
+      /* ─────────────────────────────────────────
+         SHARED SECTION
+      ───────────────────────────────────────── */
+      section { padding: 6rem 2.5rem; }
+      .section-eyebrow {
+        font-size: 0.75rem;
+        color: var(--accent);
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        margin-bottom: 0.5rem;
+      }
+      .section-title {
+        font-family: var(--font-display);
+        font-size: clamp(1.8rem, 4vw, 2.8rem);
+        font-weight: 700;
+        line-height: 1.1;
+        letter-spacing: -0.02em;
+      }
+      .section-header {
+        display: flex;
+        align-items: flex-end;
+        justify-content: space-between;
+        margin-bottom: 3rem;
+        flex-wrap: wrap;
+        gap: 1rem;
+      }
+      .section-note {
+        font-size: 0.9rem;
+        color: var(--muted);
+        max-width: 280px;
+        text-align: right;
+      }
+
+      /* ─────────────────────────────────────────
+         1. HERO
+      ───────────────────────────────────────── */
+      .hero {
+        min-height: 82vh;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-end;
+        padding: 8rem 2.5rem 5rem;
+        position: relative;
+        overflow: hidden;
+      }
+      .hero-bg {
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(150deg, #0a1200 0%, #0a0a0a 45%);
+      }
+      .hero-grid {
+        position: absolute;
+        inset: 0;
+        background-image:
+          linear-gradient(var(--border) 1px, transparent 1px),
+          linear-gradient(90deg, var(--border) 1px, transparent 1px);
+        background-size: 60px 60px;
+        opacity: 0.45;
+      }
+      .hero-glow {
+        position: absolute;
+        top: 5%;
+        right: -10%;
+        width: 650px;
+        height: 650px;
+        background: radial-gradient(circle, rgba(200,240,75,0.07) 0%, transparent 65%);
+        pointer-events: none;
+      }
+      .hero-glow2 {
+        position: absolute;
+        bottom: -5%;
+        left: -5%;
+        width: 450px;
+        height: 450px;
+        background: radial-gradient(circle, rgba(200,240,75,0.04) 0%, transparent 70%);
+        pointer-events: none;
+      }
+      .hero-content { position: relative; z-index: 1; }
+      .hero-tag {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 0.78rem;
+        color: var(--accent);
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        margin-bottom: 1.5rem;
+        animation: fadeUp 0.6s ease both;
+      }
+      .hero-tag::before { content: ""; width: 24px; height: 1px; background: var(--accent); }
+      .hero h1 {
+        font-family: var(--font-display);
+        font-size: clamp(2.6rem, 7vw, 5.5rem);
+        font-weight: 800;
+        line-height: 1.05;
+        letter-spacing: -0.035em;
+        max-width: 860px;
+        margin-bottom: 1.5rem;
+        animation: fadeUp 0.6s 0.1s ease both;
+      }
+      .hero h1 em { font-style: normal; color: var(--accent); }
+      .hero-sub {
+        font-size: 1.05rem;
+        color: var(--muted);
+        max-width: 520px;
+        margin-bottom: 2.5rem;
+        font-weight: 300;
+        line-height: 1.75;
+        animation: fadeUp 0.6s 0.2s ease both;
+      }
+      .hero-badges {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+        animation: fadeUp 0.6s 0.3s ease both;
+      }
+      .location-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 7px;
+        font-size: 0.82rem;
+        color: var(--text);
+        background: var(--surface);
+        border: 1px solid var(--border);
+        padding: 0.45rem 1rem;
+        border-radius: 100px;
+        transition: border-color 0.25s, background 0.25s;
+      }
+      .location-badge:hover {
+        border-color: rgba(200,240,75,0.3);
+        background: var(--surface2);
+      }
+      .location-badge .dot {
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+        background: var(--accent);
+        flex-shrink: 0;
+        animation: pulse 2s ease-in-out infinite;
+      }
+      .location-badge .dot.delay-1 { animation-delay: 0.4s; }
+      .location-badge .dot.delay-2 { animation-delay: 0.8s; }
+      @keyframes pulse {
+        0%, 100% { opacity: 1; transform: scale(1); }
+        50%       { opacity: 0.4; transform: scale(0.75); }
+      }
+
+      /* ─────────────────────────────────────────
+         2. OFICINAS
+      ───────────────────────────────────────── */
+      .offices-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 1.5rem;
+      }
+      .office-card {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 14px;
+        overflow: hidden;
+        transition: border-color 0.3s;
+        position: relative;
+      }
+      .office-card:hover { border-color: rgba(200,240,75,0.18); }
+      .office-card::before {
+        content: "";
+        position: absolute;
+        top: 0; left: 0; right: 0;
+        height: 2px;
+        background: var(--accent);
+        opacity: 0;
+        transition: opacity 0.3s;
+      }
+      .office-card:hover::before { opacity: 1; }
+      /* placeholder image */
+      .office-img {
+        height: 180px;
+        position: relative;
+        overflow: hidden;
+      }
+      .office-img-bg {
+        position: absolute;
+        inset: 0;
+        transition: transform 0.5s ease;
+      }
+      .office-card:hover .office-img-bg { transform: scale(1.04); }
+      .office-img-bg-seattle {
+        background: linear-gradient(135deg, #091800 0%, #0d2200 40%, #111111 100%);
+      }
+      .office-img-bg-gdl {
+        background: linear-gradient(135deg, #101800 0%, #182400 40%, #111111 100%);
+      }
+      .office-img-bg-cdmx {
+        background: linear-gradient(135deg, #0c1500 0%, #141e00 40%, #111111 100%);
+      }
+      .office-img-pattern {
+        position: absolute;
+        inset: 0;
+        background-image:
+          linear-gradient(rgba(200,240,75,0.045) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(200,240,75,0.045) 1px, transparent 1px);
+        background-size: 28px 28px;
+      }
+      .office-img-icon {
+        position: absolute;
+        top: 50%; left: 50%;
+        transform: translate(-50%, -50%);
+        opacity: 0.12;
+      }
+      .office-img-icon svg {
+        width: 72px; height: 72px;
+        stroke: var(--accent); fill: none;
+        stroke-width: 0.8; stroke-linecap: round; stroke-linejoin: round;
+      }
+      .office-img-label {
+        position: absolute;
+        bottom: 12px; left: 14px;
+        display: flex;
+        align-items: center;
+        gap: 7px;
+      }
+      .hq-badge {
+        font-size: 0.68rem;
+        font-weight: 600;
+        color: var(--bg);
+        background: var(--accent);
+        padding: 2px 9px;
+        border-radius: 100px;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+      }
+      .office-body { padding: 1.75rem; }
+      .office-city {
+        font-family: var(--font-display);
+        font-size: 1.15rem;
+        font-weight: 700;
+        color: var(--text);
+        margin-bottom: 0.25rem;
+      }
+      .office-region {
+        font-size: 0.78rem;
+        color: var(--accent);
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        margin-bottom: 1.25rem;
+      }
+      .office-address {
+        font-size: 0.85rem;
+        color: var(--muted);
+        line-height: 1.6;
+        margin-bottom: 1.25rem;
+        padding-left: 1.1rem;
+        border-left: 2px solid var(--border);
+      }
+      .office-details {
+        display: flex;
+        flex-direction: column;
+        gap: 0.6rem;
+      }
+      .office-detail-row {
+        display: flex;
+        align-items: center;
+        gap: 9px;
+        font-size: 0.82rem;
+        color: var(--muted);
+      }
+      .office-detail-row svg {
+        width: 14px; height: 14px;
+        stroke: var(--accent); fill: none;
+        stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round;
+        flex-shrink: 0;
+      }
+      .office-detail-row a {
+        color: var(--muted);
+        text-decoration: none;
+        transition: color 0.2s;
+      }
+      .office-detail-row a:hover { color: var(--accent); }
+
+      /* ─────────────────────────────────────────
+         3. MAPA
+      ───────────────────────────────────────── */
+      .map-section { padding-top: 0; }
+      .map-tabs {
+        display: flex;
+        gap: 6px;
+        margin-bottom: 1.5rem;
+        flex-wrap: wrap;
+      }
+      .map-tab {
+        font-family: var(--font-body);
+        font-size: 0.85rem;
+        color: var(--muted);
+        background: var(--surface);
+        border: 1px solid var(--border);
+        padding: 0.5rem 1.25rem;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: color 0.2s, border-color 0.2s, background 0.2s;
+      }
+      .map-tab:hover { color: var(--text); border-color: rgba(255,255,255,0.15); }
+      .map-tab.active {
+        color: var(--accent);
+        border-color: rgba(200,240,75,0.3);
+        background: var(--accent-dim);
+      }
+      .map-container {
+        border-radius: 14px;
+        overflow: hidden;
+        border: 1px solid var(--border);
+        height: 400px;
+        position: relative;
+      }
+      .map-frame {
+        display: none;
+        width: 100%;
+        height: 100%;
+        border: 0;
+        filter: invert(0.9) hue-rotate(175deg) saturate(0.4) brightness(0.85);
+        transition: opacity 0.3s;
+      }
+      .map-frame.active { display: block; }
+
+      /* ─────────────────────────────────────────
+         4. ÁREAS DE CONTACTO
+      ───────────────────────────────────────── */
+      .areas-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: 1px;
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        overflow: hidden;
+      }
+      .area-card {
+        background: var(--surface);
+        padding: 2rem;
+        position: relative;
+        transition: background 0.3s;
+      }
+      .area-card:hover { background: var(--surface2); }
+      .area-card::after {
+        content: "";
+        position: absolute;
+        top: 0; left: 0; right: 0;
+        height: 2px;
+        background: var(--accent);
+        opacity: 0;
+        transition: opacity 0.3s;
+      }
+      .area-card:hover::after { opacity: 1; }
+      .area-icon-wrap {
+        width: 44px; height: 44px;
+        background: var(--accent-dim);
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 1.25rem;
+      }
+      .area-icon-wrap svg {
+        width: 20px; height: 20px;
+        stroke: var(--accent); fill: none;
+        stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round;
+      }
+      .area-card h3 {
+        font-family: var(--font-display);
+        font-size: 0.95rem;
+        font-weight: 600;
+        color: var(--text);
+        margin-bottom: 0.35rem;
+      }
+      .area-card p { font-size: 0.82rem; color: var(--muted); margin-bottom: 1rem; line-height: 1.6; }
+      .area-card a {
+        font-size: 0.82rem;
+        color: var(--accent);
+        text-decoration: none;
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        transition: gap 0.2s;
+      }
+      .area-card a:hover { gap: 8px; }
+      .area-card a svg {
+        width: 12px; height: 12px;
+        stroke: var(--accent); fill: none;
+        stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;
+      }
+
+      /* ─────────────────────────────────────────
+         5. FORMULARIO
+      ───────────────────────────────────────── */
+      .contact-layout {
+        display: grid;
+        grid-template-columns: 1fr 1.6fr;
+        gap: 4rem;
+        align-items: start;
+      }
+      .contact-info { position: sticky; top: 7rem; }
+      .contact-info h2 {
+        font-family: var(--font-display);
+        font-size: clamp(1.6rem, 3.5vw, 2.3rem);
+        font-weight: 700;
+        line-height: 1.15;
+        letter-spacing: -0.02em;
+        margin-bottom: 1rem;
+      }
+      .contact-info h2 em { font-style: normal; color: var(--accent); }
+      .contact-info p { font-size: 0.9rem; color: var(--muted); line-height: 1.75; margin-bottom: 2rem; }
+      .contact-info-items { display: flex; flex-direction: column; gap: 1rem; }
+      .contact-info-item {
+        display: flex;
+        align-items: flex-start;
+        gap: 12px;
+        font-size: 0.85rem;
+        color: var(--muted);
+      }
+      .contact-info-item svg {
+        width: 16px; height: 16px;
+        stroke: var(--accent); fill: none;
+        stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round;
+        flex-shrink: 0;
+        margin-top: 3px;
+      }
+      .contact-info-item strong {
+        display: block;
+        font-size: 0.8rem;
+        color: var(--text);
+        font-weight: 500;
+        margin-bottom: 2px;
+      }
+      .contact-form {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        padding: 2.75rem;
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+      }
+      .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+      .form-group { display: flex; flex-direction: column; gap: 6px; }
+      .form-group label { font-size: 0.78rem; color: var(--muted); letter-spacing: 0.05em; }
+      .form-group input,
+      .form-group textarea,
+      .form-group select {
+        background: var(--bg);
+        border: 1px solid var(--border);
+        border-radius: 6px;
+        padding: 0.75rem 1rem;
+        font-family: var(--font-body);
+        font-size: 0.9rem;
+        color: var(--text);
+        outline: none;
+        transition: border-color 0.2s;
+        resize: none;
+        appearance: none;
+        -webkit-appearance: none;
+      }
+      .form-group select {
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23888880' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: right 1rem center;
+        padding-right: 2.5rem;
+        cursor: pointer;
+      }
+      .form-group select option { background: var(--surface); color: var(--text); }
+      .form-group input:focus,
+      .form-group textarea:focus,
+      .form-group select:focus { border-color: var(--accent); }
+      .form-group input::placeholder,
+      .form-group textarea::placeholder { color: #555; }
+
+      /* success state */
+      .form-success {
+        display: none;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        gap: 1.25rem;
+        padding: 2rem 0;
+      }
+      .success-icon {
+        width: 60px; height: 60px;
+        background: var(--accent-dim);
+        border: 1px solid rgba(200,240,75,0.3);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .success-icon svg {
+        width: 26px; height: 26px;
+        stroke: var(--accent); fill: none;
+        stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;
+      }
+      .success-title {
+        font-family: var(--font-display);
+        font-size: 1.2rem;
+        font-weight: 700;
+        color: var(--text);
+      }
+      .success-sub { font-size: 0.88rem; color: var(--muted); }
+
+      /* ─────────────────────────────────────────
+         6. RESPUESTA GARANTIZADA
+      ───────────────────────────────────────── */
+      .guarantee-section {
+        background: var(--surface);
+        border-radius: 16px;
+        padding: 3.5rem;
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 2rem;
+        position: relative;
+        overflow: hidden;
+      }
+      .guarantee-section::before {
+        content: "";
+        position: absolute;
+        top: 0; left: 0; right: 0;
+        height: 2px;
+        background: linear-gradient(90deg, var(--accent) 0%, transparent 80%);
+      }
+      .guarantee-item { display: flex; flex-direction: column; gap: 0.75rem; }
+      .guarantee-num {
+        font-family: var(--font-display);
+        font-size: clamp(2rem, 4vw, 2.8rem);
+        font-weight: 800;
+        color: var(--accent);
+        line-height: 1;
+      }
+      .guarantee-label {
+        font-family: var(--font-display);
+        font-size: 0.95rem;
+        font-weight: 600;
+        color: var(--text);
+        line-height: 1.3;
+      }
+      .guarantee-desc { font-size: 0.85rem; color: var(--muted); line-height: 1.65; }
+
+      /* ─────────────────────────────────────────
+         FOOTER
+      ───────────────────────────────────────── */
+      footer {
+        padding: 2.5rem;
+        border-top: 1px solid var(--border);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 1rem;
+      }
+      .footer-brand { display: flex; align-items: center; gap: 8px; }
+      .footer-brand-text {
+        font-family: var(--font-display);
+        font-size: 0.9rem;
+        font-weight: 800;
+        color: var(--muted);
+        letter-spacing: -0.02em;
+      }
+      .footer-brand-text span { color: var(--accent); }
+      .footer-copy { font-size: 0.8rem; color: var(--muted); }
+      .footer-links { display: flex; gap: 1.5rem; }
+      .footer-links a {
+        font-size: 0.8rem;
+        color: var(--muted);
+        text-decoration: none;
+        transition: color 0.2s;
+      }
+      .footer-links a:hover { color: var(--text); }
+
+      /* ─────────────────────────────────────────
+         ANIMATIONS
+      ───────────────────────────────────────── */
+      @keyframes fadeUp {
+        from { opacity: 0; transform: translateY(24px); }
+        to   { opacity: 1; transform: translateY(0); }
+      }
+      .reveal {
+        opacity: 0;
+        transform: translateY(28px);
+        transition: opacity 0.65s ease, transform 0.65s ease;
+      }
+      .reveal.visible { opacity: 1; transform: translateY(0); }
+      .reveal-delay-1 { transition-delay: 0.1s; }
+      .reveal-delay-2 { transition-delay: 0.2s; }
+      .reveal-delay-3 { transition-delay: 0.3s; }
+
+      /* ─────────────────────────────────────────
+         RESPONSIVE
+      ───────────────────────────────────────── */
+      @media (max-width: 1024px) {
+        .contact-layout { grid-template-columns: 1fr; gap: 3rem; }
+        .contact-info { position: static; }
+        .guarantee-section { grid-template-columns: 1fr 1fr; }
+      }
+      @media (max-width: 768px) {
+        nav { padding: 1rem 1.5rem; }
+        .nav-links { display: none; }
+        .hero { padding: 7rem 1.5rem 3.5rem; }
+        section { padding: 4rem 1.5rem; }
+        .form-row { grid-template-columns: 1fr; }
+        .contact-form { padding: 2rem 1.5rem; }
+        .guarantee-section { grid-template-columns: 1fr; padding: 2rem 1.5rem; }
+        .section-note { text-align: left; }
+        footer { flex-direction: column; align-items: flex-start; padding: 2rem 1.5rem; }
+      }
+    </style>
+  </head>
+  <body>
+
+    <!-- ═══════════════════════════════════════
+         NAV
+    ═══════════════════════════════════════ -->
+    <nav>
+      <a href="index.html" class="nav-logo">
+        <svg width="30" height="30" viewBox="0 0 30 30" fill="none">
+          <circle cx="15" cy="3" r="2.2" fill="#c8f04b"/>
+          <circle cx="24.6" cy="7.4" r="2.2" fill="#c8f04b" opacity="0.7"/>
+          <circle cx="27" cy="15" r="2.2" fill="#c8f04b"/>
+          <circle cx="24.6" cy="22.6" r="2.2" fill="#c8f04b" opacity="0.7"/>
+          <circle cx="15" cy="27" r="2.2" fill="#c8f04b"/>
+          <circle cx="5.4" cy="22.6" r="2.2" fill="#c8f04b" opacity="0.7"/>
+          <circle cx="3" cy="15" r="2.2" fill="#c8f04b"/>
+          <circle cx="5.4" cy="7.4" r="2.2" fill="#c8f04b" opacity="0.7"/>
+          <circle cx="15" cy="15" r="3.5" fill="none" stroke="#c8f04b" stroke-width="1.5"/>
+          <line x1="15" y1="5.2" x2="15" y2="11.5" stroke="#c8f04b" stroke-width="1.2" stroke-linecap="round"/>
+          <line x1="15" y1="18.5" x2="15" y2="24.8" stroke="#c8f04b" stroke-width="1.2" stroke-linecap="round"/>
+          <line x1="5.2" y1="15" x2="11.5" y2="15" stroke="#c8f04b" stroke-width="1.2" stroke-linecap="round"/>
+          <line x1="18.5" y1="15" x2="24.8" y2="15" stroke="#c8f04b" stroke-width="1.2" stroke-linecap="round"/>
+        </svg>
+        <span class="nav-logo-text">nodo<span>8</span></span>
+      </a>
+      <ul class="nav-links">
+        <li><a href="index.html#servicios">Servicios</a></li>
+        <li><a href="industries.html">Industrias</a></li>
+        <li><a href="contact.html" class="active">Contacto</a></li>
+        <li><a href="careers.html">Careers</a></li>
+      </ul>
+      <a href="#formulario" class="nav-cta">Escribirnos</a>
+    </nav>
+
+    <!-- ═══════════════════════════════════════
+         1. HERO
+    ═══════════════════════════════════════ -->
+    <section class="hero">
+      <div class="hero-bg"></div>
+      <div class="hero-grid"></div>
+      <div class="hero-glow"></div>
+      <div class="hero-glow2"></div>
+      <div class="hero-content">
+        <div class="hero-tag">Presencia global · Respuesta local</div>
+        <h1>Hablemos. Estamos<br />donde <em>tú estás.</em></h1>
+        <p class="hero-sub">
+          Con oficinas en Seattle, Guadalajara y Ciudad de México, siempre hay
+          alguien en tu zona horaria listo para escucharte. Respondemos en
+          menos de 24 horas, sin importar desde dónde escribas.
+        </p>
+        <div class="hero-badges">
+          <div class="location-badge">
+            <span class="dot"></span>Seattle, WA
+          </div>
+          <div class="location-badge">
+            <span class="dot delay-1"></span>Guadalajara, MX
+          </div>
+          <div class="location-badge">
+            <span class="dot delay-2"></span>Ciudad de México, MX
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════
+         2. OFICINAS
+    ═══════════════════════════════════════ -->
+    <section id="oficinas">
+      <div class="section-header reveal">
+        <div>
+          <div class="section-eyebrow">Encuéntranos</div>
+          <div class="section-title">Nuestras oficinas</div>
+        </div>
+        <p class="section-note">Todas en WeWork. Espacios diseñados para trabajar de verdad.</p>
+      </div>
+      <div class="offices-grid">
+
+        <!-- Seattle -->
+        <div class="office-card reveal reveal-delay-1">
+          <div class="office-img">
+            <div class="office-img-bg office-img-bg-seattle"></div>
+            <div class="office-img-pattern"></div>
+            <div class="office-img-icon">
+              <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+            </div>
+            <div class="office-img-label">
+              <span class="hq-badge">Headquarters</span>
+            </div>
+          </div>
+          <div class="office-body">
+            <div class="office-city">Seattle</div>
+            <div class="office-region">Washington, USA</div>
+            <div class="office-address">
+              WeWork Columbia Center<br />
+              701 5th Ave, Suite 4200<br />
+              Seattle, WA 98104
+            </div>
+            <div class="office-details">
+              <div class="office-detail-row">
+                <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                Lun–Vie · 9:00 am – 6:00 pm PST
+              </div>
+              <div class="office-detail-row">
+                <svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+                <a href="mailto:seattle@nodo8.net">seattle@nodo8.net</a>
+              </div>
+              <div class="office-detail-row">
+                <svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 13.5 19.79 19.79 0 0 1 1.62 4.84 2 2 0 0 1 3.6 2.63h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 9.4a16 16 0 0 0 6.29 6.29l.87-1.84a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 21.73 16z"/></svg>
+                <a href="tel:+12060000000">+1 (206) 000-0000</a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Guadalajara -->
+        <div class="office-card reveal reveal-delay-2">
+          <div class="office-img">
+            <div class="office-img-bg office-img-bg-gdl"></div>
+            <div class="office-img-pattern"></div>
+            <div class="office-img-icon">
+              <svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            </div>
+          </div>
+          <div class="office-body">
+            <div class="office-city">Guadalajara</div>
+            <div class="office-region">Jalisco, México</div>
+            <div class="office-address">
+              WeWork Punto Sao Paulo<br />
+              Av. Punto Sao Paulo 114<br />
+              Col. Providencia, Guadalajara, Jal.
+            </div>
+            <div class="office-details">
+              <div class="office-detail-row">
+                <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                Lun–Vie · 9:00 am – 7:00 pm CST
+              </div>
+              <div class="office-detail-row">
+                <svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+                <a href="mailto:gdl@nodo8.net">gdl@nodo8.net</a>
+              </div>
+              <div class="office-detail-row">
+                <svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 13.5 19.79 19.79 0 0 1 1.62 4.84 2 2 0 0 1 3.6 2.63h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 9.4a16 16 0 0 0 6.29 6.29l.87-1.84a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 21.73 16z"/></svg>
+                <a href="tel:+523300000000">+52 (33) 0000-0000</a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- CDMX -->
+        <div class="office-card reveal reveal-delay-3">
+          <div class="office-img">
+            <div class="office-img-bg office-img-bg-cdmx"></div>
+            <div class="office-img-pattern"></div>
+            <div class="office-img-icon">
+              <svg viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/><line x1="12" y1="12" x2="12" y2="16"/><line x1="10" y1="14" x2="14" y2="14"/></svg>
+            </div>
+          </div>
+          <div class="office-body">
+            <div class="office-city">Ciudad de México</div>
+            <div class="office-region">CDMX, México</div>
+            <div class="office-address">
+              WeWork Reforma 27<br />
+              Paseo de la Reforma 27, Piso 7<br />
+              Col. Cuauhtémoc, CDMX
+            </div>
+            <div class="office-details">
+              <div class="office-detail-row">
+                <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                Lun–Vie · 9:00 am – 7:00 pm CST
+              </div>
+              <div class="office-detail-row">
+                <svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+                <a href="mailto:cdmx@nodo8.net">cdmx@nodo8.net</a>
+              </div>
+              <div class="office-detail-row">
+                <svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 13.5 19.79 19.79 0 0 1 1.62 4.84 2 2 0 0 1 3.6 2.63h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 9.4a16 16 0 0 0 6.29 6.29l.87-1.84a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 21.73 16z"/></svg>
+                <a href="tel:+525500000000">+52 (55) 0000-0000</a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════
+         3. MAPA
+    ═══════════════════════════════════════ -->
+    <section class="map-section" style="padding-top:0">
+      <div class="map-tabs reveal">
+        <button class="map-tab active" data-map="seattle">Seattle</button>
+        <button class="map-tab" data-map="gdl">Guadalajara</button>
+        <button class="map-tab" data-map="cdmx">Ciudad de México</button>
+      </div>
+      <div class="map-container reveal">
+        <iframe
+          id="map-seattle"
+          class="map-frame active"
+          src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2689.3480516944327!2d-122.33474082346483!3d47.60584567118985!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x54906ab565a5a9c3%3A0x51bf50c2d2c28ea8!2sWeWork%20Columbia%20Center!5e0!3m2!1ses!2smx!4v1711000000000"
+          allowfullscreen=""
+          loading="lazy"
+          referrerpolicy="no-referrer-when-downgrade"
+          title="WeWork Columbia Center, Seattle"
+        ></iframe>
+        <iframe
+          id="map-gdl"
+          class="map-frame"
+          src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3732.4560000000003!2d-103.38600000000001!3d20.67000000000001!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8428ae0d3b49736b%3A0x4c2c7a48c9add6c4!2sWeWork%20Punto%20Sao%20Paulo!5e0!3m2!1ses!2smx!4v1711000000001"
+          allowfullscreen=""
+          loading="lazy"
+          referrerpolicy="no-referrer-when-downgrade"
+          title="WeWork Punto Sao Paulo, Guadalajara"
+        ></iframe>
+        <iframe
+          id="map-cdmx"
+          class="map-frame"
+          src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3762.8000000000002!2d-99.14400000000001!3d19.43500000000001!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x85d1ff3793a594b3%3A0x6c9e8e5a3a3f3f3f!2sWeWork%20Reforma%2027!5e0!3m2!1ses!2smx!4v1711000000002"
+          allowfullscreen=""
+          loading="lazy"
+          referrerpolicy="no-referrer-when-downgrade"
+          title="WeWork Reforma 27, CDMX"
+        ></iframe>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════
+         4. ÁREAS DE CONTACTO
+    ═══════════════════════════════════════ -->
+    <section id="areas" style="padding-top:0">
+      <div class="section-header reveal">
+        <div>
+          <div class="section-eyebrow">Canal correcto</div>
+          <div class="section-title">Áreas de contacto</div>
+        </div>
+        <p class="section-note">Escríbele directamente al equipo adecuado para una respuesta más rápida.</p>
+      </div>
+      <div class="areas-grid reveal">
+
+        <div class="area-card">
+          <div class="area-icon-wrap">
+            <svg viewBox="0 0 24 24"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>
+          </div>
+          <h3>Ventas y proyectos</h3>
+          <p>¿Tienes un proyecto en mente o quieres una cotización? Este es tu canal.</p>
+          <a href="mailto:ventas@nodo8.net">
+            ventas@nodo8.net
+            <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+          </a>
+        </div>
+
+        <div class="area-card">
+          <div class="area-icon-wrap">
+            <svg viewBox="0 0 24 24"><path d="M12 8V4H8"/><rect x="2" y="2" width="20" height="8" rx="2"/><rect x="2" y="14" width="20" height="8" rx="2"/><path d="M6 18h.01M6 6h.01"/></svg>
+          </div>
+          <h3>Soporte técnico</h3>
+          <p>¿Eres cliente y necesitas ayuda? Nuestro equipo te responde en horas.</p>
+          <a href="mailto:soporte@nodo8.net">
+            soporte@nodo8.net
+            <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+          </a>
+        </div>
+
+        <div class="area-card">
+          <div class="area-icon-wrap">
+            <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+          </div>
+          <h3>Carreras</h3>
+          <p>¿Quieres unirte al equipo? También puedes revisar las posiciones abiertas.</p>
+          <a href="mailto:careers@nodo8.net">
+            careers@nodo8.net
+            <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+          </a>
+        </div>
+
+        <div class="area-card">
+          <div class="area-icon-wrap">
+            <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+          </div>
+          <h3>Prensa</h3>
+          <p>Medios, colaboraciones y solicitudes editoriales. Respondemos en 48h.</p>
+          <a href="mailto:press@nodo8.net">
+            press@nodo8.net
+            <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+          </a>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════
+         5. FORMULARIO
+    ═══════════════════════════════════════ -->
+    <section id="formulario" style="padding-top:0">
+      <div class="contact-layout">
+
+        <div class="contact-info reveal">
+          <div class="section-eyebrow">Escríbenos</div>
+          <h2 style="margin-top:0.5rem">¿Listo para<br /><em>empezar?</em></h2>
+          <p>
+            Cuéntanos sobre tu proyecto o necesidad. Sin compromisos: solo una
+            conversación honesta sobre cómo podemos ayudarte.
+          </p>
+          <div class="contact-info-items">
+            <div class="contact-info-item">
+              <svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+              <div>
+                <strong>Correo general</strong>
+                hola@nodo8.net
+              </div>
+            </div>
+            <div class="contact-info-item">
+              <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+              <div>
+                <strong>Tiempo de respuesta</strong>
+                Menos de 24 horas hábiles
+              </div>
+            </div>
+            <div class="contact-info-item">
+              <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="2"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/><path d="M2 12h20"/></svg>
+              <div>
+                <strong>Idiomas</strong>
+                Español e inglés
+              </div>
+            </div>
+            <div class="contact-info-item">
+              <svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+              <div>
+                <strong>Zonas horarias</strong>
+                PST · CST · EST
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <form
+          class="contact-form reveal"
+          id="contact-form"
+          action="https://formspree.io/f/mzdkebnz"
+          method="POST"
+        >
+          <div class="form-row">
+            <div class="form-group">
+              <label for="nombre">Nombre completo</label>
+              <input type="text" id="nombre" name="nombre" placeholder="Tu nombre" required />
+            </div>
+            <div class="form-group">
+              <label for="empresa">Empresa</label>
+              <input type="text" id="empresa" name="empresa" placeholder="Tu empresa" />
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="email">Correo electrónico</label>
+              <input type="email" id="email" name="email" placeholder="tu@correo.com" required />
+            </div>
+            <div class="form-group">
+              <label for="telefono">Teléfono</label>
+              <input type="tel" id="telefono" name="telefono" placeholder="+1 (000) 000-0000" />
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="oficina">Oficina más cercana</label>
+              <select id="oficina" name="oficina">
+                <option value="" disabled selected>Seleccionar</option>
+                <option value="Seattle">Seattle, WA</option>
+                <option value="Guadalajara">Guadalajara, México</option>
+                <option value="CDMX">Ciudad de México</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="servicio">Servicio de interés</label>
+              <select id="servicio" name="servicio">
+                <option value="" disabled selected>Seleccionar</option>
+                <option value="Desarrollo Web">Desarrollo Web</option>
+                <option value="Cloud / DevOps">Cloud / DevOps</option>
+                <option value="Ciberseguridad">Ciberseguridad</option>
+                <option value="Soporte Técnico">Soporte Técnico</option>
+                <option value="Otro">Otro</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="mensaje">Mensaje</label>
+            <textarea id="mensaje" name="mensaje" rows="5" placeholder="Cuéntanos sobre tu proyecto, problema o consulta..." required></textarea>
+          </div>
+          <button type="submit" class="btn-primary" id="submit-btn" style="width:100%;text-align:center;">
+            Enviar mensaje
+          </button>
+          <p id="form-error" style="font-size:0.85rem;color:#f04b4b;display:none;margin-top:4px;">
+            Hubo un error. Escríbenos directamente a hola@nodo8.net
+          </p>
+
+          <!-- success overlay -->
+          <div class="form-success" id="form-success">
+            <div class="success-icon">
+              <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+            </div>
+            <div class="success-title">¡Mensaje enviado!</div>
+            <div class="success-sub">Te respondemos en menos de 24 horas hábiles. Revisa tu bandeja de entrada.</div>
+          </div>
+        </form>
+
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════
+         6. RESPUESTA GARANTIZADA
+    ═══════════════════════════════════════ -->
+    <section style="padding-top:0">
+      <div class="guarantee-section reveal">
+        <div class="guarantee-item">
+          <div class="guarantee-num">&lt; 24h</div>
+          <div class="guarantee-label">Respuesta garantizada</div>
+          <div class="guarantee-desc">
+            Todos los mensajes reciben respuesta en menos de 24 horas hábiles.
+            Sin bots, sin respuestas automáticas vacías.
+          </div>
+        </div>
+        <div class="guarantee-item">
+          <div class="guarantee-num">3 TZ</div>
+          <div class="guarantee-label">Zonas horarias cubiertas</div>
+          <div class="guarantee-desc">
+            PST, CST y EST. Siempre hay alguien del equipo disponible sin
+            importar desde dónde nos contactes.
+          </div>
+        </div>
+        <div class="guarantee-item">
+          <div class="guarantee-num">2</div>
+          <div class="guarantee-label">Idiomas de soporte</div>
+          <div class="guarantee-desc">
+            Atendemos en español e inglés con el mismo nivel de calidad.
+            Sin barreras de idioma para ningún proyecto.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════
+         FOOTER
+    ═══════════════════════════════════════ -->
+    <footer>
+      <div class="footer-brand">
+        <svg width="18" height="18" viewBox="0 0 30 30" fill="none">
+          <circle cx="15" cy="3" r="2.2" fill="#c8f04b"/>
+          <circle cx="24.6" cy="7.4" r="2.2" fill="#c8f04b" opacity="0.6"/>
+          <circle cx="27" cy="15" r="2.2" fill="#c8f04b"/>
+          <circle cx="24.6" cy="22.6" r="2.2" fill="#c8f04b" opacity="0.6"/>
+          <circle cx="15" cy="27" r="2.2" fill="#c8f04b"/>
+          <circle cx="5.4" cy="22.6" r="2.2" fill="#c8f04b" opacity="0.6"/>
+          <circle cx="3" cy="15" r="2.2" fill="#c8f04b"/>
+          <circle cx="5.4" cy="7.4" r="2.2" fill="#c8f04b" opacity="0.6"/>
+          <circle cx="15" cy="15" r="3.5" fill="none" stroke="#c8f04b" stroke-width="1.5"/>
+          <line x1="15" y1="5.2" x2="15" y2="11.5" stroke="#c8f04b" stroke-width="1.2" stroke-linecap="round"/>
+          <line x1="15" y1="18.5" x2="15" y2="24.8" stroke="#c8f04b" stroke-width="1.2" stroke-linecap="round"/>
+          <line x1="5.2" y1="15" x2="11.5" y2="15" stroke="#c8f04b" stroke-width="1.2" stroke-linecap="round"/>
+          <line x1="18.5" y1="15" x2="24.8" y2="15" stroke="#c8f04b" stroke-width="1.2" stroke-linecap="round"/>
+        </svg>
+        <span class="footer-brand-text">nodo<span>8</span></span>
+      </div>
+      <div class="footer-copy">© 2026 nodo8 · Guadalajara, México</div>
+      <div class="footer-links">
+        <a href="index.html">Inicio</a>
+        <a href="index.html#servicios">Servicios</a>
+        <a href="careers.html">Careers</a>
+      </div>
+    </footer>
+
+    <!-- ═══════════════════════════════════════
+         SCRIPTS
+    ═══════════════════════════════════════ -->
+    <script>
+      /* ── Scroll reveal ── */
+      const reveals = document.querySelectorAll(".reveal");
+      const revealObs = new IntersectionObserver(
+        (entries) => entries.forEach((e) => {
+          if (e.isIntersecting) { e.target.classList.add("visible"); revealObs.unobserve(e.target); }
+        }),
+        { threshold: 0.08 }
+      );
+      reveals.forEach((el) => revealObs.observe(el));
+
+      /* ── Map tabs ── */
+      document.querySelectorAll(".map-tab").forEach((tab) => {
+        tab.addEventListener("click", () => {
+          document.querySelectorAll(".map-tab").forEach((t) => t.classList.remove("active"));
+          document.querySelectorAll(".map-frame").forEach((f) => f.classList.remove("active"));
+          tab.classList.add("active");
+          document.getElementById("map-" + tab.getAttribute("data-map")).classList.add("active");
+        });
+      });
+
+      /* ── Contact form submit ── */
+      const form    = document.getElementById("contact-form");
+      const errMsg  = document.getElementById("form-error");
+      const success = document.getElementById("form-success");
+      const btn     = document.getElementById("submit-btn");
+
+      form.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        btn.textContent = "Enviando...";
+        btn.style.opacity = "0.7";
+        btn.disabled = true;
+        errMsg.style.display = "none";
+        try {
+          const res = await fetch(form.action, {
+            method: "POST",
+            body: new FormData(form),
+            headers: { Accept: "application/json" },
+          });
+          if (res.ok) {
+            // hide form fields, show success
+            [...form.querySelectorAll(".form-group, .form-row, #submit-btn")].forEach(
+              (el) => (el.style.display = "none")
+            );
+            success.style.display = "flex";
+          } else {
+            throw new Error();
+          }
+        } catch {
+          errMsg.style.display = "block";
+          btn.textContent = "Enviar mensaje";
+          btn.style.opacity = "1";
+          btn.disabled = false;
+        }
+      });
+    </script>
+  </body>
+</html>
