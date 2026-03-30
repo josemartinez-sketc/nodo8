@@ -1,0 +1,690 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Servicios — nodo8</title>
+    <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:wght@300;400;500&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --bg: #0a0a0a;
+        --surface: #111111;
+        --surface2: #181818;
+        --surface3: #1e1e1e;
+        --border: rgba(255, 255, 255, 0.07);
+        --accent: #c8f04b;
+        --accent-dim: rgba(200, 240, 75, 0.12);
+        --accent-glow: rgba(200, 240, 75, 0.06);
+        --text: #f0f0ec;
+        --muted: #888880;
+        --font-display: "Syne", sans-serif;
+        --font-body: "DM Sans", sans-serif;
+        --nav-h: 68px;
+      }
+      *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+      html { scroll-behavior: smooth; }
+      body { background: var(--bg); color: var(--text); font-family: var(--font-body); font-size: 16px; line-height: 1.7; overflow-x: hidden; }
+
+      /* ── NAV ── */
+      nav {
+        position: fixed; top: 0; left: 0; right: 0; z-index: 300;
+        display: flex; align-items: center; justify-content: space-between;
+        padding: 1.25rem 2.5rem;
+        border-bottom: 1px solid var(--border);
+        background: rgba(10,10,10,0.88);
+        backdrop-filter: blur(12px);
+        height: var(--nav-h);
+      }
+      .nav-logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+      .nav-logo-text { font-family: var(--font-display); font-size: 1.1rem; font-weight: 800; color: var(--text); letter-spacing: -0.02em; }
+      .nav-logo-text span { color: var(--accent); }
+      .nav-links { display: flex; gap: 2rem; list-style: none; }
+      .nav-links a { font-size: 0.85rem; color: var(--muted); text-decoration: none; letter-spacing: 0.03em; transition: color 0.2s; }
+      .nav-links a:hover { color: var(--text); }
+      .nav-links a.active { color: var(--accent); }
+      .nav-cta { font-family: var(--font-body); font-size: 0.85rem; font-weight: 500; color: var(--bg); background: var(--accent); border: none; padding: 0.55rem 1.25rem; border-radius: 4px; cursor: pointer; text-decoration: none; transition: opacity 0.2s; }
+      .nav-cta:hover { opacity: 0.88; }
+
+      /* ── Hamburger ── */
+      .hamburger { display: none; flex-direction: column; gap: 5px; background: none; border: none; cursor: pointer; padding: 4px; z-index: 10; }
+      .hamburger span { display: block; width: 22px; height: 1.5px; background: var(--text); border-radius: 2px; transition: transform 0.3s ease, opacity 0.3s ease; transform-origin: center; }
+      .hamburger.open span:nth-child(1) { transform: translateY(6.5px) rotate(45deg); }
+      .hamburger.open span:nth-child(2) { opacity: 0; transform: scaleX(0); }
+      .hamburger.open span:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); }
+
+      /* ── BUTTONS ── */
+      .btn-primary { font-family: var(--font-body); font-size: 0.9rem; font-weight: 500; color: var(--bg); background: var(--accent); border: none; padding: 0.85rem 2rem; border-radius: 4px; cursor: pointer; text-decoration: none; transition: opacity 0.2s, transform 0.2s; display: inline-block; }
+      .btn-primary:hover { opacity: 0.88; transform: translateY(-1px); }
+      .btn-ghost { font-family: var(--font-body); font-size: 0.9rem; font-weight: 400; color: var(--muted); background: transparent; border: 1px solid var(--border); padding: 0.85rem 2rem; border-radius: 4px; cursor: pointer; text-decoration: none; transition: color 0.2s, border-color 0.2s; display: inline-block; }
+      .btn-ghost:hover { color: var(--text); border-color: rgba(255,255,255,0.2); }
+
+      /* ── SHARED ── */
+      .section-eyebrow { font-size: 0.75rem; color: var(--accent); letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 0.5rem; }
+      .section-title { font-family: var(--font-display); font-size: clamp(1.8rem, 4vw, 2.8rem); font-weight: 700; line-height: 1.1; letter-spacing: -0.02em; }
+      .tag { font-size: 0.72rem; color: var(--accent); background: var(--accent-dim); padding: 3px 10px; border-radius: 100px; white-space: nowrap; }
+
+      /* ── HERO ── */
+      .hero {
+        min-height: 82vh; display: flex; flex-direction: column; justify-content: flex-end;
+        padding: 8rem 2.5rem 5rem; position: relative; overflow: hidden;
+      }
+      #hero-canvas { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 0; }
+      .hero-overlay { position: absolute; inset: 0; background: linear-gradient(to top, rgba(10,10,10,0.97) 0%, rgba(10,10,10,0.55) 55%, rgba(10,10,10,0.25) 100%); z-index: 1; }
+      .hero-content { position: relative; z-index: 2; }
+      .hero-tag { display: inline-flex; align-items: center; gap: 8px; font-size: 0.78rem; color: var(--accent); letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 1.5rem; animation: fadeUp 0.6s ease both; }
+      .hero-tag::before { content: ""; width: 24px; height: 1px; background: var(--accent); }
+      .hero h1 { font-family: var(--font-display); font-size: clamp(2.4rem, 6.5vw, 5rem); font-weight: 800; line-height: 1.05; letter-spacing: -0.035em; max-width: 900px; margin-bottom: 1.5rem; animation: fadeUp 0.6s 0.1s ease both; }
+      .hero h1 em { font-style: normal; color: var(--accent); }
+      .hero-sub { font-size: 1.05rem; color: var(--muted); max-width: 520px; margin-bottom: 2.5rem; font-weight: 300; line-height: 1.75; animation: fadeUp 0.6s 0.2s ease both; }
+      .hero-actions { display: flex; gap: 1rem; flex-wrap: wrap; animation: fadeUp 0.6s 0.3s ease both; }
+
+      /* ── BODY LAYOUT: sidenav + content ── */
+      .services-wrapper {
+        display: grid;
+        grid-template-columns: 220px 1fr;
+        align-items: start;
+      }
+
+      /* sticky side nav */
+      .services-sidenav {
+        position: sticky;
+        top: calc(var(--nav-h) + 2rem);
+        padding: 2.5rem 0 2.5rem 2.5rem;
+        display: flex; flex-direction: column; gap: 2px;
+      }
+      .sidenav-label { font-size: 0.68rem; color: var(--muted); letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 0.75rem; }
+      .sidenav-link {
+        display: flex; align-items: center; gap: 9px;
+        font-size: 0.83rem; color: var(--muted);
+        text-decoration: none; padding: 0.55rem 0.75rem;
+        border-radius: 6px; border-left: 2px solid transparent;
+        transition: color 0.2s, border-color 0.2s, background 0.2s;
+        line-height: 1.3;
+      }
+      .sidenav-link:hover { color: var(--text); background: var(--surface); }
+      .sidenav-link.active { color: var(--accent); border-left-color: var(--accent); background: var(--accent-dim); }
+
+      /* mobile tabs */
+      .services-tabs-mobile { display: none; overflow-x: auto; gap: 8px; padding: 2rem 1.5rem 1rem; scrollbar-width: none; }
+      .services-tabs-mobile::-webkit-scrollbar { display: none; }
+      .svc-tab-btn { font-family: var(--font-body); font-size: 0.8rem; color: var(--muted); background: var(--surface); border: 1px solid var(--border); padding: 0.45rem 1.1rem; border-radius: 100px; cursor: pointer; white-space: nowrap; transition: color 0.2s, border-color 0.2s, background 0.2s; }
+      .svc-tab-btn:hover, .svc-tab-btn.active { color: var(--accent); border-color: rgba(200,240,75,0.3); background: var(--accent-dim); }
+
+      /* content area */
+      .services-content { border-left: 1px solid var(--border); }
+
+      /* ── CATEGORY BLOCK ── */
+      .cat-block { padding: 5rem 4rem 5rem; border-bottom: 1px solid var(--border); }
+      .cat-block:last-child { border-bottom: none; }
+      .cat-header { margin-bottom: 3rem; }
+      .cat-eyebrow { font-size: 0.7rem; color: var(--accent); letter-spacing: 0.14em; text-transform: uppercase; margin-bottom: 0.5rem; }
+      .cat-title { font-family: var(--font-display); font-size: clamp(1.6rem, 3.5vw, 2.4rem); font-weight: 800; line-height: 1.1; letter-spacing: -0.025em; }
+      .cat-desc { font-size: 0.9rem; color: var(--muted); line-height: 1.75; margin-top: 0.75rem; max-width: 560px; }
+
+      /* ── SERVICE CARD GRID ── */
+      .svc-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 1px; border: 1px solid var(--border); border-radius: 12px; overflow: hidden; }
+      .svc-grid.cols-2 { grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); }
+      .svc-grid.cols-3 { grid-template-columns: repeat(3, 1fr); }
+
+      .svc-card {
+        background: var(--surface); padding: 2rem;
+        position: relative; overflow: hidden;
+        transition: background 0.3s;
+        display: flex; flex-direction: column;
+      }
+      .svc-card:hover { background: var(--surface2); }
+      .svc-card::before { content: ""; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: var(--accent); opacity: 0; transition: opacity 0.3s; }
+      .svc-card:hover::before { opacity: 1; }
+      .svc-num { font-family: var(--font-display); font-size: 0.68rem; color: var(--muted); letter-spacing: 0.1em; margin-bottom: 1.25rem; }
+      .svc-icon { width: 44px; height: 44px; background: var(--accent-dim); border-radius: 9px; display: flex; align-items: center; justify-content: center; margin-bottom: 1.1rem; }
+      .svc-icon svg { width: 20px; height: 20px; stroke: var(--accent); fill: none; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
+      .svc-card h3 { font-family: var(--font-display); font-size: 1rem; font-weight: 600; color: var(--text); margin-bottom: 0.5rem; line-height: 1.3; }
+      .svc-card p { font-size: 0.855rem; color: var(--muted); line-height: 1.72; flex: 1; }
+      .svc-tags { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 1.25rem; }
+
+      /* ── PLATFORM CARDS (big) ── */
+      .platform-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1.5rem; }
+      .platform-card {
+        background: var(--surface); border: 1px solid var(--border); border-radius: 14px;
+        padding: 2.25rem; position: relative; overflow: hidden;
+        transition: border-color 0.3s, background 0.3s;
+        display: flex; flex-direction: column; gap: 1.1rem;
+      }
+      .platform-card:hover { border-color: rgba(200,240,75,0.2); background: var(--surface2); }
+      .platform-card::before { content: ""; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: var(--accent); opacity: 0; transition: opacity 0.3s; }
+      .platform-card:hover::before { opacity: 1; }
+      .platform-logo {
+        width: 52px; height: 52px; border-radius: 12px;
+        background: var(--accent-dim); border: 1px solid rgba(200,240,75,0.2);
+        display: flex; align-items: center; justify-content: center;
+        font-family: var(--font-display); font-size: 1rem; font-weight: 800;
+        color: var(--accent); letter-spacing: -0.03em;
+      }
+      .platform-name { font-family: var(--font-display); font-size: 1.15rem; font-weight: 700; color: var(--text); }
+      .platform-desc { font-size: 0.875rem; color: var(--muted); line-height: 1.72; flex: 1; }
+      .platform-tags { display: flex; flex-wrap: wrap; gap: 5px; }
+
+      /* ── CTA SECTION ── */
+      .cta-section { padding: 6rem 2.5rem; }
+      .cta-box {
+        background: var(--surface); border: 1px solid var(--border);
+        border-radius: 16px; padding: 5rem 4rem;
+        text-align: center; position: relative; overflow: hidden;
+      }
+      .cta-box::before { content: ""; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, transparent, var(--accent), transparent); }
+      .cta-glow { position: absolute; top: -30%; left: 50%; transform: translateX(-50%); width: 600px; height: 400px; background: radial-gradient(ellipse, var(--accent-glow) 0%, transparent 70%); pointer-events: none; }
+      .cta-grid-bg { position: absolute; inset: 0; background-image: linear-gradient(var(--border) 1px, transparent 1px), linear-gradient(90deg, var(--border) 1px, transparent 1px); background-size: 40px 40px; opacity: 0.3; }
+      .cta-content { position: relative; z-index: 1; }
+      .cta-content h2 { font-family: var(--font-display); font-size: clamp(2rem, 5vw, 3.2rem); font-weight: 800; letter-spacing: -0.03em; line-height: 1.1; margin-bottom: 1rem; }
+      .cta-content h2 em { font-style: normal; color: var(--accent); }
+      .cta-content p { font-size: 1rem; color: var(--muted); margin-bottom: 2.5rem; line-height: 1.7; max-width: 440px; margin-left: auto; margin-right: auto; }
+      .cta-actions { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+
+      /* ── FOOTER ── */
+      footer { padding: 2.5rem; border-top: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem; }
+      .footer-brand { display: flex; align-items: center; gap: 8px; }
+      .footer-brand-text { font-family: var(--font-display); font-size: 0.9rem; font-weight: 800; color: var(--muted); letter-spacing: -0.02em; }
+      .footer-brand-text span { color: var(--accent); }
+      .footer-copy { font-size: 0.8rem; color: var(--muted); }
+      .footer-links { display: flex; gap: 1.5rem; }
+      .footer-links a { font-size: 0.8rem; color: var(--muted); text-decoration: none; transition: color 0.2s; }
+      .footer-links a:hover { color: var(--text); }
+
+      /* ── ANIMATIONS ── */
+      @keyframes fadeUp { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: translateY(0); } }
+      .reveal { opacity: 0; transform: translateY(28px); transition: opacity 0.65s ease, transform 0.65s ease; }
+      .reveal.visible { opacity: 1; transform: translateY(0); }
+      .reveal-d1 { transition-delay: 0.08s; }
+      .reveal-d2 { transition-delay: 0.16s; }
+      .reveal-d3 { transition-delay: 0.24s; }
+      .reveal-d4 { transition-delay: 0.32s; }
+      .reveal-d5 { transition-delay: 0.40s; }
+      .reveal-d6 { transition-delay: 0.48s; }
+
+      /* ── RESPONSIVE ── */
+      @media (max-width: 1024px) {
+        .services-wrapper { grid-template-columns: 1fr; }
+        .services-sidenav { display: none; }
+        .services-tabs-mobile { display: flex; }
+        .services-content { border-left: none; border-top: 1px solid var(--border); }
+        .cat-block { padding: 3.5rem 1.5rem; }
+        .svc-grid.cols-3 { grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); }
+      }
+      @media (max-width: 768px) {
+        nav { padding: 1rem 1.5rem; }
+        .hamburger { display: flex; }
+        .nav-links {
+          position: absolute; top: 100%; left: 0; right: 0;
+          background: #111111; border-bottom: 1px solid var(--border);
+          flex-direction: column; padding: 0.5rem 1.5rem 1.5rem; gap: 0;
+        }
+        .nav-links.open { display: flex !important; }
+        .nav-links li { border-bottom: 1px solid var(--border); }
+        .nav-links li:last-child { border-bottom: none; }
+        .nav-links a { padding: 0.9rem 0; display: block; font-size: 0.95rem; }
+        .hero { padding: 7rem 1.5rem 3.5rem; }
+        .cta-section { padding: 4rem 1.5rem; }
+        .cta-box { padding: 3rem 1.75rem; }
+        .platform-grid { grid-template-columns: 1fr; }
+        footer { flex-direction: column; align-items: flex-start; padding: 2rem 1.5rem; }
+      }
+    </style>
+  </head>
+  <body>
+
+    <!-- NAV -->
+    <nav>
+      <a href="index.html" class="nav-logo">
+        <svg width="30" height="30" viewBox="0 0 30 30" fill="none">
+          <circle cx="15" cy="3" r="2.2" fill="#c8f04b"/>
+          <circle cx="24.6" cy="7.4" r="2.2" fill="#c8f04b" opacity="0.7"/>
+          <circle cx="27" cy="15" r="2.2" fill="#c8f04b"/>
+          <circle cx="24.6" cy="22.6" r="2.2" fill="#c8f04b" opacity="0.7"/>
+          <circle cx="15" cy="27" r="2.2" fill="#c8f04b"/>
+          <circle cx="5.4" cy="22.6" r="2.2" fill="#c8f04b" opacity="0.7"/>
+          <circle cx="3" cy="15" r="2.2" fill="#c8f04b"/>
+          <circle cx="5.4" cy="7.4" r="2.2" fill="#c8f04b" opacity="0.7"/>
+          <circle cx="15" cy="15" r="3.5" fill="none" stroke="#c8f04b" stroke-width="1.5"/>
+          <line x1="15" y1="5.2" x2="15" y2="11.5" stroke="#c8f04b" stroke-width="1.2" stroke-linecap="round"/>
+          <line x1="15" y1="18.5" x2="15" y2="24.8" stroke="#c8f04b" stroke-width="1.2" stroke-linecap="round"/>
+          <line x1="5.2" y1="15" x2="11.5" y2="15" stroke="#c8f04b" stroke-width="1.2" stroke-linecap="round"/>
+          <line x1="18.5" y1="15" x2="24.8" y2="15" stroke="#c8f04b" stroke-width="1.2" stroke-linecap="round"/>
+        </svg>
+        <span class="nav-logo-text">nodo<span>8</span></span>
+      </a>
+      <ul class="nav-links">
+        <li><a href="index.html#servicios">Servicios</a></li>
+        <li><a href="industries.html">Industrias</a></li>
+        <li><a href="ai.html">IA</a></li>
+        <li><a href="careers.html">Careers</a></li>
+        <li><a href="contact.html">Contacto</a></li>
+      </ul>
+      <button class="hamburger" id="hamburger" aria-label="Menú">
+        <span></span><span></span><span></span>
+      </button>
+      <a href="contact.html" class="nav-cta">Agendar llamada</a>
+    </nav>
+
+    <!-- HERO -->
+    <section class="hero">
+      <canvas id="hero-canvas"></canvas>
+      <div class="hero-overlay"></div>
+      <div class="hero-content">
+        <div class="hero-tag">Portafolio completo</div>
+        <h1>Servicios y Soluciones que<br /><em>transforman</em> tu negocio</h1>
+        <p class="hero-sub">
+          De la consultoría a la implementación, nodo8 entrega experiencia
+          end-to-end en cada capa de tu stack tecnológico — desde la estrategia
+          digital hasta las operaciones en producción.
+        </p>
+        <div class="hero-actions">
+          <a href="#digital-solutions" class="btn-primary">Explorar servicios</a>
+          <a href="contact.html" class="btn-ghost">Hablar con nosotros</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- MOBILE TABS -->
+    <div class="services-tabs-mobile" id="svc-tabs-mobile">
+      <button class="svc-tab-btn active" data-target="digital-solutions">Digital Solutions</button>
+      <button class="svc-tab-btn" data-target="application-services">Application Services</button>
+      <button class="svc-tab-btn" data-target="cloud-devops">Cloud &amp; DevOps</button>
+      <button class="svc-tab-btn" data-target="data-automation">Data &amp; Automation</button>
+      <button class="svc-tab-btn" data-target="services-transformation">Services Transformation</button>
+      <button class="svc-tab-btn" data-target="platform-services">Platform Services</button>
+    </div>
+
+    <!-- MAIN LAYOUT -->
+    <div class="services-wrapper">
+
+      <!-- STICKY SIDENAV (desktop) -->
+      <nav class="services-sidenav" aria-label="Categorías de servicios">
+        <div class="sidenav-label">Categorías</div>
+        <a href="#digital-solutions"       class="sidenav-link active" data-section="digital-solutions">Digital Solutions</a>
+        <a href="#application-services"    class="sidenav-link"        data-section="application-services">Application Services</a>
+        <a href="#cloud-devops"            class="sidenav-link"        data-section="cloud-devops">Cloud &amp; DevOps</a>
+        <a href="#data-automation"         class="sidenav-link"        data-section="data-automation">Data &amp; Automation</a>
+        <a href="#services-transformation" class="sidenav-link"        data-section="services-transformation">Services Transformation</a>
+        <a href="#platform-services"       class="sidenav-link"        data-section="platform-services">Platform Services</a>
+      </nav>
+
+      <!-- CONTENT -->
+      <div class="services-content">
+
+        <!-- ══ 1. DIGITAL SOLUTIONS ══ -->
+        <div class="cat-block" id="digital-solutions">
+          <div class="cat-header reveal">
+            <div class="cat-eyebrow">01 · Digital Solutions</div>
+            <div class="cat-title">Habilitadores digitales<br />para la nueva economía</div>
+            <p class="cat-desc">Soluciones que digitalizan procesos, potencian ventas y protegen datos, construidas con las mejores prácticas de la industria y IA integrada desde el primer día.</p>
+          </div>
+          <div class="svc-grid">
+
+            <div class="svc-card reveal reveal-d1">
+              <div class="svc-num">01</div>
+              <div class="svc-icon"><svg viewBox="0 0 24 24"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg></div>
+              <h3>Digital Optimization</h3>
+              <p>Optimización de procesos digitales con IA, analytics y automatización. Identificamos cuellos de botella y los eliminamos sin interrumpir la operación.</p>
+              <div class="svc-tags"><span class="tag">IA</span><span class="tag">Analytics</span><span class="tag">RPA</span></div>
+            </div>
+
+            <div class="svc-card reveal reveal-d2">
+              <div class="svc-num">02</div>
+              <div class="svc-icon"><svg viewBox="0 0 24 24"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg></div>
+              <h3>Digital Sales</h3>
+              <p>Plataformas de ventas digitales, e-commerce a medida y CRM integrado para maximizar cada punto de contacto con el cliente en todos los canales.</p>
+              <div class="svc-tags"><span class="tag">E-commerce</span><span class="tag">CRM</span><span class="tag">Omnichannel</span></div>
+            </div>
+
+            <div class="svc-card reveal reveal-d3">
+              <div class="svc-num">03</div>
+              <div class="svc-icon"><svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
+              <h3>Data Masking Solution</h3>
+              <p>Protección de datos sensibles en ambientes de prueba y desarrollo. Cumple con GDPR, LFPDPPP y regulaciones sectoriales sin afectar la calidad del testing.</p>
+              <div class="svc-tags"><span class="tag">Privacidad</span><span class="tag">GDPR</span><span class="tag">Compliance</span></div>
+            </div>
+
+            <div class="svc-card reveal reveal-d4">
+              <div class="svc-num">04</div>
+              <div class="svc-icon"><svg viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></div>
+              <h3>IT Cost Optimization</h3>
+              <p>Reducimos el gasto en IT entre 20–40% sin sacrificar rendimiento: rightsizing, licencias, automatización de operaciones y renegociación de contratos cloud.</p>
+              <div class="svc-tags"><span class="tag">FinOps</span><span class="tag">Cloud</span><span class="tag">Automatización</span></div>
+            </div>
+
+            <div class="svc-card reveal reveal-d5">
+              <div class="svc-num">05</div>
+              <div class="svc-icon"><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></div>
+              <h3>Fan Engagement Ecosystem</h3>
+              <p>Plataformas de engagement digital para marcas, equipos deportivos y eventos. Gamificación, loyalty, experiencias interactivas y analytics de audiencia en tiempo real.</p>
+              <div class="svc-tags"><span class="tag">Gamificación</span><span class="tag">Loyalty</span><span class="tag">Real-time</span></div>
+            </div>
+
+            <div class="svc-card reveal reveal-d6">
+              <div class="svc-num">06</div>
+              <div class="svc-icon"><svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div>
+              <h3>FRIDA — Asistente IA nodo8</h3>
+              <p>Nuestra asistente IA interna y para clientes. Automatiza flujos de trabajo, responde preguntas sobre documentación y opera como agente 24/7 en proyectos activos.</p>
+              <div class="svc-tags"><span class="tag">LLM</span><span class="tag">Agente IA</span><span class="tag">LangChain</span></div>
+            </div>
+
+            <div class="svc-card reveal">
+              <div class="svc-num">07</div>
+              <div class="svc-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="2"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/><path d="M2 12h20"/></svg></div>
+              <h3>Digital Enablers</h3>
+              <p>Habilitadores digitales para la transformación empresarial: arquitecturas de referencia, playbooks de adopción, marcos de gobernanza y aceleradoras reutilizables.</p>
+              <div class="svc-tags"><span class="tag">Arquitectura</span><span class="tag">Governance</span><span class="tag">Aceleradores</span></div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- ══ 2. APPLICATION SERVICES ══ -->
+        <div class="cat-block" id="application-services">
+          <div class="cat-header reveal">
+            <div class="cat-eyebrow">02 · Application Services</div>
+            <div class="cat-title">Del código a la operación,<br />cubierto end-to-end</div>
+            <p class="cat-desc">Desarrollamos, aseguramos la calidad y mantenemos aplicaciones de misión crítica con los más altos estándares de ingeniería.</p>
+          </div>
+          <div class="svc-grid cols-3">
+
+            <div class="svc-card reveal reveal-d1">
+              <div class="svc-num">01</div>
+              <div class="svc-icon"><svg viewBox="0 0 24 24"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg></div>
+              <h3>Software Development</h3>
+              <p>Desarrollo de software a medida: web, mobile nativo/híbrido, APIs REST y GraphQL, microservicios y aplicaciones empresariales. Metodología ágil, entregas cada 2 semanas.</p>
+              <div class="svc-tags"><span class="tag">React</span><span class="tag">Node.js</span><span class="tag">iOS</span><span class="tag">Android</span></div>
+            </div>
+
+            <div class="svc-card reveal reveal-d2">
+              <div class="svc-num">02</div>
+              <div class="svc-icon"><svg viewBox="0 0 24 24"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg></div>
+              <h3>Quality Engineering</h3>
+              <p>QA automatizado, testing de rendimiento, seguridad y accesibilidad. Cobertura de pruebas desde el primer sprint. Shift-left testing integrado al pipeline de CI/CD.</p>
+              <div class="svc-tags"><span class="tag">Selenium</span><span class="tag">Playwright</span><span class="tag">k6</span><span class="tag">OWASP</span></div>
+            </div>
+
+            <div class="svc-card reveal reveal-d3">
+              <div class="svc-num">03</div>
+              <div class="svc-icon"><svg viewBox="0 0 24 24"><path d="M12 8V4H8"/><rect x="2" y="2" width="20" height="8" rx="2"/><rect x="2" y="14" width="20" height="8" rx="2"/><path d="M6 18h.01M6 6h.01"/></svg></div>
+              <h3>Application Management</h3>
+              <p>Mantenimiento evolutivo, monitoreo proactivo y soporte 24/7 para aplicaciones en producción. SLAs garantizados, gestión de incidentes y mejora continua.</p>
+              <div class="svc-tags"><span class="tag">AMS</span><span class="tag">ITIL</span><span class="tag">Datadog</span><span class="tag">PagerDuty</span></div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- ══ 3. CLOUD & DEVOPS ══ -->
+        <div class="cat-block" id="cloud-devops">
+          <div class="cat-header reveal">
+            <div class="cat-eyebrow">03 · Cloud &amp; DevOps</div>
+            <div class="cat-title">Infraestructura que escala<br />con tu negocio</div>
+            <p class="cat-desc">Desde la migración al cloud hasta la seguridad ofensiva, construimos y operamos la infraestructura que hace posible todo lo demás.</p>
+          </div>
+          <div class="svc-grid">
+
+            <div class="svc-card reveal reveal-d1">
+              <div class="svc-num">01</div>
+              <div class="svc-icon"><svg viewBox="0 0 24 24"><path d="M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9Z"/></svg></div>
+              <h3>Cloud Services</h3>
+              <p>Migración, diseño de arquitecturas cloud-native y estrategia multi-cloud. Implementamos bien-arquitectadas desde el día uno en AWS, Azure y GCP.</p>
+              <div class="svc-tags"><span class="tag">AWS</span><span class="tag">Azure</span><span class="tag">GCP</span><span class="tag">Multi-cloud</span></div>
+            </div>
+
+            <div class="svc-card reveal reveal-d2">
+              <div class="svc-num">02</div>
+              <div class="svc-icon"><svg viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="8" rx="2"/><rect x="2" y="14" width="20" height="8" rx="2"/><line x1="6" y1="6" x2="6.01" y2="6"/><line x1="6" y1="18" x2="6.01" y2="18"/></svg></div>
+              <h3>IT Infrastructure</h3>
+              <p>Diseño, implementación y gestión de infraestructura híbrida: redes, storage, virtualización y centros de datos. Operaciones 24/7 con respuesta a incidentes garantizada.</p>
+              <div class="svc-tags"><span class="tag">VMware</span><span class="tag">Cisco</span><span class="tag">NetApp</span><span class="tag">Híbrido</span></div>
+            </div>
+
+            <div class="svc-card reveal reveal-d3">
+              <div class="svc-num">03</div>
+              <div class="svc-icon"><svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
+              <h3>Digital Security</h3>
+              <p>Ciberseguridad ofensiva y defensiva: auditorías, pentesting, hardening, gestión de vulnerabilidades, SOC y compliance (ISO 27001, NIST, PCI DSS).</p>
+              <div class="svc-tags"><span class="tag">Pentesting</span><span class="tag">SOC</span><span class="tag">Zero Trust</span><span class="tag">OWASP</span></div>
+            </div>
+
+            <div class="svc-card reveal reveal-d4">
+              <div class="svc-num">04</div>
+              <div class="svc-icon"><svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div>
+              <h3>DevOps</h3>
+              <p>Pipelines CI/CD, contenedores, Kubernetes, observabilidad y cultura DevOps. Reducimos el time-to-market y aumentamos la frecuencia de despliegue sin sacrificar estabilidad.</p>
+              <div class="svc-tags"><span class="tag">Kubernetes</span><span class="tag">Docker</span><span class="tag">Terraform</span><span class="tag">GitOps</span></div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- ══ 4. DATA & AUTOMATION ══ -->
+        <div class="cat-block" id="data-automation">
+          <div class="cat-header reveal">
+            <div class="cat-eyebrow">04 · Data &amp; Automation</div>
+            <div class="cat-title">Datos que deciden,<br />procesos que se mueven solos</div>
+            <p class="cat-desc">Convertimos datos en ventaja competitiva y automatizamos los procesos que consumen tiempo y generan errores humanos.</p>
+          </div>
+          <div class="svc-grid cols-2">
+
+            <div class="svc-card reveal reveal-d1">
+              <div class="svc-num">01</div>
+              <div class="svc-icon"><svg viewBox="0 0 24 24"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg></div>
+              <h3>Data &amp; AI</h3>
+              <p>Analytics avanzado, modelos de ML supervisado y no supervisado, forecasting, detección de anomalías y dashboards ejecutivos en tiempo real. Desde el data lake hasta el insight accionable en el negocio.</p>
+              <div class="svc-tags"><span class="tag">Python</span><span class="tag">TensorFlow</span><span class="tag">BigQuery</span><span class="tag">Looker</span><span class="tag">dbt</span></div>
+            </div>
+
+            <div class="svc-card reveal reveal-d2">
+              <div class="svc-num">02</div>
+              <div class="svc-icon"><svg viewBox="0 0 24 24"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg></div>
+              <h3>Intelligent Automation</h3>
+              <p>RPA con UiPath y Power Automate, agentes IA con LangChain y Claude, workflows automáticos e integración de sistemas mediante APIs y webhooks. Automatizamos lo repetitivo para que tu equipo se enfoque en lo que importa.</p>
+              <div class="svc-tags"><span class="tag">RPA</span><span class="tag">UiPath</span><span class="tag">LangChain</span><span class="tag">n8n</span><span class="tag">Zapier</span></div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- ══ 5. SERVICES TRANSFORMATION ══ -->
+        <div class="cat-block" id="services-transformation">
+          <div class="cat-header reveal">
+            <div class="cat-eyebrow">05 · Services Transformation</div>
+            <div class="cat-title">Moderniza el núcleo,<br />opera el futuro</div>
+            <p class="cat-desc">Migramos sistemas legacy que frenan el crecimiento y diseñamos las operaciones IT del siguiente decenio.</p>
+          </div>
+          <div class="svc-grid cols-2">
+
+            <div class="svc-card reveal reveal-d1">
+              <div class="svc-num">01</div>
+              <div class="svc-icon"><svg viewBox="0 0 24 24"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg></div>
+              <h3>Core Modernization</h3>
+              <p>Migración de sistemas legacy a arquitecturas modernas: strangler fig, re-platform o full rewrite según el caso. Cero downtime en producción, migración incremental y validada. Especialidad en COBOL, AS/400 y monolitos Java.</p>
+              <div class="svc-tags"><span class="tag">Microservicios</span><span class="tag">Event-driven</span><span class="tag">Strangler Fig</span><span class="tag">DDD</span></div>
+            </div>
+
+            <div class="svc-card reveal reveal-d2">
+              <div class="svc-num">02</div>
+              <div class="svc-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M4.93 4.93a10 10 0 0 0 0 14.14"/></svg></div>
+              <h3>Next-Gen IT Operations</h3>
+              <p>Operaciones IT del futuro: AIOps, monitoreo predictivo, auto-healing de infraestructura, chatops y gestión de incidentes con IA. Reducimos el MTTR en más del 70% y eliminamos el ruido de alertas que nadie atiende.</p>
+              <div class="svc-tags"><span class="tag">AIOps</span><span class="tag">Prometheus</span><span class="tag">Datadog</span><span class="tag">PagerDuty</span></div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- ══ 6. PLATFORM SERVICES ══ -->
+        <div class="cat-block" id="platform-services">
+          <div class="cat-header reveal">
+            <div class="cat-eyebrow">06 · Platform Services</div>
+            <div class="cat-title">Expertise certificado<br />en las plataformas líderes</div>
+            <p class="cat-desc">Nuestros equipos especializados por plataforma implementan, personalizan e integran las soluciones más adoptadas en la industria.</p>
+          </div>
+          <div class="platform-grid">
+
+            <div class="platform-card reveal reveal-d1">
+              <div class="platform-logo">AWS</div>
+              <div class="platform-name">Amazon Web Services</div>
+              <p class="platform-desc">Arquitectura, migración y optimización de costos en AWS. Socios certificados con experiencia en más de 30 servicios: EC2, Lambda, RDS, EKS, SageMaker y más.</p>
+              <div class="platform-tags"><span class="tag">Well-Architected</span><span class="tag">FinOps</span><span class="tag">MLOps</span></div>
+            </div>
+
+            <div class="platform-card reveal reveal-d2">
+              <div class="platform-logo">SAP</div>
+              <div class="platform-name">SAP</div>
+              <p class="platform-desc">Implementación, personalización, migración a S/4HANA y soporte AMS de sistemas SAP. Módulos FI/CO, MM, SD, PP, HCM y desarrollo ABAP.</p>
+              <div class="platform-tags"><span class="tag">S/4HANA</span><span class="tag">BTP</span><span class="tag">ABAP</span></div>
+            </div>
+
+            <div class="platform-card reveal reveal-d3">
+              <div class="platform-logo">MS</div>
+              <div class="platform-name">Microsoft</div>
+              <p class="platform-desc">Azure, Microsoft 365 y Dynamics 365. Migraciones, licenciamiento, implementación de Copilot empresarial y desarrollo con Power Platform.</p>
+              <div class="platform-tags"><span class="tag">Azure</span><span class="tag">M365</span><span class="tag">Power Platform</span></div>
+            </div>
+
+            <div class="platform-card reveal reveal-d4">
+              <div class="platform-logo">SF</div>
+              <div class="platform-name">Salesforce</div>
+              <p class="platform-desc">Implementación de Sales Cloud, Service Cloud y Marketing Cloud. Desarrollo Apex y LWC, integraciones con ERP y portales de experiencia para clientes.</p>
+              <div class="platform-tags"><span class="tag">Sales Cloud</span><span class="tag">Apex</span><span class="tag">Flow</span></div>
+            </div>
+
+            <div class="platform-card reveal reveal-d5">
+              <div class="platform-logo">SN</div>
+              <div class="platform-name">ServiceNow</div>
+              <p class="platform-desc">Automatización de procesos IT y empresariales con ServiceNow. ITSM, ITOM, HR Service Delivery y desarrollo de aplicaciones de flujo de trabajo a medida.</p>
+              <div class="platform-tags"><span class="tag">ITSM</span><span class="tag">ITOM</span><span class="tag">Flow Designer</span></div>
+            </div>
+
+            <div class="platform-card reveal reveal-d6">
+              <div class="platform-logo">AT</div>
+              <div class="platform-name">Atlassian</div>
+              <p class="platform-desc">Jira, Confluence, Bitbucket y Jira Service Management. Configuración de flujos ágiles, migración a Cloud, automatizaciones y administración de instancias.</p>
+              <div class="platform-tags"><span class="tag">Jira</span><span class="tag">Confluence</span><span class="tag">ScriptRunner</span></div>
+            </div>
+
+          </div>
+        </div>
+
+      </div><!-- /services-content -->
+    </div><!-- /services-wrapper -->
+
+    <!-- CTA -->
+    <section class="cta-section">
+      <div class="cta-box reveal">
+        <div class="cta-glow"></div>
+        <div class="cta-grid-bg"></div>
+        <div class="cta-content">
+          <div class="section-eyebrow" style="margin-bottom:0.75rem">¿Algo más?</div>
+          <h2>¿No encuentras<br /><em>lo que buscas?</em></h2>
+          <p>Cuéntanos el reto y en 24 horas te decimos si podemos ayudarte y cómo. No hacemos propuestas genéricas.</p>
+          <div class="cta-actions">
+            <a href="contact.html" class="btn-primary">Hablar con un experto</a>
+            <a href="industries.html" class="btn-ghost">Ver por industria</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer>
+      <div class="footer-brand">
+        <svg width="18" height="18" viewBox="0 0 30 30" fill="none">
+          <circle cx="15" cy="3" r="2.2" fill="#c8f04b"/>
+          <circle cx="24.6" cy="7.4" r="2.2" fill="#c8f04b" opacity="0.6"/>
+          <circle cx="27" cy="15" r="2.2" fill="#c8f04b"/>
+          <circle cx="24.6" cy="22.6" r="2.2" fill="#c8f04b" opacity="0.6"/>
+          <circle cx="15" cy="27" r="2.2" fill="#c8f04b"/>
+          <circle cx="5.4" cy="22.6" r="2.2" fill="#c8f04b" opacity="0.6"/>
+          <circle cx="3" cy="15" r="2.2" fill="#c8f04b"/>
+          <circle cx="5.4" cy="7.4" r="2.2" fill="#c8f04b" opacity="0.6"/>
+          <circle cx="15" cy="15" r="3.5" fill="none" stroke="#c8f04b" stroke-width="1.5"/>
+          <line x1="15" y1="5.2" x2="15" y2="11.5" stroke="#c8f04b" stroke-width="1.2" stroke-linecap="round"/>
+          <line x1="15" y1="18.5" x2="15" y2="24.8" stroke="#c8f04b" stroke-width="1.2" stroke-linecap="round"/>
+          <line x1="5.2" y1="15" x2="11.5" y2="15" stroke="#c8f04b" stroke-width="1.2" stroke-linecap="round"/>
+          <line x1="18.5" y1="15" x2="24.8" y2="15" stroke="#c8f04b" stroke-width="1.2" stroke-linecap="round"/>
+        </svg>
+        <span class="footer-brand-text">nodo<span>8</span></span>
+      </div>
+      <div class="footer-copy">© 2026 nodo8 · Guadalajara, México</div>
+      <div class="footer-links">
+        <a href="index.html">Inicio</a>
+        <a href="industries.html">Industrias</a>
+        <a href="contact.html">Contacto</a>
+        <a href="careers.html">Careers</a>
+      </div>
+    </footer>
+
+    <script>
+      /* ── Neural canvas ── */
+      (function () {
+        var canvas = document.getElementById("hero-canvas");
+        var ctx = canvas.getContext("2d");
+        var ACCENT = "200,240,75";
+        var W, H, nodes = [], raf;
+        function resize() { W = canvas.width = canvas.offsetWidth; H = canvas.height = canvas.offsetHeight; }
+        function mkNode() { return { x: Math.random()*W, y: Math.random()*H, vx: (Math.random()-.5)*.35, vy: (Math.random()-.5)*.35, r: Math.random()*1.8+.8, o: Math.random()*.5+.2 }; }
+        function init() { resize(); var n = Math.min(Math.floor(W*H/13000), 80); nodes = []; for(var i=0;i<n;i++) nodes.push(mkNode()); }
+        function draw() {
+          ctx.clearRect(0,0,W,H);
+          for(var i=0;i<nodes.length;i++) {
+            var a=nodes[i]; a.x+=a.vx; a.y+=a.vy;
+            if(a.x<0||a.x>W) a.vx*=-1; if(a.y<0||a.y>H) a.vy*=-1;
+            for(var j=i+1;j<nodes.length;j++) {
+              var b=nodes[j], dx=a.x-b.x, dy=a.y-b.y, d=Math.sqrt(dx*dx+dy*dy);
+              if(d<140){ ctx.beginPath(); ctx.moveTo(a.x,a.y); ctx.lineTo(b.x,b.y); ctx.strokeStyle="rgba("+ACCENT+","+(1-d/140)*.18+")"; ctx.lineWidth=.6; ctx.stroke(); }
+            }
+            ctx.beginPath(); ctx.arc(a.x,a.y,a.r,0,Math.PI*2); ctx.fillStyle="rgba("+ACCENT+","+a.o+")"; ctx.fill();
+          }
+          raf=requestAnimationFrame(draw);
+        }
+        init(); draw();
+        window.addEventListener("resize",function(){cancelAnimationFrame(raf);init();draw();});
+      })();
+
+      /* ── Scroll reveal ── */
+      var revObs = new IntersectionObserver(function(entries){
+        entries.forEach(function(e){ if(e.isIntersecting){e.target.classList.add("visible");revObs.unobserve(e.target);} });
+      },{threshold:0.07});
+      document.querySelectorAll(".reveal").forEach(function(el){revObs.observe(el);});
+
+      /* ── Sticky sidenav active + mobile tabs sync ── */
+      var cats = ["digital-solutions","application-services","cloud-devops","data-automation","services-transformation","platform-services"];
+      var sideLinks = document.querySelectorAll(".sidenav-link[data-section]");
+      var mobileBtns = document.querySelectorAll(".svc-tab-btn[data-target]");
+      function setActive(id) {
+        sideLinks.forEach(function(l){l.classList.toggle("active",l.dataset.section===id);});
+        mobileBtns.forEach(function(b){b.classList.toggle("active",b.dataset.target===id);});
+      }
+      var sectObs = new IntersectionObserver(function(entries){
+        entries.forEach(function(e){if(e.isIntersecting)setActive(e.target.id);});
+      },{rootMargin:"-35% 0px -60% 0px"});
+      cats.forEach(function(id){var el=document.getElementById(id);if(el)sectObs.observe(el);});
+
+      /* ── Mobile tab click → smooth scroll ── */
+      mobileBtns.forEach(function(btn){
+        btn.addEventListener("click",function(){
+          var el=document.getElementById(btn.dataset.target);
+          if(el)el.scrollIntoView({behavior:"smooth",block:"start"});
+        });
+      });
+
+      /* ── Hamburger ── */
+      (function(){
+        var btn=document.getElementById("hamburger");
+        var menu=document.querySelector(".nav-links");
+        btn.addEventListener("click",function(){btn.classList.toggle("open");menu.classList.toggle("open");});
+        menu.querySelectorAll("a").forEach(function(a){
+          a.addEventListener("click",function(){btn.classList.remove("open");menu.classList.remove("open");});
+        });
+      })();
+    </script>
+  </body>
+</html>
