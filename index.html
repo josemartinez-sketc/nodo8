@@ -554,11 +554,52 @@
           padding: 2rem 1.5rem;
         }
       }
+
+      /* ── Hamburger ── */
+      .hamburger {
+        display: none;
+        flex-direction: column;
+        gap: 5px;
+        background: none;
+        border: none;
+        cursor: pointer;
+        padding: 4px;
+        z-index: 10;
+      }
+      .hamburger span {
+        display: block;
+        width: 22px;
+        height: 1.5px;
+        background: var(--text);
+        border-radius: 2px;
+        transition: transform 0.3s ease, opacity 0.3s ease;
+        transform-origin: center;
+      }
+      .hamburger.open span:nth-child(1) { transform: translateY(6.5px) rotate(45deg); }
+      .hamburger.open span:nth-child(2) { opacity: 0; transform: scaleX(0); }
+      .hamburger.open span:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); }
+      @media (max-width: 768px) {
+        .hamburger { display: flex; }
+        .nav-links {
+          position: absolute;
+          top: 100%;
+          left: 0; right: 0;
+          background: #111111;
+          border-bottom: 1px solid var(--border);
+          flex-direction: column;
+          padding: 0.5rem 1.5rem 1.5rem;
+          gap: 0;
+        }
+        .nav-links.open { display: flex !important; }
+        .nav-links li { border-bottom: 1px solid var(--border); }
+        .nav-links li:last-child { border-bottom: none; }
+        .nav-links a { padding: 0.9rem 0; display: block; font-size: 0.95rem; }
+      }
     </style>
   </head>
   <body>
     <nav>
-      <a href="#" class="nav-logo">
+      <a href="index.html" class="nav-logo">
         <svg
           width="30"
           height="30"
@@ -625,14 +666,16 @@
         <span class="nav-logo-text">nodo<span>8</span></span>
       </a>
       <ul class="nav-links">
-        <li><a href="#servicios">Servicios</a></li>
-        <li><a href="#proceso">Proceso</a></li>
+        <li><a href="#servicios" class="active">Servicios</a></li>
         <li><a href="industries.html">Industrias</a></li>
         <li><a href="ai.html">IA</a></li>
-        <li><a href="contact.html">Contacto</a></li>
         <li><a href="careers.html">Careers</a></li>
+        <li><a href="contact.html">Contacto</a></li>
       </ul>
-      <a href="#contacto" class="nav-cta">Agendar llamada</a>
+      <button class="hamburger" id="hamburger" aria-label="Menú">
+        <span></span><span></span><span></span>
+      </button>
+      <a href="contact.html" class="nav-cta">Agendar llamada</a>
     </nav>
 
     <section class="hero">
@@ -976,8 +1019,24 @@
       </div>
       <div class="footer-copy">© 2026 nodo8 · Guadalajara, México</div>
       <div class="footer-links">
-        <a href="#servicios">Servic </a>
+        <a href="#servicios">Servicios</a>
       </div>
     </footer>
+    <script>
+      (function () {
+        var btn  = document.getElementById("hamburger");
+        var menu = document.querySelector(".nav-links");
+        btn.addEventListener("click", function () {
+          btn.classList.toggle("open");
+          menu.classList.toggle("open");
+        });
+        menu.querySelectorAll("a").forEach(function (a) {
+          a.addEventListener("click", function () {
+            btn.classList.remove("open");
+            menu.classList.remove("open");
+          });
+        });
+      })();
+    </script>
   </body>
 </html>
