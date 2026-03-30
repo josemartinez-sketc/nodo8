@@ -1,0 +1,995 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>nodo8 — Pitch Deck 2026</title>
+    <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:wght@300;400;500&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --bg: #0a0a0a;
+        --surface: #111111;
+        --surface2: #181818;
+        --border: rgba(255, 255, 255, 0.07);
+        --accent: #c8f04b;
+        --accent-dim: rgba(200, 240, 75, 0.12);
+        --text: #f0f0ec;
+        --muted: #888880;
+        --font-display: "Syne", sans-serif;
+        --font-body: "DM Sans", sans-serif;
+        --nav-h: 68px;
+      }
+      *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+      html { scroll-behavior: smooth; }
+      body {
+        background: var(--bg);
+        color: var(--text);
+        font-family: var(--font-body);
+        font-size: 16px;
+        line-height: 1.7;
+        overflow-x: hidden;
+      }
+
+      /* ── NAV ── */
+      nav {
+        position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+        display: flex; align-items: center; justify-content: space-between;
+        padding: 1.25rem 2.5rem;
+        border-bottom: 1px solid var(--border);
+        background: rgba(10,10,10,0.88);
+        backdrop-filter: blur(12px);
+      }
+      .nav-logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+      .nav-logo-text { font-family: var(--font-display); font-size: 1.1rem; font-weight: 800; color: var(--text); letter-spacing: -0.02em; }
+      .nav-logo-text span { color: var(--accent); }
+      .nav-links { display: flex; gap: 2rem; list-style: none; }
+      .nav-links a { font-size: 0.85rem; color: var(--muted); text-decoration: none; transition: color 0.2s; }
+      .nav-links a:hover, .nav-links a.active { color: var(--accent); }
+      .nav-cta {
+        font-family: var(--font-display); font-size: 0.8rem; font-weight: 700;
+        background: var(--accent); color: #0a0a0a; padding: 0.5rem 1.25rem;
+        border-radius: 4px; text-decoration: none; letter-spacing: 0.03em;
+        transition: opacity 0.2s;
+      }
+      .nav-cta:hover { opacity: 0.85; }
+      .nav-cta-sec { font-family: var(--font-body); font-size: 0.85rem; font-weight: 500; color: var(--accent); background: transparent; border: 1px solid var(--accent); padding: 0.55rem 1.25rem; border-radius: 4px; cursor: pointer; text-decoration: none; transition: background 0.2s; }
+      .nav-cta-sec:hover { background: var(--accent-dim); }
+      .hamburger {
+        display: none; flex-direction: column; justify-content: center; gap: 5px;
+        background: none; border: none; cursor: pointer; padding: 4px;
+      }
+      .hamburger span {
+        display: block; width: 22px; height: 2px; background: var(--text); border-radius: 2px;
+        transition: transform 0.3s, opacity 0.3s;
+      }
+      .hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+      .hamburger.open span:nth-child(2) { opacity: 0; }
+      .hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+      @media (max-width: 1100px) { .nav-links { gap: 1.2rem; } }
+      @media (max-width: 900px) {
+        .nav-links { display: none; }
+        .hamburger { display: flex; }
+      }
+      @media (max-width: 768px) {
+        .nav-links {
+          position: absolute; top: 100%; left: 0; right: 0;
+          background: rgba(10,10,10,0.98); backdrop-filter: blur(12px);
+          flex-direction: column; padding: 1rem 2rem; gap: 0;
+        }
+        .nav-links.open { display: flex !important; }
+        .nav-links li { border-bottom: 1px solid var(--border); }
+        .nav-links li:last-child { border-bottom: none; }
+        .nav-links a { padding: 0.9rem 0; display: block; font-size: 0.95rem; }
+      }
+
+      /* ── FLOAT BUTTON ── */
+      .float-pdf {
+        position: fixed; bottom: 2rem; right: 2rem; z-index: 200;
+        display: flex; align-items: center; gap: 0.6rem;
+        background: var(--accent); color: #0a0a0a;
+        font-family: var(--font-display); font-size: 0.85rem; font-weight: 700;
+        padding: 0.75rem 1.4rem; border-radius: 50px; text-decoration: none;
+        box-shadow: 0 4px 24px rgba(200,240,75,0.35);
+        cursor: pointer; border: none; transition: transform 0.2s, box-shadow 0.2s;
+        letter-spacing: 0.02em;
+      }
+      .float-pdf:hover { transform: translateY(-2px); box-shadow: 0 8px 32px rgba(200,240,75,0.45); }
+      .float-pdf svg { flex-shrink: 0; }
+
+      /* ── PITCH WRAPPER ── */
+      .pitch-main {
+        margin-top: var(--nav-h);
+      }
+
+      /* ── SHARED SLIDE STYLES ── */
+      .slide {
+        min-height: 100vh;
+        display: flex; flex-direction: column; justify-content: center;
+        padding: 5rem 8vw;
+        position: relative;
+        overflow: hidden;
+      }
+      .slide + .slide {
+        border-top: 1px solid var(--border);
+      }
+      .slide-number {
+        position: absolute; top: 2.5rem; right: 3rem;
+        font-family: var(--font-display); font-size: 0.75rem;
+        color: var(--muted); letter-spacing: 0.12em;
+      }
+      .slide-label {
+        font-family: var(--font-display); font-size: 0.72rem; font-weight: 700;
+        color: var(--accent); letter-spacing: 0.18em; text-transform: uppercase;
+        margin-bottom: 1.5rem;
+      }
+      .slide-title {
+        font-family: var(--font-display); font-size: clamp(2rem, 4vw, 3.2rem);
+        font-weight: 800; line-height: 1.1; letter-spacing: -0.03em;
+        margin-bottom: 1.5rem;
+      }
+      .slide-body {
+        font-size: 1.05rem; color: rgba(240,240,236,0.75); max-width: 700px;
+        line-height: 1.75;
+      }
+
+      /* ─────────────────────────────────────────────
+         SLIDE 1: PORTADA
+      ───────────────────────────────────────────── */
+      #slide-cover {
+        align-items: center; text-align: center;
+        background:
+          radial-gradient(ellipse 80% 60% at 50% 50%, rgba(200,240,75,0.06) 0%, transparent 70%),
+          var(--bg);
+      }
+      .cover-grid {
+        position: absolute; inset: 0;
+        background-image:
+          linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+        background-size: 60px 60px;
+        pointer-events: none;
+      }
+      .cover-logo {
+        position: relative; z-index: 1;
+        margin-bottom: 3rem;
+      }
+      .cover-wordmark {
+        font-family: var(--font-display); font-size: clamp(3.5rem, 10vw, 7rem);
+        font-weight: 800; letter-spacing: -0.04em; line-height: 1;
+        color: var(--text);
+      }
+      .cover-wordmark span { color: var(--accent); }
+      .cover-dot {
+        display: inline-block; width: 14px; height: 14px;
+        background: var(--accent); border-radius: 50%;
+        margin-left: 4px; vertical-align: middle; margin-bottom: 8px;
+      }
+      .cover-tagline {
+        position: relative; z-index: 1;
+        font-family: var(--font-display); font-size: clamp(1.1rem, 2.5vw, 1.5rem);
+        font-weight: 600; color: rgba(240,240,236,0.7);
+        letter-spacing: -0.01em; margin-bottom: 1.5rem; max-width: 600px;
+      }
+      .cover-tagline strong { color: var(--accent); font-weight: 700; }
+      .cover-meta {
+        position: relative; z-index: 1;
+        font-size: 0.85rem; color: var(--muted); letter-spacing: 0.12em;
+        text-transform: uppercase;
+      }
+      .cover-meta a { color: var(--accent); text-decoration: none; }
+      .cover-badges {
+        position: relative; z-index: 1;
+        display: flex; gap: 0.75rem; flex-wrap: wrap; justify-content: center;
+        margin-top: 2.5rem;
+      }
+      .cover-badge {
+        padding: 0.4rem 1rem; border: 1px solid rgba(200,240,75,0.3);
+        border-radius: 50px; font-size: 0.8rem; color: rgba(240,240,236,0.6);
+        letter-spacing: 0.05em;
+      }
+
+      /* ─────────────────────────────────────────────
+         SLIDE 2: QUIÉNES SOMOS
+      ───────────────────────────────────────────── */
+      .about-grid {
+        display: grid; grid-template-columns: 1fr 1fr;
+        gap: 4rem; margin-top: 3rem;
+        align-items: start;
+      }
+      .about-offices {
+        display: flex; flex-direction: column; gap: 1rem;
+      }
+      .office-item {
+        display: flex; align-items: center; gap: 1rem;
+        padding: 1.1rem 1.4rem;
+        background: var(--surface); border: 1px solid var(--border);
+        border-radius: 10px;
+      }
+      .office-icon {
+        width: 36px; height: 36px; background: var(--accent-dim);
+        border-radius: 8px; display: flex; align-items: center; justify-content: center;
+        flex-shrink: 0;
+      }
+      .office-info { display: flex; flex-direction: column; }
+      .office-city { font-family: var(--font-display); font-weight: 700; font-size: 0.95rem; }
+      .office-country { font-size: 0.8rem; color: var(--muted); }
+      .about-stats {
+        display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;
+      }
+      .stat-card {
+        background: var(--surface); border: 1px solid var(--border);
+        border-radius: 12px; padding: 1.75rem 1.5rem; text-align: center;
+      }
+      .stat-num {
+        font-family: var(--font-display); font-size: 2.8rem; font-weight: 800;
+        color: var(--accent); line-height: 1; letter-spacing: -0.03em;
+      }
+      .stat-suffix { font-size: 1.6rem; }
+      .stat-label { font-size: 0.82rem; color: var(--muted); margin-top: 0.5rem; }
+
+      /* ─────────────────────────────────────────────
+         SLIDE 3: SERVICIOS
+      ───────────────────────────────────────────── */
+      .services-grid {
+        display: grid; grid-template-columns: repeat(3, 1fr);
+        gap: 1.5rem; margin-top: 3rem;
+      }
+      .service-card {
+        background: var(--surface); border: 1px solid var(--border);
+        border-radius: 12px; padding: 2rem 1.75rem;
+        position: relative; overflow: hidden;
+      }
+      .service-card::before {
+        content: ''; position: absolute; inset: 0;
+        background: linear-gradient(135deg, var(--accent-dim) 0%, transparent 60%);
+        opacity: 0; transition: opacity 0.3s;
+      }
+      .service-card:hover::before { opacity: 1; }
+      .service-icon {
+        width: 48px; height: 48px; background: var(--accent-dim);
+        border-radius: 10px; display: flex; align-items: center; justify-content: center;
+        margin-bottom: 1.25rem;
+      }
+      .service-icon svg { width: 22px; height: 22px; color: var(--accent); }
+      .service-name {
+        font-family: var(--font-display); font-size: 1rem; font-weight: 700;
+        margin-bottom: 0.6rem; position: relative; z-index: 1;
+      }
+      .service-desc {
+        font-size: 0.85rem; color: var(--muted); line-height: 1.6;
+        position: relative; z-index: 1;
+      }
+      .service-tag {
+        display: inline-block; margin-top: 1rem;
+        padding: 0.25rem 0.7rem; background: var(--accent-dim);
+        border-radius: 50px; font-size: 0.72rem; color: var(--accent);
+        font-weight: 600; letter-spacing: 0.04em; position: relative; z-index: 1;
+      }
+
+      /* ─────────────────────────────────────────────
+         SLIDE 4: INDUSTRIAS
+      ───────────────────────────────────────────── */
+      .industries-grid {
+        display: grid; grid-template-columns: repeat(3, 1fr);
+        gap: 1.5rem; margin-top: 3rem;
+      }
+      .industry-card {
+        background: var(--surface); border: 1px solid var(--border);
+        border-radius: 12px; padding: 2.25rem 1.75rem;
+        display: flex; flex-direction: column; align-items: flex-start; gap: 1rem;
+        transition: border-color 0.25s;
+      }
+      .industry-card:hover { border-color: rgba(200,240,75,0.3); }
+      .ind-icon {
+        width: 52px; height: 52px; background: var(--accent-dim);
+        border-radius: 12px; display: flex; align-items: center; justify-content: center;
+      }
+      .ind-icon svg { width: 24px; height: 24px; color: var(--accent); }
+      .ind-name {
+        font-family: var(--font-display); font-size: 1.05rem; font-weight: 700;
+      }
+      .ind-desc { font-size: 0.85rem; color: var(--muted); line-height: 1.6; }
+
+      /* ─────────────────────────────────────────────
+         SLIDE 5: PARTNERS
+      ───────────────────────────────────────────── */
+      .partners-intro {
+        font-size: 1rem; color: rgba(240,240,236,0.65); max-width: 560px;
+        margin-top: 0.5rem; margin-bottom: 3rem;
+      }
+      .partners-logos {
+        display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem;
+      }
+      .partner-logo-card {
+        background: var(--surface); border: 1px solid var(--border);
+        border-radius: 12px; padding: 2rem 1.5rem;
+        display: flex; flex-direction: column; align-items: center; gap: 0.75rem;
+        text-align: center; transition: border-color 0.25s;
+      }
+      .partner-logo-card:hover { border-color: rgba(200,240,75,0.3); }
+      .partner-abbr {
+        font-family: var(--font-display); font-size: 1.4rem; font-weight: 800;
+        color: var(--accent); letter-spacing: -0.02em;
+      }
+      .partner-full { font-size: 0.82rem; color: var(--muted); }
+      .partner-badge-sm {
+        font-size: 0.7rem; font-weight: 700; letter-spacing: 0.06em;
+        color: var(--accent); background: var(--accent-dim);
+        padding: 0.2rem 0.6rem; border-radius: 50px;
+      }
+
+      /* ─────────────────────────────────────────────
+         SLIDE 6: CASOS DE ÉXITO
+      ───────────────────────────────────────────── */
+      .cases-grid {
+        display: grid; grid-template-columns: repeat(3, 1fr);
+        gap: 1.5rem; margin-top: 3rem;
+      }
+      .case-card-pitch {
+        background: var(--surface); border: 1px solid var(--border);
+        border-radius: 12px; padding: 2rem 1.75rem;
+        display: flex; flex-direction: column; gap: 1rem;
+      }
+      .case-thumb-mini {
+        height: 80px; border-radius: 8px; margin-bottom: 0.25rem;
+      }
+      .case-thumb-retail  { background: linear-gradient(135deg, #1a3a4a 0%, #0d1f2d 100%); }
+      .case-thumb-banca   { background: linear-gradient(135deg, #1a1a3e 0%, #0d0d2a 100%); }
+      .case-thumb-logis   { background: linear-gradient(135deg, #1a2a1a 0%, #0d1a0d 100%); }
+      .case-tag-sm {
+        font-size: 0.72rem; font-weight: 700; letter-spacing: 0.06em;
+        color: var(--accent); text-transform: uppercase;
+      }
+      .case-title-sm {
+        font-family: var(--font-display); font-size: 1rem; font-weight: 700;
+        line-height: 1.3;
+      }
+      .case-result-big {
+        font-family: var(--font-display); font-size: 2.2rem; font-weight: 800;
+        color: var(--accent); letter-spacing: -0.03em; line-height: 1;
+      }
+      .case-result-label { font-size: 0.8rem; color: var(--muted); margin-top: 0.2rem; }
+      .case-desc-sm { font-size: 0.83rem; color: var(--muted); line-height: 1.6; }
+
+      /* ─────────────────────────────────────────────
+         SLIDE 7: POR QUÉ NODO8
+      ───────────────────────────────────────────── */
+      .why-quote {
+        font-family: var(--font-display); font-size: clamp(1rem, 2vw, 1.3rem);
+        font-weight: 700; color: var(--accent); font-style: italic;
+        max-width: 680px; line-height: 1.5; margin-bottom: 3rem;
+        padding-left: 1.5rem; border-left: 3px solid var(--accent);
+      }
+      .why-list {
+        display: flex; flex-direction: column; gap: 1rem;
+      }
+      .why-item {
+        display: flex; align-items: flex-start; gap: 1.25rem;
+        background: var(--surface); border: 1px solid var(--border);
+        border-radius: 10px; padding: 1.25rem 1.5rem;
+      }
+      .why-num {
+        font-family: var(--font-display); font-size: 1.4rem; font-weight: 800;
+        color: var(--accent); opacity: 0.5; flex-shrink: 0; line-height: 1;
+        min-width: 28px;
+      }
+      .why-content {}
+      .why-title { font-family: var(--font-display); font-size: 0.95rem; font-weight: 700; margin-bottom: 0.25rem; }
+      .why-desc { font-size: 0.83rem; color: var(--muted); line-height: 1.6; }
+
+      /* ─────────────────────────────────────────────
+         SLIDE 8: CONTACTO
+      ───────────────────────────────────────────── */
+      #slide-contact {
+        background:
+          radial-gradient(ellipse 70% 50% at 50% 100%, rgba(200,240,75,0.05) 0%, transparent 70%),
+          var(--bg);
+      }
+      .contact-grid {
+        display: grid; grid-template-columns: 1fr 1fr; gap: 4rem;
+        margin-top: 3rem;
+      }
+      .contact-col {}
+      .contact-section-title {
+        font-family: var(--font-display); font-size: 0.75rem; font-weight: 700;
+        color: var(--accent); letter-spacing: 0.15em; text-transform: uppercase;
+        margin-bottom: 1.25rem;
+      }
+      .contact-items { display: flex; flex-direction: column; gap: 0.9rem; }
+      .contact-item { display: flex; align-items: center; gap: 0.85rem; }
+      .contact-item-icon {
+        width: 34px; height: 34px; background: var(--accent-dim);
+        border-radius: 8px; display: flex; align-items: center; justify-content: center;
+        flex-shrink: 0;
+      }
+      .contact-item-icon svg { width: 16px; height: 16px; color: var(--accent); }
+      .contact-item-text { font-size: 0.88rem; color: rgba(240,240,236,0.8); }
+      .contact-item-text strong { color: var(--text); display: block; font-size: 0.78rem; font-family: var(--font-display); letter-spacing: 0.04em; }
+      .qr-block {
+        background: var(--surface); border: 1px solid var(--border);
+        border-radius: 12px; padding: 2rem; text-align: center;
+        margin-top: 1rem;
+      }
+      .qr-placeholder {
+        width: 120px; height: 120px; background: var(--surface2);
+        border: 2px dashed rgba(200,240,75,0.25); border-radius: 8px;
+        margin: 0 auto 1rem; display: flex; align-items: center; justify-content: center;
+        font-size: 0.7rem; color: var(--muted); text-align: center; line-height: 1.5;
+      }
+      .qr-label { font-size: 0.82rem; color: var(--muted); }
+      .qr-label strong { color: var(--accent); display: block; font-size: 0.9rem; font-family: var(--font-display); }
+      .contact-cta-block {
+        margin-top: 2.5rem; padding: 2rem;
+        background: var(--accent-dim); border: 1px solid rgba(200,240,75,0.2);
+        border-radius: 12px; text-align: center;
+      }
+      .contact-cta-text { font-size: 0.9rem; color: rgba(240,240,236,0.7); margin-bottom: 1rem; }
+      .contact-cta-url {
+        font-family: var(--font-display); font-size: 1.1rem; font-weight: 800;
+        color: var(--accent); text-decoration: none; letter-spacing: -0.01em;
+      }
+      .cities-row {
+        display: flex; gap: 1rem; flex-wrap: wrap; margin-top: 1.25rem;
+      }
+      .city-chip {
+        padding: 0.3rem 0.9rem; background: var(--surface2);
+        border: 1px solid var(--border); border-radius: 50px;
+        font-size: 0.8rem; color: rgba(240,240,236,0.65);
+      }
+
+      /* ── RESPONSIVE ── */
+      @media (max-width: 900px) {
+        .slide { padding: 4rem 5vw; }
+        .about-grid { grid-template-columns: 1fr; gap: 2.5rem; }
+        .services-grid { grid-template-columns: repeat(2, 1fr); }
+        .industries-grid { grid-template-columns: repeat(2, 1fr); }
+        .partners-logos { grid-template-columns: repeat(2, 1fr); }
+        .cases-grid { grid-template-columns: 1fr; }
+        .contact-grid { grid-template-columns: 1fr; gap: 2.5rem; }
+      }
+      @media (max-width: 600px) {
+        .services-grid { grid-template-columns: 1fr; }
+        .industries-grid { grid-template-columns: 1fr; }
+        .partners-logos { grid-template-columns: repeat(2, 1fr); }
+        .about-stats { grid-template-columns: 1fr 1fr; }
+      }
+
+      /* ══════════════════════════════════════════
+         PRINT / PDF STYLES
+      ══════════════════════════════════════════ */
+      @media print {
+        * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+
+        nav, .float-pdf { display: none !important; }
+
+        body { margin: 0; font-size: 13px; }
+
+        .pitch-main { margin-top: 0; }
+
+        .slide {
+          min-height: 100vh;
+          page-break-after: always;
+          padding: 6rem 10vw;
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+        }
+
+        .slide:last-child { page-break-after: avoid; }
+
+        /* Force grid into 2-col or 3-col for print */
+        .services-grid { grid-template-columns: repeat(3, 1fr) !important; }
+        .industries-grid { grid-template-columns: repeat(3, 1fr) !important; }
+        .partners-logos { grid-template-columns: repeat(3, 1fr) !important; }
+        .cases-grid { grid-template-columns: repeat(3, 1fr) !important; }
+        .about-grid { grid-template-columns: 1fr 1fr !important; }
+        .contact-grid { grid-template-columns: 1fr 1fr !important; }
+
+        /* Keep dark backgrounds */
+        body, .slide { background: #0a0a0a !important; color: #f0f0ec !important; }
+        .service-card, .industry-card, .partner-logo-card,
+        .case-card-pitch, .why-item, .stat-card,
+        .office-item, .contact-cta-block, .qr-block { background: #111111 !important; }
+
+        a { color: inherit; text-decoration: none; }
+
+        /* Remove hover effects / transitions for print */
+        * { transition: none !important; animation: none !important; }
+
+        .cover-grid { display: none; }
+      }
+    </style>
+  </head>
+  <body>
+
+    <!-- ── NAV ── -->
+    <nav>
+      <a href="/" class="nav-logo">
+        <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect width="32" height="32" rx="8" fill="#c8f04b"/>
+          <circle cx="11" cy="16" r="3.5" fill="#0a0a0a"/>
+          <circle cx="21" cy="16" r="3.5" fill="#0a0a0a"/>
+          <line x1="14.5" y1="16" x2="17.5" y2="16" stroke="#0a0a0a" stroke-width="1.5"/>
+          <line x1="11" y1="9.5" x2="11" y2="12.5" stroke="#0a0a0a" stroke-width="1.2" stroke-linecap="round"/>
+          <line x1="21" y1="9.5" x2="21" y2="12.5" stroke="#0a0a0a" stroke-width="1.2" stroke-linecap="round"/>
+          <line x1="14.5" y1="9" x2="17.5" y2="9" stroke="#c8f04b" stroke-width="1.2" stroke-linecap="round"/>
+        </svg>
+        <span class="nav-logo-text">nodo<span>8</span></span>
+      </a>
+      <ul class="nav-links">
+        <li><a href="/services">Servicios</a></li>
+        <li><a href="/industries">Industrias</a></li>
+        <li><a href="/ai">IA</a></li>
+        <li><a href="/partners">Partners</a></li>
+        <li><a href="/blog">Blog</a></li>
+        <li><a href="/case-studies">Casos de Éxito</a></li>
+        <li><a href="/careers">Careers</a></li>
+        <li><a href="/contact">Contacto</a></li>
+      </ul>
+      <button class="hamburger" id="hamburger" aria-label="Menú">
+        <span></span><span></span><span></span>
+      </button>
+      <a href="/roi" class="nav-cta-sec">Calcular ROI</a>
+      <a href="/contact" class="nav-cta">Agendar llamada</a>
+    </nav>
+
+    <!-- ── FLOAT PDF BUTTON ── -->
+    <button class="float-pdf" onclick="window.print()">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+        <polyline points="7 10 12 15 17 10"/>
+        <line x1="12" y1="15" x2="12" y2="3"/>
+      </svg>
+      Descargar PDF
+    </button>
+
+    <main class="pitch-main">
+
+      <!-- ══════════════════════════════
+           SLIDE 1: PORTADA
+      ══════════════════════════════ -->
+      <section class="slide" id="slide-cover">
+        <div class="cover-grid"></div>
+        <div class="cover-logo">
+          <svg width="80" height="80" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect width="32" height="32" rx="8" fill="#c8f04b"/>
+            <circle cx="11" cy="16" r="3.5" fill="#0a0a0a"/>
+            <circle cx="21" cy="16" r="3.5" fill="#0a0a0a"/>
+            <line x1="14.5" y1="16" x2="17.5" y2="16" stroke="#0a0a0a" stroke-width="1.5"/>
+            <line x1="11" y1="9.5" x2="11" y2="12.5" stroke="#0a0a0a" stroke-width="1.2" stroke-linecap="round"/>
+            <line x1="21" y1="9.5" x2="21" y2="12.5" stroke="#0a0a0a" stroke-width="1.2" stroke-linecap="round"/>
+            <line x1="14.5" y1="9" x2="17.5" y2="9" stroke="#c8f04b" stroke-width="1.2" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <div class="cover-wordmark">nodo<span>8</span></div>
+        <p class="cover-tagline">
+          Transformación digital que <strong>genera resultados reales</strong>
+        </p>
+        <p class="cover-meta">
+          2026 &nbsp;·&nbsp; <a href="https://nodo8.net">nodo8.net</a>
+        </p>
+        <div class="cover-badges">
+          <span class="cover-badge">Cloud &amp; DevOps</span>
+          <span class="cover-badge">Data &amp; AI</span>
+          <span class="cover-badge">Salesforce</span>
+          <span class="cover-badge">SAP</span>
+          <span class="cover-badge">ServiceNow</span>
+          <span class="cover-badge">AWS</span>
+        </div>
+        <span class="slide-number">01 / 08</span>
+      </section>
+
+      <!-- ══════════════════════════════
+           SLIDE 2: QUIÉNES SOMOS
+      ══════════════════════════════ -->
+      <section class="slide" id="slide-about">
+        <span class="slide-label">Quiénes Somos</span>
+        <h2 class="slide-title">Presencia global,<br>soluciones a medida</h2>
+        <p class="slide-body">
+          nodo8 es una consultora de tecnología especializada en transformación digital,
+          inteligencia artificial y arquitectura cloud. Acompañamos a empresas líderes
+          desde la estrategia hasta la implementación, con equipos certificados en las
+          plataformas más demandadas del mercado.
+        </p>
+        <div class="about-grid">
+          <div class="about-offices">
+            <p class="contact-section-title">Nuestras oficinas</p>
+            <div class="office-item">
+              <div class="office-icon">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#c8f04b" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+              </div>
+              <div class="office-info">
+                <span class="office-city">Seattle, WA</span>
+                <span class="office-country">Estados Unidos · HQ</span>
+              </div>
+            </div>
+            <div class="office-item">
+              <div class="office-icon">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#c8f04b" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+              </div>
+              <div class="office-info">
+                <span class="office-city">Guadalajara, Jal</span>
+                <span class="office-country">México · Centro de Desarrollo</span>
+              </div>
+            </div>
+            <div class="office-item">
+              <div class="office-icon">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#c8f04b" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+              </div>
+              <div class="office-info">
+                <span class="office-city">Ciudad de México</span>
+                <span class="office-country">México · Oficina Corporativa</span>
+              </div>
+            </div>
+          </div>
+          <div class="about-stats">
+            <div class="stat-card">
+              <div class="stat-num">20<span class="stat-suffix">+</span></div>
+              <div class="stat-label">Proyectos entregados</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-num">12<span class="stat-suffix">+</span></div>
+              <div class="stat-label">Tecnologías certificadas</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-num">6<span class="stat-suffix">+</span></div>
+              <div class="stat-label">Años de experiencia</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-num">30<span class="stat-suffix">+</span></div>
+              <div class="stat-label">Clientes satisfechos</div>
+            </div>
+          </div>
+        </div>
+        <span class="slide-number">02 / 08</span>
+      </section>
+
+      <!-- ══════════════════════════════
+           SLIDE 3: SERVICIOS
+      ══════════════════════════════ -->
+      <section class="slide" id="slide-services">
+        <span class="slide-label">Nuestros Servicios</span>
+        <h2 class="slide-title">Soluciones end-to-end<br>para cada etapa</h2>
+        <div class="services-grid">
+          <div class="service-card">
+            <div class="service-icon">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#c8f04b" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+            </div>
+            <div class="service-name">Digital Solutions</div>
+            <div class="service-desc">Portales, apps web y experiencias digitales de alto rendimiento con arquitectura moderna.</div>
+            <span class="service-tag">UX · Web · PWA</span>
+          </div>
+          <div class="service-card">
+            <div class="service-icon">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#c8f04b" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg>
+            </div>
+            <div class="service-name">App Services</div>
+            <div class="service-desc">Desarrollo de aplicaciones móviles y de escritorio con integración nativa a tus sistemas.</div>
+            <span class="service-tag">iOS · Android · Hybrid</span>
+          </div>
+          <div class="service-card">
+            <div class="service-icon">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#c8f04b" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+            </div>
+            <div class="service-name">Cloud &amp; DevOps</div>
+            <div class="service-desc">Infraestructura en AWS, Azure y GCP. CI/CD, IaC y arquitecturas cloud-native escalables.</div>
+            <span class="service-tag">AWS · Terraform · Kubernetes</span>
+          </div>
+          <div class="service-card">
+            <div class="service-icon">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#c8f04b" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
+            </div>
+            <div class="service-name">Data &amp; AI</div>
+            <div class="service-desc">Pipelines de datos, analítica avanzada e IA generativa integrada a tus procesos de negocio.</div>
+            <span class="service-tag">ML · LLMs · Databricks</span>
+          </div>
+          <div class="service-card">
+            <div class="service-icon">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#c8f04b" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+            </div>
+            <div class="service-name">Transformation</div>
+            <div class="service-desc">Consultoría estratégica y gestión del cambio para llevar tu organización al siguiente nivel.</div>
+            <span class="service-tag">Strategy · OCM · PMO</span>
+          </div>
+          <div class="service-card">
+            <div class="service-icon">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#c8f04b" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
+            </div>
+            <div class="service-name">Platform Services</div>
+            <div class="service-desc">Implementación y optimización de Salesforce, SAP, ServiceNow y Atlassian para tu empresa.</div>
+            <span class="service-tag">Salesforce · SAP · ServiceNow</span>
+          </div>
+        </div>
+        <span class="slide-number">03 / 08</span>
+      </section>
+
+      <!-- ══════════════════════════════
+           SLIDE 4: INDUSTRIAS
+      ══════════════════════════════ -->
+      <section class="slide" id="slide-industries">
+        <span class="slide-label">Industrias</span>
+        <h2 class="slide-title">Experiencia probada<br>en 6 sectores clave</h2>
+        <div class="industries-grid">
+          <div class="industry-card">
+            <div class="ind-icon">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#c8f04b" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+            </div>
+            <div class="ind-name">Retail</div>
+            <div class="ind-desc">Omnicanalidad, e-commerce y personalización con IA para retailers de alto volumen.</div>
+          </div>
+          <div class="industry-card">
+            <div class="ind-icon">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#c8f04b" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
+            </div>
+            <div class="ind-name">Banca &amp; Fintech</div>
+            <div class="ind-desc">Plataformas financieras seguras, open banking y automatización de procesos críticos.</div>
+          </div>
+          <div class="industry-card">
+            <div class="ind-icon">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#c8f04b" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.38 2 2 0 0 1 3.6 1.2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.79a16 16 0 0 0 6.29 6.29l.95-.96a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+            </div>
+            <div class="ind-name">Airlines</div>
+            <div class="ind-desc">Sistemas de reservas, operaciones y experiencia del pasajero para aerolíneas globales.</div>
+          </div>
+          <div class="industry-card">
+            <div class="ind-icon">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#c8f04b" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+            </div>
+            <div class="ind-name">Logística</div>
+            <div class="ind-desc">Trazabilidad en tiempo real, optimización de rutas y digitalización de cadenas de suministro.</div>
+          </div>
+          <div class="industry-card">
+            <div class="ind-icon">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#c8f04b" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 16 12 14 15 10 9 8 12 2 12"/></svg>
+            </div>
+            <div class="ind-name">ERP</div>
+            <div class="ind-desc">Implementación, migración y optimización de SAP y sistemas ERP empresariales.</div>
+          </div>
+          <div class="industry-card">
+            <div class="ind-icon">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#c8f04b" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/></svg>
+            </div>
+            <div class="ind-name">CRM</div>
+            <div class="ind-desc">Estrategia y configuración de Salesforce para ventas, servicio y marketing integrado.</div>
+          </div>
+        </div>
+        <span class="slide-number">04 / 08</span>
+      </section>
+
+      <!-- ══════════════════════════════
+           SLIDE 5: PARTNERS
+      ══════════════════════════════ -->
+      <section class="slide" id="slide-partners">
+        <span class="slide-label">Ecosystem de Partners</span>
+        <h2 class="slide-title">Certified partners que<br>garantizan calidad</h2>
+        <p class="partners-intro">
+          Trabajamos con las plataformas tecnológicas más confiables del mundo.
+          Nuestras certificaciones garantizan implementaciones correctas desde el primer día.
+        </p>
+        <div class="partners-logos">
+          <div class="partner-logo-card">
+            <div class="partner-abbr">AWS</div>
+            <div class="partner-full">Amazon Web Services</div>
+            <div class="partner-badge-sm">Advanced Consulting Partner</div>
+          </div>
+          <div class="partner-logo-card">
+            <div class="partner-abbr">SF</div>
+            <div class="partner-full">Salesforce</div>
+            <div class="partner-badge-sm">Consulting Partner</div>
+          </div>
+          <div class="partner-logo-card">
+            <div class="partner-abbr">MS</div>
+            <div class="partner-full">Microsoft</div>
+            <div class="partner-badge-sm">Solutions Partner</div>
+          </div>
+          <div class="partner-logo-card">
+            <div class="partner-abbr">SAP</div>
+            <div class="partner-full">SAP</div>
+            <div class="partner-badge-sm">SAP Partner</div>
+          </div>
+          <div class="partner-logo-card">
+            <div class="partner-abbr">SN</div>
+            <div class="partner-full">ServiceNow</div>
+            <div class="partner-badge-sm">Implementation Partner</div>
+          </div>
+          <div class="partner-logo-card">
+            <div class="partner-abbr">AT</div>
+            <div class="partner-full">Atlassian</div>
+            <div class="partner-badge-sm">Solution Partner</div>
+          </div>
+        </div>
+        <span class="slide-number">05 / 08</span>
+      </section>
+
+      <!-- ══════════════════════════════
+           SLIDE 6: CASOS DE ÉXITO
+      ══════════════════════════════ -->
+      <section class="slide" id="slide-cases">
+        <span class="slide-label">Casos de Éxito</span>
+        <h2 class="slide-title">Resultados que hablan<br>por sí solos</h2>
+        <div class="cases-grid">
+          <div class="case-card-pitch">
+            <div class="case-thumb-mini case-thumb-retail"></div>
+            <div class="case-tag-sm">Retail · Salesforce</div>
+            <div class="case-title-sm">Transformación CRM para retailer con 200+ tiendas</div>
+            <div class="case-result-big">+38%</div>
+            <div class="case-result-label">aumento en conversión de ventas</div>
+            <div class="case-desc-sm">Implementamos Salesforce Sales Cloud + Commerce Cloud, unificando 5 sistemas legacy en una sola plataforma omnicanal.</div>
+          </div>
+          <div class="case-card-pitch">
+            <div class="case-thumb-mini case-thumb-banca"></div>
+            <div class="case-tag-sm">Banca · AWS · AI</div>
+            <div class="case-title-sm">Modernización core bancario en la nube</div>
+            <div class="case-result-big">60%</div>
+            <div class="case-result-label">reducción en tiempo de procesamiento</div>
+            <div class="case-desc-sm">Migramos la infraestructura crítica a AWS con arquitectura de microservicios y detección de fraude con ML en tiempo real.</div>
+          </div>
+          <div class="case-card-pitch">
+            <div class="case-thumb-mini case-thumb-logis"></div>
+            <div class="case-tag-sm">Logística · SAP · IoT</div>
+            <div class="case-title-sm">Plataforma de trazabilidad end-to-end</div>
+            <div class="case-result-big">$5M+</div>
+            <div class="case-result-label">ahorros operativos primer año</div>
+            <div class="case-desc-sm">Diseñamos una plataforma IoT+SAP que digitaliza completamente la cadena de suministro con visibilidad en tiempo real.</div>
+          </div>
+        </div>
+        <span class="slide-number">06 / 08</span>
+      </section>
+
+      <!-- ══════════════════════════════
+           SLIDE 7: POR QUÉ NODO8
+      ══════════════════════════════ -->
+      <section class="slide" id="slide-why">
+        <span class="slide-label">Por Qué nodo8</span>
+        <h2 class="slide-title">Tu socio tecnológico,<br>no una fábrica de software</h2>
+        <p class="why-quote">
+          "No somos una fábrica de software. Somos tu socio tecnológico estratégico,
+          comprometidos con tus resultados de negocio."
+        </p>
+        <div class="why-list">
+          <div class="why-item">
+            <div class="why-num">01</div>
+            <div class="why-content">
+              <div class="why-title">Orientados a resultados de negocio</div>
+              <div class="why-desc">Medimos el éxito en KPIs de negocio, no en líneas de código. Cada proyecto parte de un caso de ROI claro y verificable.</div>
+            </div>
+          </div>
+          <div class="why-item">
+            <div class="why-num">02</div>
+            <div class="why-content">
+              <div class="why-title">Equipos certificados en las plataformas líderes</div>
+              <div class="why-desc">Más de 40 certificaciones activas en AWS, Salesforce, SAP, Microsoft y ServiceNow garantizan implementaciones de primera calidad.</div>
+            </div>
+          </div>
+          <div class="why-item">
+            <div class="why-num">03</div>
+            <div class="why-content">
+              <div class="why-title">Presencia nearshore México + US</div>
+              <div class="why-desc">Combinamos talento senior mexicano con supervisión en Seattle para ofrecer calidad global a precios competitivos.</div>
+            </div>
+          </div>
+          <div class="why-item">
+            <div class="why-num">04</div>
+            <div class="why-content">
+              <div class="why-title">IA integrada desde el diseño</div>
+              <div class="why-desc">No añadimos IA como un extra: la integramos desde la arquitectura para maximizar automatización y valor diferencial.</div>
+            </div>
+          </div>
+          <div class="why-item">
+            <div class="why-num">05</div>
+            <div class="why-content">
+              <div class="why-title">Compromiso post-entrega</div>
+              <div class="why-desc">Nuestros proyectos no terminan en el go-live. Ofrecemos soporte, optimización continua y evolución de la plataforma.</div>
+            </div>
+          </div>
+        </div>
+        <span class="slide-number">07 / 08</span>
+      </section>
+
+      <!-- ══════════════════════════════
+           SLIDE 8: CONTACTO
+      ══════════════════════════════ -->
+      <section class="slide" id="slide-contact">
+        <span class="slide-label">Contacto</span>
+        <h2 class="slide-title">¿Listo para empezar?<br>Hablemos.</h2>
+        <div class="contact-grid">
+          <div class="contact-col">
+            <p class="contact-section-title">Equipo de ventas</p>
+            <div class="contact-items">
+              <div class="contact-item">
+                <div class="contact-item-icon">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#c8f04b" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+                </div>
+                <div class="contact-item-text">
+                  <strong>Ventas Enterprise</strong>
+                  ventas@nodo8.net
+                </div>
+              </div>
+              <div class="contact-item">
+                <div class="contact-item-icon">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#c8f04b" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+                </div>
+                <div class="contact-item-text">
+                  <strong>Proyectos &amp; Consultoría</strong>
+                  proyectos@nodo8.net
+                </div>
+              </div>
+              <div class="contact-item">
+                <div class="contact-item-icon">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#c8f04b" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.38 2 2 0 0 1 3.6 1.2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.79a16 16 0 0 0 6.29 6.29l.95-.96a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+                </div>
+                <div class="contact-item-text">
+                  <strong>Teléfono MX</strong>
+                  +52 33 1234 5678
+                </div>
+              </div>
+              <div class="contact-item">
+                <div class="contact-item-icon">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#c8f04b" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.38 2 2 0 0 1 3.6 1.2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.79a16 16 0 0 0 6.29 6.29l.95-.96a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+                </div>
+                <div class="contact-item-text">
+                  <strong>Teléfono US</strong>
+                  +1 206 123 4567
+                </div>
+              </div>
+            </div>
+            <div class="cities-row">
+              <span class="city-chip">Seattle, WA</span>
+              <span class="city-chip">Guadalajara, MX</span>
+              <span class="city-chip">CDMX, MX</span>
+            </div>
+            <div class="contact-cta-block">
+              <p class="contact-cta-text">Agenda una llamada de 30 minutos sin costo:</p>
+              <a href="https://nodo8.net/contact" class="contact-cta-url">nodo8.net/contact</a>
+            </div>
+          </div>
+          <div class="contact-col">
+            <p class="contact-section-title">Visítanos en línea</p>
+            <div class="qr-block">
+              <div class="qr-placeholder">
+                Código QR<br>nodo8.net
+              </div>
+              <div class="qr-label">
+                <strong>nodo8.net</strong>
+                Escanea para visitar nuestro sitio
+              </div>
+            </div>
+            <div style="margin-top:1.5rem;">
+              <p class="contact-section-title">Sobre nodo8</p>
+              <p style="font-size:0.85rem; color:var(--muted); line-height:1.7;">
+                nodo8 es una consultora de tecnología con presencia en México y Estados Unidos,
+                especializada en transformación digital, inteligencia artificial y arquitectura cloud.
+                Fundada con la misión de llevar soluciones tecnológicas de clase mundial al mercado
+                latinoamericano y de nearshore a Norteamérica.
+              </p>
+            </div>
+          </div>
+        </div>
+        <span class="slide-number">08 / 08</span>
+      </section>
+
+    </main>
+
+    <script>
+      // Hamburger menu
+      (function () {
+        var btn  = document.getElementById("hamburger");
+        var menu = document.querySelector(".nav-links");
+        btn.addEventListener("click", function () {
+          btn.classList.toggle("open");
+          menu.classList.toggle("open");
+        });
+        document.addEventListener("click", function (e) {
+          if (!btn.contains(e.target) && !menu.contains(e.target)) {
+            btn.classList.remove("open");
+            menu.classList.remove("open");
+          }
+        });
+      })();
+    </script>
+  </body>
+</html>

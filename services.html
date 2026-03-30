@@ -48,6 +48,8 @@
       .nav-links a.active { color: var(--accent); }
       .nav-cta { font-family: var(--font-body); font-size: 0.85rem; font-weight: 500; color: var(--bg); background: var(--accent); border: none; padding: 0.55rem 1.25rem; border-radius: 4px; cursor: pointer; text-decoration: none; transition: opacity 0.2s; }
       .nav-cta:hover { opacity: 0.88; }
+      .nav-cta-sec { font-family: var(--font-body); font-size: 0.85rem; font-weight: 500; color: var(--accent); background: transparent; border: 1px solid var(--accent); padding: 0.55rem 1.25rem; border-radius: 4px; cursor: pointer; text-decoration: none; transition: background 0.2s; }
+      .nav-cta-sec:hover { background: var(--accent-dim); }
 
       /* ── Hamburger ── */
       .hamburger { display: none; flex-direction: column; gap: 5px; background: none; border: none; cursor: pointer; padding: 4px; z-index: 10; }
@@ -260,16 +262,16 @@
         <li><a href="/services" class="active">Servicios</a></li>
         <li><a href="/industries">Industrias</a></li>
         <li><a href="/ai">IA</a></li>
-        <li><a href="/careers">Careers</a></li>
         <li><a href="/partners">Partners</a></li>
-        <li><a href="/case-studies">Casos de Éxito</a></li>
         <li><a href="/blog">Blog</a></li>
-        <li><a href="/roi">Calc. ROI</a></li>
+        <li><a href="/case-studies">Casos de Éxito</a></li>
+        <li><a href="/careers">Careers</a></li>
         <li><a href="/contact">Contacto</a></li>
       </ul>
       <button class="hamburger" id="hamburger" aria-label="Menú">
         <span></span><span></span><span></span>
       </button>
+      <a href="/roi" class="nav-cta-sec">Calcular ROI</a>
       <a href="/contact" class="nav-cta">Agendar llamada</a>
     </nav>
 
