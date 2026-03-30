@@ -1,0 +1,764 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Blog — nodo8</title>
+    <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+    <style>
+      :root {
+        --bg: #0a0a0a; --surface: #111111; --surface2: #181818; --surface3: #1e1e1e;
+        --border: rgba(255,255,255,0.07); --accent: #c8f04b;
+        --accent-dim: rgba(200,240,75,0.12); --accent-glow: rgba(200,240,75,0.06);
+        --text: #f0f0ec; --muted: #888880;
+        --font-display: "Syne", sans-serif; --font-body: "DM Sans", sans-serif;
+        --nav-h: 68px;
+      }
+      *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+      html { scroll-behavior: smooth; }
+      body { background: var(--bg); color: var(--text); font-family: var(--font-body); font-size: 16px; line-height: 1.7; overflow-x: hidden; }
+
+      /* ── NAV ── */
+      nav { position: fixed; top: 0; left: 0; right: 0; z-index: 300; display: flex; align-items: center; justify-content: space-between; padding: 1.25rem 2.5rem; border-bottom: 1px solid var(--border); background: rgba(10,10,10,0.88); backdrop-filter: blur(12px); height: var(--nav-h); }
+      .nav-logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+      .nav-logo-text { font-family: var(--font-display); font-size: 1.1rem; font-weight: 800; color: var(--text); letter-spacing: -0.02em; }
+      .nav-logo-text span { color: var(--accent); }
+      .nav-links { display: flex; gap: 2rem; list-style: none; }
+      .nav-links a { font-size: 0.85rem; color: var(--muted); text-decoration: none; letter-spacing: 0.03em; transition: color 0.2s; }
+      .nav-links a:hover { color: var(--text); }
+      .nav-links a.active { color: var(--accent); }
+      .nav-cta { font-family: var(--font-body); font-size: 0.85rem; font-weight: 500; color: var(--bg); background: var(--accent); border: none; padding: 0.55rem 1.25rem; border-radius: 4px; cursor: pointer; text-decoration: none; transition: opacity 0.2s; }
+      .nav-cta:hover { opacity: 0.88; }
+      .hamburger { display: none; flex-direction: column; gap: 5px; background: none; border: none; cursor: pointer; padding: 4px; z-index: 10; }
+      .hamburger span { display: block; width: 22px; height: 1.5px; background: var(--text); border-radius: 2px; transition: transform 0.3s ease, opacity 0.3s ease; transform-origin: center; }
+      .hamburger.open span:nth-child(1) { transform: translateY(6.5px) rotate(45deg); }
+      .hamburger.open span:nth-child(2) { opacity: 0; transform: scaleX(0); }
+      .hamburger.open span:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); }
+
+      /* ── SHARED ── */
+      .section-eyebrow { font-size: 0.75rem; color: var(--accent); letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 0.5rem; }
+      .section-title { font-family: var(--font-display); font-size: clamp(1.8rem, 4vw, 2.8rem); font-weight: 700; line-height: 1.1; letter-spacing: -0.02em; }
+      .cat-badge { display: inline-block; font-size: 0.65rem; font-weight: 600; letter-spacing: 0.07em; text-transform: uppercase; color: var(--bg); background: var(--accent); padding: 3px 9px; border-radius: 100px; }
+      .cat-badge-muted { display: inline-block; font-size: 0.65rem; font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase; color: var(--accent); background: var(--accent-dim); border: 1px solid rgba(200,240,75,0.18); padding: 3px 9px; border-radius: 100px; }
+      .btn-primary { font-family: var(--font-body); font-size: 0.88rem; font-weight: 500; color: var(--bg); background: var(--accent); border: none; padding: 0.75rem 1.75rem; border-radius: 4px; cursor: pointer; text-decoration: none; transition: opacity 0.2s, transform 0.2s; display: inline-block; }
+      .btn-primary:hover { opacity: 0.88; transform: translateY(-1px); }
+      .btn-ghost { font-family: var(--font-body); font-size: 0.82rem; color: var(--muted); background: transparent; border: 1px solid var(--border); padding: 0.5rem 1.1rem; border-radius: 4px; cursor: pointer; text-decoration: none; transition: color 0.2s, border-color 0.2s; display: inline-block; }
+      .btn-ghost:hover { color: var(--accent); border-color: rgba(200,240,75,0.3); }
+
+      /* ── HERO ── */
+      .hero { padding: calc(var(--nav-h) + 3.5rem) 2.5rem 3.5rem; position: relative; overflow: hidden; }
+      .hero-grid { position: absolute; inset: 0; background-image: linear-gradient(rgba(200,240,75,0.025) 1px, transparent 1px), linear-gradient(90deg, rgba(200,240,75,0.025) 1px, transparent 1px); background-size: 54px 54px; -webkit-mask-image: radial-gradient(ellipse 70% 90% at 50% 0%, black 30%, transparent 100%); mask-image: radial-gradient(ellipse 70% 90% at 50% 0%, black 30%, transparent 100%); z-index: 0; }
+      .hero-content { position: relative; z-index: 1; max-width: 1300px; margin: 0 auto; display: flex; flex-direction: column; align-items: flex-start; gap: 1.5rem; }
+      .hero-tag { display: inline-flex; align-items: center; gap: 8px; font-size: 0.78rem; color: var(--accent); letter-spacing: 0.1em; text-transform: uppercase; animation: fadeUp 0.5s ease both; }
+      .hero-tag::before { content: ""; width: 22px; height: 1px; background: var(--accent); }
+      .hero h1 { font-family: var(--font-display); font-size: clamp(2rem, 5vw, 3.6rem); font-weight: 800; line-height: 1.06; letter-spacing: -0.035em; animation: fadeUp 0.5s 0.08s ease both; }
+      .hero h1 em { font-style: normal; color: var(--accent); }
+      .hero-sub { font-size: 0.98rem; color: var(--muted); max-width: 500px; font-weight: 300; line-height: 1.8; animation: fadeUp 0.5s 0.16s ease both; }
+      .search-wrap { width: 100%; max-width: 480px; position: relative; animation: fadeUp 0.5s 0.24s ease both; }
+      .search-input { width: 100%; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 0.75rem 1rem 0.75rem 2.75rem; font-family: var(--font-body); font-size: 0.88rem; color: var(--text); outline: none; transition: border-color 0.2s; }
+      .search-input::placeholder { color: var(--muted); }
+      .search-input:focus { border-color: rgba(200,240,75,0.35); }
+      .search-icon { position: absolute; left: 0.9rem; top: 50%; transform: translateY(-50%); width: 15px; height: 15px; stroke: var(--muted); fill: none; stroke-width: 2; stroke-linecap: round; }
+
+      /* ── FEATURED ── */
+      .featured-section { padding: 0 2.5rem 2rem; max-width: 1300px; margin: 0 auto; }
+      .featured-card { display: grid; grid-template-columns: 1fr 420px; background: var(--surface); border: 1px solid var(--border); border-radius: 14px; overflow: hidden; transition: border-color 0.25s; text-decoration: none; color: inherit; }
+      .featured-card:hover { border-color: rgba(200,240,75,0.25); }
+      .featured-card:hover .featured-thumb-bg { transform: scale(1.03); }
+      .featured-thumb { overflow: hidden; position: relative; min-height: 320px; }
+      .featured-thumb-bg { position: absolute; inset: 0; background: linear-gradient(135deg, #0d1a0a 0%, #0f200d 50%, #0a1208 100%); transition: transform 0.5s ease; }
+      .featured-thumb-icon { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; opacity: 0.12; }
+      .featured-thumb-icon svg { width: 110px; height: 110px; stroke: var(--accent); fill: none; stroke-width: 0.8; }
+      .featured-thumb-overlay { position: absolute; inset: 0; background: linear-gradient(to right, transparent 50%, rgba(17,17,17,0.6) 100%); }
+      .featured-body { padding: 2.5rem; display: flex; flex-direction: column; gap: 1rem; justify-content: center; }
+      .featured-meta { display: flex; align-items: center; gap: 0.6rem; flex-wrap: wrap; }
+      .featured-sep { color: var(--border); font-size: 0.8rem; }
+      .featured-read { font-size: 0.75rem; color: var(--muted); }
+      .featured-title { font-family: var(--font-display); font-weight: 800; font-size: clamp(1.25rem, 2.5vw, 1.7rem); line-height: 1.2; letter-spacing: -0.025em; }
+      .featured-excerpt { font-size: 0.9rem; color: var(--muted); line-height: 1.8; }
+      .featured-author { display: flex; align-items: center; gap: 0.6rem; margin-top: 0.5rem; }
+      .author-avatar { width: 30px; height: 30px; background: var(--accent-dim); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-family: var(--font-display); font-size: 0.62rem; font-weight: 700; color: var(--accent); flex-shrink: 0; }
+      .author-name { font-size: 0.78rem; color: var(--muted); }
+
+      /* ── MAIN LAYOUT ── */
+      .main-layout { padding: 2rem 2.5rem 5rem; max-width: 1300px; margin: 0 auto; display: grid; grid-template-columns: 1fr 300px; gap: 3rem; align-items: start; }
+
+      /* ── FILTERS ── */
+      .filter-row { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 2rem; }
+      .filter-btn { font-family: var(--font-body); font-size: 0.78rem; color: var(--muted); background: var(--surface); border: 1px solid var(--border); padding: 0.38rem 1rem; border-radius: 100px; cursor: pointer; transition: color 0.18s, border-color 0.18s, background 0.18s; white-space: nowrap; }
+      .filter-btn:hover { color: var(--text); border-color: rgba(255,255,255,0.18); }
+      .filter-btn.active { color: var(--bg); background: var(--accent); border-color: var(--accent); }
+
+      /* ── ARTICLES GRID ── */
+      .articles-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: var(--border); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; }
+      .article-card { background: var(--surface); display: flex; flex-direction: column; transition: background 0.22s; cursor: pointer; }
+      .article-card.hidden { display: none; }
+      .article-card:hover { background: var(--surface2); }
+      .article-thumb { height: 148px; position: relative; overflow: hidden; flex-shrink: 0; }
+      .article-thumb-bg { position: absolute; inset: 0; transition: transform 0.45s ease; }
+      .article-card:hover .article-thumb-bg { transform: scale(1.05); }
+      .article-thumb-icon { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; opacity: 0.14; }
+      .article-thumb-icon svg { width: 44px; height: 44px; stroke: var(--accent); fill: none; stroke-width: 1.2; }
+      .article-body { padding: 1.1rem; display: flex; flex-direction: column; gap: 0.55rem; flex: 1; }
+      .article-meta { display: flex; align-items: center; gap: 0.5rem; }
+      .article-sep { color: var(--border); }
+      .article-read { font-size: 0.68rem; color: var(--muted); }
+      .article-title { font-family: var(--font-display); font-weight: 700; font-size: 0.9rem; line-height: 1.4; color: var(--text); flex: 1; }
+      .article-excerpt { font-size: 0.78rem; color: var(--muted); line-height: 1.65; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+      .article-footer { display: flex; align-items: center; justify-content: space-between; margin-top: auto; padding-top: 0.4rem; }
+      .article-author { display: flex; align-items: center; gap: 0.45rem; }
+      .article-avatar { width: 24px; height: 24px; background: var(--accent-dim); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-family: var(--font-display); font-size: 0.55rem; font-weight: 700; color: var(--accent); flex-shrink: 0; }
+      .article-author-name { font-size: 0.7rem; color: var(--muted); }
+      .article-date { font-size: 0.68rem; color: var(--muted); }
+      .no-results-msg { display: none; text-align: center; padding: 4rem 2rem; color: var(--muted); font-size: 0.9rem; grid-column: 1/-1; background: var(--surface); }
+
+      /* ── PAGINATION ── */
+      .pagination { display: flex; align-items: center; justify-content: center; gap: 0.4rem; margin-top: 2rem; }
+      .page-btn { font-family: var(--font-body); font-size: 0.82rem; color: var(--muted); background: var(--surface); border: 1px solid var(--border); width: 36px; height: 36px; border-radius: 6px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: color 0.18s, border-color 0.18s; text-decoration: none; }
+      .page-btn:hover { color: var(--text); border-color: rgba(255,255,255,0.18); }
+      .page-btn.active { color: var(--bg); background: var(--accent); border-color: var(--accent); }
+      .page-btn.wide { width: auto; padding: 0 0.9rem; }
+
+      /* ── SIDEBAR ── */
+      .sidebar { position: sticky; top: calc(var(--nav-h) + 2rem); display: flex; flex-direction: column; gap: 1.5rem; }
+      .sidebar-block { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 1.5rem; }
+      .sidebar-title { font-family: var(--font-display); font-weight: 700; font-size: 0.85rem; color: var(--text); margin-bottom: 1.1rem; letter-spacing: -0.01em; }
+      /* Popular */
+      .popular-list { list-style: none; display: flex; flex-direction: column; gap: 0; }
+      .popular-item { display: flex; gap: 0.75rem; align-items: flex-start; padding: 0.75rem 0; border-bottom: 1px solid var(--border); cursor: pointer; transition: opacity 0.18s; }
+      .popular-item:last-child { border-bottom: none; padding-bottom: 0; }
+      .popular-item:hover { opacity: 0.75; }
+      .popular-num { font-family: var(--font-display); font-size: 1.1rem; font-weight: 800; color: var(--accent); opacity: 0.4; line-height: 1; flex-shrink: 0; width: 20px; }
+      .popular-info { display: flex; flex-direction: column; gap: 0.2rem; }
+      .popular-ttl { font-size: 0.8rem; color: var(--text); line-height: 1.4; font-weight: 500; }
+      .popular-meta { font-size: 0.68rem; color: var(--muted); }
+      /* Subscribe */
+      .subscribe-form { display: flex; flex-direction: column; gap: 0.6rem; }
+      .subscribe-sub { font-size: 0.8rem; color: var(--muted); line-height: 1.65; margin-bottom: 0.25rem; }
+      .subscribe-input { background: var(--surface2); border: 1px solid var(--border); border-radius: 6px; padding: 0.6rem 0.9rem; font-family: var(--font-body); font-size: 0.82rem; color: var(--text); outline: none; transition: border-color 0.2s; }
+      .subscribe-input::placeholder { color: var(--muted); }
+      .subscribe-input:focus { border-color: rgba(200,240,75,0.35); }
+      .subscribe-btn { font-family: var(--font-body); font-size: 0.82rem; font-weight: 500; color: var(--bg); background: var(--accent); border: none; border-radius: 6px; padding: 0.6rem; cursor: pointer; transition: opacity 0.2s; }
+      .subscribe-btn:hover { opacity: 0.88; }
+      .subscribe-success { display: none; font-size: 0.8rem; color: var(--accent); text-align: center; padding: 0.4rem 0; }
+      /* Categories */
+      .cats-list { list-style: none; display: flex; flex-direction: column; gap: 2px; }
+      .cats-item { display: flex; align-items: center; justify-content: space-between; padding: 0.45rem 0.5rem; border-radius: 6px; cursor: pointer; transition: background 0.18s; }
+      .cats-item:hover { background: var(--surface2); }
+      .cats-name { font-size: 0.82rem; color: var(--muted); transition: color 0.18s; }
+      .cats-item:hover .cats-name { color: var(--text); }
+      .cats-count { font-size: 0.7rem; color: var(--muted); background: var(--surface3); border: 1px solid var(--border); padding: 1px 7px; border-radius: 100px; }
+
+      /* ── NEWSLETTER ── */
+      .newsletter-section { padding: 0 2.5rem 5rem; }
+      .newsletter-box { max-width: 1300px; margin: 0 auto; background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 3.5rem 3rem; display: grid; grid-template-columns: 1fr auto; gap: 2rem; align-items: center; position: relative; overflow: hidden; }
+      .newsletter-box::before { content: ""; position: absolute; inset: 0; background-image: linear-gradient(rgba(200,240,75,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(200,240,75,0.03) 1px, transparent 1px); background-size: 40px 40px; z-index: 0; }
+      .newsletter-box::after { content: ""; position: absolute; left: -100px; top: 50%; transform: translateY(-50%); width: 500px; height: 300px; background: radial-gradient(ellipse, rgba(200,240,75,0.055) 0%, transparent 70%); z-index: 0; pointer-events: none; }
+      .newsletter-text { position: relative; z-index: 1; }
+      .newsletter-text h2 { font-family: var(--font-display); font-size: clamp(1.3rem, 2.5vw, 1.75rem); font-weight: 800; letter-spacing: -0.025em; margin-bottom: 0.4rem; line-height: 1.2; }
+      .newsletter-text h2 em { font-style: normal; color: var(--accent); }
+      .newsletter-text p { font-size: 0.88rem; color: var(--muted); }
+      .newsletter-form-wrap { position: relative; z-index: 1; display: flex; gap: 0.6rem; flex-shrink: 0; }
+      .newsletter-input { background: var(--surface2); border: 1px solid var(--border); border-radius: 6px; padding: 0.7rem 1rem; font-family: var(--font-body); font-size: 0.85rem; color: var(--text); outline: none; width: 240px; transition: border-color 0.2s; }
+      .newsletter-input::placeholder { color: var(--muted); }
+      .newsletter-input:focus { border-color: rgba(200,240,75,0.35); }
+      .newsletter-submit { font-family: var(--font-body); font-size: 0.85rem; font-weight: 500; color: var(--bg); background: var(--accent); border: none; border-radius: 6px; padding: 0.7rem 1.4rem; cursor: pointer; white-space: nowrap; transition: opacity 0.2s; }
+      .newsletter-submit:hover { opacity: 0.88; }
+      .newsletter-success { display: none; position: relative; z-index: 1; font-size: 0.88rem; color: var(--accent); align-self: center; }
+
+      /* ── FOOTER ── */
+      footer { padding: 2.5rem; border-top: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem; }
+      .footer-brand { display: flex; align-items: center; gap: 8px; }
+      .footer-brand-text { font-family: var(--font-display); font-size: 0.9rem; font-weight: 800; color: var(--muted); letter-spacing: -0.02em; }
+      .footer-brand-text span { color: var(--accent); }
+      .footer-copy { font-size: 0.8rem; color: var(--muted); }
+      .footer-links { display: flex; gap: 1.5rem; }
+      .footer-links a { font-size: 0.8rem; color: var(--muted); text-decoration: none; transition: color 0.2s; }
+      .footer-links a:hover { color: var(--text); }
+
+      /* ── ANIMATIONS ── */
+      @keyframes fadeUp { from { opacity: 0; transform: translateY(22px); } to { opacity: 1; transform: translateY(0); } }
+      .reveal { opacity: 0; transform: translateY(26px); transition: opacity 0.6s ease, transform 0.6s ease; }
+      .reveal.visible { opacity: 1; transform: translateY(0); }
+
+      /* ── THUMB COLORS ── */
+      .thumb-cloud   { background: linear-gradient(135deg, #080e1a 0%, #0b1422 50%, #060c14 100%); }
+      .thumb-ia      { background: linear-gradient(135deg, #0d1a0a 0%, #0f200d 50%, #0a1208 100%); }
+      .thumb-sec     { background: linear-gradient(135deg, #1a0a0a 0%, #200d0d 50%, #140808 100%); }
+      .thumb-sf      { background: linear-gradient(135deg, #0a0d1a 0%, #0d1120 50%, #080a16 100%); }
+      .thumb-devops  { background: linear-gradient(135deg, #0a1a13 0%, #0d2018 50%, #081410 100%); }
+      .thumb-digital { background: linear-gradient(135deg, #14100a 0%, #1a140d 50%, #100c08 100%); }
+      .thumb-erp     { background: linear-gradient(135deg, #0f0a1a 0%, #140d20 50%, #0c0814 100%); }
+      .thumb-auto    { background: linear-gradient(135deg, #0a1614 0%, #0d1c1a 50%, #081210 100%); }
+
+      /* ── RESPONSIVE ── */
+      @media (max-width: 1100px) {
+        .main-layout { grid-template-columns: 1fr; }
+        .sidebar { position: static; }
+        .articles-grid { grid-template-columns: repeat(2, 1fr); }
+      }
+      @media (max-width: 860px) {
+        .featured-card { grid-template-columns: 1fr; }
+        .featured-thumb { min-height: 200px; }
+        .featured-thumb-overlay { background: linear-gradient(to bottom, transparent 30%, rgba(17,17,17,0.85) 100%); }
+        .newsletter-box { grid-template-columns: 1fr; }
+        .newsletter-form-wrap { flex-direction: column; }
+        .newsletter-input { width: 100%; }
+      }
+      @media (max-width: 768px) {
+        nav { padding: 1rem 1.5rem; }
+        .hamburger { display: flex; }
+        .nav-links { display: none; flex-direction: column; gap: 0; position: fixed; top: var(--nav-h); left: 0; right: 0; background: rgba(10,10,10,0.97); border-bottom: 1px solid var(--border); padding: 1rem 0; backdrop-filter: blur(12px); }
+        .nav-links.open { display: flex; }
+        .nav-links li { padding: 0; }
+        .nav-links a { display: block; padding: 0.75rem 2rem; }
+        .hero { padding: calc(var(--nav-h) + 2.5rem) 1.5rem 2.5rem; }
+        .featured-section { padding: 0 1.5rem 1.5rem; }
+        .main-layout { padding: 1.5rem 1.5rem 4rem; }
+        .articles-grid { grid-template-columns: 1fr; }
+        .newsletter-section { padding: 0 1.5rem 4rem; }
+        .newsletter-box { padding: 2.5rem 1.5rem; }
+        footer { flex-direction: column; align-items: flex-start; padding: 2rem 1.5rem; }
+      }
+    </style>
+  </head>
+  <body>
+
+    <!-- NAV -->
+    <nav>
+      <a href="/" class="nav-logo">
+        <svg width="30" height="30" viewBox="0 0 30 30" fill="none">
+          <circle cx="15" cy="3" r="2.2" fill="#c8f04b"/>
+          <circle cx="24.6" cy="7.4" r="2.2" fill="#c8f04b" opacity="0.7"/>
+          <circle cx="27" cy="15" r="2.2" fill="#c8f04b"/>
+          <circle cx="24.6" cy="22.6" r="2.2" fill="#c8f04b" opacity="0.7"/>
+          <circle cx="15" cy="27" r="2.2" fill="#c8f04b"/>
+          <circle cx="5.4" cy="22.6" r="2.2" fill="#c8f04b" opacity="0.7"/>
+          <circle cx="3" cy="15" r="2.2" fill="#c8f04b"/>
+          <circle cx="5.4" cy="7.4" r="2.2" fill="#c8f04b" opacity="0.7"/>
+          <circle cx="15" cy="15" r="3.5" fill="none" stroke="#c8f04b" stroke-width="1.5"/>
+          <line x1="15" y1="5.2" x2="15" y2="11.5" stroke="#c8f04b" stroke-width="1.2" stroke-linecap="round"/>
+          <line x1="15" y1="18.5" x2="15" y2="24.8" stroke="#c8f04b" stroke-width="1.2" stroke-linecap="round"/>
+          <line x1="5.2" y1="15" x2="11.5" y2="15" stroke="#c8f04b" stroke-width="1.2" stroke-linecap="round"/>
+          <line x1="18.5" y1="15" x2="24.8" y2="15" stroke="#c8f04b" stroke-width="1.2" stroke-linecap="round"/>
+        </svg>
+        <span class="nav-logo-text">nodo<span>8</span></span>
+      </a>
+      <ul class="nav-links">
+        <li><a href="/services">Servicios</a></li>
+        <li><a href="/industries">Industrias</a></li>
+        <li><a href="/ai">IA</a></li>
+        <li><a href="/careers">Careers</a></li>
+        <li><a href="/partners">Partners</a></li>
+        <li><a href="/case-studies">Casos de Éxito</a></li>
+        <li><a href="/blog" class="active">Blog</a></li>
+        <li><a href="/roi">Calc. ROI</a></li>
+        <li><a href="/contact">Contacto</a></li>
+      </ul>
+      <button class="hamburger" id="hamburger" aria-label="Menú">
+        <span></span><span></span><span></span>
+      </button>
+      <a href="/contact" class="nav-cta">Agendar llamada</a>
+    </nav>
+
+    <!-- HERO -->
+    <section class="hero">
+      <div class="hero-grid"></div>
+      <div class="hero-content">
+        <div class="hero-tag">Perspectivas del equipo nodo8</div>
+        <h1>Insights de<br /><em>transformación digital</em></h1>
+        <p class="hero-sub">Estrategia, tecnología y negocios — desde las trincheras de proyectos reales.</p>
+        <div class="search-wrap">
+          <svg class="search-icon" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          <input class="search-input" id="search-input" type="search" placeholder="Buscar artículos…" autocomplete="off" />
+        </div>
+      </div>
+    </section>
+
+    <!-- FEATURED -->
+    <div class="featured-section reveal">
+      <a class="featured-card" href="#" tabindex="0">
+        <div class="featured-thumb">
+          <div class="featured-thumb-bg thumb-cloud"></div>
+          <div class="featured-thumb-icon">
+            <svg viewBox="0 0 24 24"><path d="M18 10h-1.26A8 8 0 109 20h9a5 5 0 000-10z"/></svg>
+          </div>
+          <div class="featured-thumb-overlay"></div>
+        </div>
+        <div class="featured-body">
+          <div class="featured-meta">
+            <span class="cat-badge">Cloud</span>
+            <span class="featured-sep">·</span>
+            <span class="featured-read">8 min lectura</span>
+            <span class="featured-sep">·</span>
+            <span class="featured-read">Mar 2026</span>
+          </div>
+          <div class="featured-title">Cómo reducir costos IT 40% migrando a AWS en 90 días</div>
+          <div class="featured-excerpt">La mayoría de las empresas que migran a AWS sin un plan claro terminan pagando más de lo que pagaban on-premise. Te mostramos el framework exacto que usamos en nodo8 para garantizar ahorro desde el día 1.</div>
+          <div class="featured-author">
+            <div class="author-avatar">RC</div>
+            <span class="author-name">Ricardo Cruz · Director de Cloud, nodo8</span>
+          </div>
+          <div style="margin-top:0.5rem;">
+            <span class="btn-primary">Leer artículo →</span>
+          </div>
+        </div>
+      </a>
+    </div>
+
+    <!-- MAIN: ARTICLES + SIDEBAR -->
+    <div class="main-layout">
+      <div>
+        <!-- Filters -->
+        <div class="filter-row" id="filter-row">
+          <button class="filter-btn active" data-cat="all">Todos</button>
+          <button class="filter-btn" data-cat="cloud">Cloud</button>
+          <button class="filter-btn" data-cat="ia">IA</button>
+          <button class="filter-btn" data-cat="ciberseguridad">Ciberseguridad</button>
+          <button class="filter-btn" data-cat="salesforce">Salesforce</button>
+          <button class="filter-btn" data-cat="devops">DevOps</button>
+          <button class="filter-btn" data-cat="digital">Digital</button>
+          <button class="filter-btn" data-cat="erp">ERP</button>
+          <button class="filter-btn" data-cat="automatizacion">Automatización</button>
+        </div>
+
+        <!-- Articles -->
+        <div class="articles-grid" id="articles-grid">
+
+          <div class="article-card reveal" data-cat="digital">
+            <div class="article-thumb">
+              <div class="article-thumb-bg thumb-digital"></div>
+              <div class="article-thumb-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></div>
+            </div>
+            <div class="article-body">
+              <div class="article-meta">
+                <span class="cat-badge-muted">Digital</span>
+                <span class="article-sep">·</span>
+                <span class="article-read">5 min</span>
+              </div>
+              <div class="article-title">5 señales de que tu empresa necesita transformación digital ya</div>
+              <div class="article-excerpt">Si tu equipo sigue usando Excel para reportes críticos o tarda días en cerrar el mes, ya vas tarde.</div>
+              <div class="article-footer">
+                <div class="article-author">
+                  <div class="article-avatar">AM</div>
+                  <span class="article-author-name">Ana M.</span>
+                </div>
+                <span class="article-date">Feb 2026</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="article-card reveal" data-cat="salesforce">
+            <div class="article-thumb">
+              <div class="article-thumb-bg thumb-sf"></div>
+              <div class="article-thumb-icon"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg></div>
+            </div>
+            <div class="article-body">
+              <div class="article-meta">
+                <span class="cat-badge-muted">Salesforce</span>
+                <span class="article-sep">·</span>
+                <span class="article-read">7 min</span>
+              </div>
+              <div class="article-title">Salesforce vs HubSpot: cuál elegir para empresas medianas en México</div>
+              <div class="article-excerpt">No es solo precio: es qué tan lejos quieres llegar con tu CRM en los próximos 3 años.</div>
+              <div class="article-footer">
+                <div class="article-author">
+                  <div class="article-avatar">RC</div>
+                  <span class="article-author-name">Ricardo C.</span>
+                </div>
+                <span class="article-date">Feb 2026</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="article-card reveal" data-cat="devops">
+            <div class="article-thumb">
+              <div class="article-thumb-bg thumb-devops"></div>
+              <div class="article-thumb-icon"><svg viewBox="0 0 24 24"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg></div>
+            </div>
+            <div class="article-body">
+              <div class="article-meta">
+                <span class="cat-badge-muted">DevOps</span>
+                <span class="article-sep">·</span>
+                <span class="article-read">10 min</span>
+              </div>
+              <div class="article-title">Kubernetes en producción: lecciones aprendidas en 3 años</div>
+              <div class="article-excerpt">Los errores que cometimos y cómo los resolvimos antes de que costaran más de $50k en downtime.</div>
+              <div class="article-footer">
+                <div class="article-author">
+                  <div class="article-avatar">LG</div>
+                  <span class="article-author-name">Luis G.</span>
+                </div>
+                <span class="article-date">Ene 2026</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="article-card reveal" data-cat="ciberseguridad">
+            <div class="article-thumb">
+              <div class="article-thumb-bg thumb-sec"></div>
+              <div class="article-thumb-icon"><svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
+            </div>
+            <div class="article-body">
+              <div class="article-meta">
+                <span class="cat-badge-muted">Ciberseguridad</span>
+                <span class="article-sep">·</span>
+                <span class="article-read">6 min</span>
+              </div>
+              <div class="article-title">Cómo proteger los datos de tus clientes con Zero Trust Security</div>
+              <div class="article-excerpt">El modelo perimetral murió. Zero Trust no es un producto, es una filosofía que toda empresa necesita hoy.</div>
+              <div class="article-footer">
+                <div class="article-author">
+                  <div class="article-avatar">MR</div>
+                  <span class="article-author-name">María R.</span>
+                </div>
+                <span class="article-date">Ene 2026</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="article-card reveal" data-cat="ia">
+            <div class="article-thumb">
+              <div class="article-thumb-bg thumb-ia"></div>
+              <div class="article-thumb-icon"><svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 1010 10A10 10 0 0012 2z"/><path d="M12 8v4l3 3"/></svg></div>
+            </div>
+            <div class="article-body">
+              <div class="article-meta">
+                <span class="cat-badge-muted">IA</span>
+                <span class="article-sep">·</span>
+                <span class="article-read">8 min</span>
+              </div>
+              <div class="article-title">IA generativa en retail: casos reales de uso en 2025</div>
+              <div class="article-excerpt">Más allá del chatbot: cómo retailers líderes están usando LLMs para optimizar precios y forecasting.</div>
+              <div class="article-footer">
+                <div class="article-author">
+                  <div class="article-avatar">AM</div>
+                  <span class="article-author-name">Ana M.</span>
+                </div>
+                <span class="article-date">Dic 2025</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="article-card reveal" data-cat="erp">
+            <div class="article-thumb">
+              <div class="article-thumb-bg thumb-erp"></div>
+              <div class="article-thumb-icon"><svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg></div>
+            </div>
+            <div class="article-body">
+              <div class="article-meta">
+                <span class="cat-badge-muted">ERP</span>
+                <span class="article-sep">·</span>
+                <span class="article-read">12 min</span>
+              </div>
+              <div class="article-title">Migración SAP a S/4HANA: guía paso a paso para no perder el año</div>
+              <div class="article-excerpt">La migración más crítica que puede hacer una empresa mediana. Aquí el checklist que usamos con clientes.</div>
+              <div class="article-footer">
+                <div class="article-author">
+                  <div class="article-avatar">JV</div>
+                  <span class="article-author-name">Jorge V.</span>
+                </div>
+                <span class="article-date">Dic 2025</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="article-card reveal" data-cat="digital">
+            <div class="article-thumb">
+              <div class="article-thumb-bg thumb-digital"></div>
+              <div class="article-thumb-icon"><svg viewBox="0 0 24 24"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg></div>
+            </div>
+            <div class="article-body">
+              <div class="article-meta">
+                <span class="cat-badge-muted">Digital</span>
+                <span class="article-sep">·</span>
+                <span class="article-read">5 min</span>
+              </div>
+              <div class="article-title">Por qué el 70% de proyectos de transformación digital fallan</div>
+              <div class="article-excerpt">No es la tecnología. Es la gestión del cambio. Y aquí está la evidencia de 40 proyectos analizados.</div>
+              <div class="article-footer">
+                <div class="article-author">
+                  <div class="article-avatar">RC</div>
+                  <span class="article-author-name">Ricardo C.</span>
+                </div>
+                <span class="article-date">Nov 2025</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="article-card reveal" data-cat="cloud">
+            <div class="article-thumb">
+              <div class="article-thumb-bg thumb-cloud"></div>
+              <div class="article-thumb-icon"><svg viewBox="0 0 24 24"><path d="M18 10h-1.26A8 8 0 109 20h9a5 5 0 000-10z"/></svg></div>
+            </div>
+            <div class="article-body">
+              <div class="article-meta">
+                <span class="cat-badge-muted">Cloud</span>
+                <span class="article-sep">·</span>
+                <span class="article-read">9 min</span>
+              </div>
+              <div class="article-title">Multi-cloud vs single cloud: la decisión que define tu infraestructura</div>
+              <div class="article-excerpt">Depender de un solo proveedor tiene riesgos reales. Pero multi-cloud mal implementado cuesta el doble.</div>
+              <div class="article-footer">
+                <div class="article-author">
+                  <div class="article-avatar">LG</div>
+                  <span class="article-author-name">Luis G.</span>
+                </div>
+                <span class="article-date">Nov 2025</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="article-card reveal" data-cat="automatizacion">
+            <div class="article-thumb">
+              <div class="article-thumb-bg thumb-auto"></div>
+              <div class="article-thumb-icon"><svg viewBox="0 0 24 24"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg></div>
+            </div>
+            <div class="article-body">
+              <div class="article-meta">
+                <span class="cat-badge-muted">Automatización</span>
+                <span class="article-sep">·</span>
+                <span class="article-read">7 min</span>
+              </div>
+              <div class="article-title">Automatización RPA: cómo ahorrar 1,000 horas al año en operaciones</div>
+              <div class="article-excerpt">Los procesos manuales repetitivos son el mayor ladrón de productividad. Estos son los 5 que automatizaríamos primero.</div>
+              <div class="article-footer">
+                <div class="article-author">
+                  <div class="article-avatar">MR</div>
+                  <span class="article-author-name">María R.</span>
+                </div>
+                <span class="article-date">Oct 2025</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="no-results-msg" id="no-results-msg">No hay artículos para esta categoría.</div>
+        </div>
+
+        <!-- Pagination -->
+        <div class="pagination" id="pagination">
+          <a href="#" class="page-btn wide">← Anterior</a>
+          <a href="#" class="page-btn active">1</a>
+          <a href="#" class="page-btn">2</a>
+          <a href="#" class="page-btn">3</a>
+          <a href="#" class="page-btn wide">Siguiente →</a>
+        </div>
+      </div>
+
+      <!-- SIDEBAR -->
+      <aside class="sidebar">
+        <!-- Popular -->
+        <div class="sidebar-block reveal">
+          <div class="sidebar-title">Artículos populares</div>
+          <ul class="popular-list">
+            <li class="popular-item">
+              <span class="popular-num">01</span>
+              <div class="popular-info">
+                <span class="popular-ttl">Cómo reducir costos IT 40% migrando a AWS en 90 días</span>
+                <span class="popular-meta">Cloud · 8 min</span>
+              </div>
+            </li>
+            <li class="popular-item">
+              <span class="popular-num">02</span>
+              <div class="popular-info">
+                <span class="popular-ttl">Por qué el 70% de proyectos de transformación digital fallan</span>
+                <span class="popular-meta">Digital · 5 min</span>
+              </div>
+            </li>
+            <li class="popular-item">
+              <span class="popular-num">03</span>
+              <div class="popular-info">
+                <span class="popular-ttl">Kubernetes en producción: lecciones aprendidas en 3 años</span>
+                <span class="popular-meta">DevOps · 10 min</span>
+              </div>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Subscribe -->
+        <div class="sidebar-block reveal">
+          <div class="sidebar-title">Suscríbete al blog</div>
+          <form class="subscribe-form" id="sidebar-subscribe">
+            <p class="subscribe-sub">Insights semanales de transformación digital, directo a tu inbox.</p>
+            <input class="subscribe-input" type="email" name="email" placeholder="tu@empresa.com" required />
+            <button class="subscribe-btn" type="submit">Suscribirme →</button>
+          </form>
+          <div class="subscribe-success" id="sidebar-success">¡Listo! Te llegará el próximo insight.</div>
+        </div>
+
+        <!-- Categories -->
+        <div class="sidebar-block reveal">
+          <div class="sidebar-title">Categorías</div>
+          <ul class="cats-list">
+            <li class="cats-item" data-filter="cloud"><span class="cats-name">Cloud</span><span class="cats-count">2</span></li>
+            <li class="cats-item" data-filter="ia"><span class="cats-name">IA</span><span class="cats-count">1</span></li>
+            <li class="cats-item" data-filter="devops"><span class="cats-name">DevOps</span><span class="cats-count">1</span></li>
+            <li class="cats-item" data-filter="ciberseguridad"><span class="cats-name">Ciberseguridad</span><span class="cats-count">1</span></li>
+            <li class="cats-item" data-filter="salesforce"><span class="cats-name">Salesforce</span><span class="cats-count">1</span></li>
+            <li class="cats-item" data-filter="digital"><span class="cats-name">Digital</span><span class="cats-count">2</span></li>
+            <li class="cats-item" data-filter="erp"><span class="cats-name">ERP</span><span class="cats-count">1</span></li>
+            <li class="cats-item" data-filter="automatizacion"><span class="cats-name">Automatización</span><span class="cats-count">1</span></li>
+          </ul>
+        </div>
+      </aside>
+    </div>
+
+    <!-- NEWSLETTER -->
+    <section class="newsletter-section">
+      <div class="newsletter-box reveal">
+        <div class="newsletter-text">
+          <h2>Recibe insights de <em>transformación digital</em> cada semana</h2>
+          <p>Sin spam. Solo perspectivas accionables del equipo nodo8 sobre cloud, IA, seguridad y más.</p>
+        </div>
+        <div class="newsletter-form-wrap" id="newsletter-form-wrap">
+          <input class="newsletter-input" id="newsletter-email" type="email" placeholder="tu@empresa.com" />
+          <button class="newsletter-submit" id="newsletter-btn">Suscribirme</button>
+        </div>
+        <div class="newsletter-success" id="newsletter-success">¡Perfecto! Te llegará el próximo insight. 🎉</div>
+      </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer>
+      <div class="footer-brand">
+        <svg width="18" height="18" viewBox="0 0 30 30" fill="none">
+          <circle cx="15" cy="3" r="2.2" fill="#c8f04b"/>
+          <circle cx="24.6" cy="7.4" r="2.2" fill="#c8f04b" opacity="0.6"/>
+          <circle cx="27" cy="15" r="2.2" fill="#c8f04b"/>
+          <circle cx="24.6" cy="22.6" r="2.2" fill="#c8f04b" opacity="0.6"/>
+          <circle cx="15" cy="27" r="2.2" fill="#c8f04b"/>
+          <circle cx="5.4" cy="22.6" r="2.2" fill="#c8f04b" opacity="0.6"/>
+          <circle cx="3" cy="15" r="2.2" fill="#c8f04b"/>
+          <circle cx="5.4" cy="7.4" r="2.2" fill="#c8f04b" opacity="0.6"/>
+          <circle cx="15" cy="15" r="3.5" fill="none" stroke="#c8f04b" stroke-width="1.5"/>
+          <line x1="15" y1="5.2" x2="15" y2="11.5" stroke="#c8f04b" stroke-width="1.2" stroke-linecap="round"/>
+          <line x1="15" y1="18.5" x2="15" y2="24.8" stroke="#c8f04b" stroke-width="1.2" stroke-linecap="round"/>
+          <line x1="5.2" y1="15" x2="11.5" y2="15" stroke="#c8f04b" stroke-width="1.2" stroke-linecap="round"/>
+          <line x1="18.5" y1="15" x2="24.8" y2="15" stroke="#c8f04b" stroke-width="1.2" stroke-linecap="round"/>
+        </svg>
+        <span class="footer-brand-text">nodo<span>8</span></span>
+      </div>
+      <div class="footer-copy">© 2026 nodo8 · Guadalajara, México</div>
+      <div class="footer-links">
+        <a href="/blog">Blog</a>
+        <a href="/case-studies">Casos de Éxito</a>
+        <a href="/services">Servicios</a>
+        <a href="/contact">Contacto</a>
+      </div>
+    </footer>
+
+    <script>
+    /* ══════════════════════════════════
+       FILTER — category buttons + sidebar cats
+    ══════════════════════════════════ */
+    var activeCat = "all";
+
+    function setFilter(cat) {
+      activeCat = cat;
+      /* top filter buttons */
+      document.querySelectorAll("#filter-row .filter-btn").forEach(function(b) {
+        b.classList.toggle("active", b.dataset.cat === cat);
+      });
+      applyFilter();
+    }
+
+    function applyFilter() {
+      var searchVal = document.getElementById("search-input").value.trim().toLowerCase();
+      var cards = document.querySelectorAll(".article-card");
+      var visible = 0;
+      cards.forEach(function(card) {
+        var catOk = activeCat === "all" || card.dataset.cat === activeCat;
+        var title = card.querySelector(".article-title").textContent.toLowerCase();
+        var excerpt = card.querySelector(".article-excerpt").textContent.toLowerCase();
+        var searchOk = !searchVal || title.includes(searchVal) || excerpt.includes(searchVal);
+        if (catOk && searchOk) {
+          card.classList.remove("hidden");
+          card.classList.add("visible");
+          visible++;
+        } else {
+          card.classList.add("hidden");
+        }
+      });
+      document.getElementById("no-results-msg").style.display = visible === 0 ? "block" : "none";
+      document.getElementById("pagination").style.display = visible === 0 ? "none" : "flex";
+    }
+
+    document.querySelectorAll("#filter-row .filter-btn").forEach(function(btn) {
+      btn.addEventListener("click", function() { setFilter(btn.dataset.cat); });
+    });
+
+    /* sidebar category clicks */
+    document.querySelectorAll(".cats-item").forEach(function(item) {
+      item.addEventListener("click", function() {
+        setFilter(item.dataset.filter);
+        item.closest(".main-layout").scrollIntoView({ behavior: "smooth", block: "start" });
+      });
+    });
+
+    /* ══════════════════════════════════
+       SEARCH
+    ══════════════════════════════════ */
+    document.getElementById("search-input").addEventListener("input", applyFilter);
+
+    /* ══════════════════════════════════
+       SIDEBAR SUBSCRIBE (local only — no Formspree)
+    ══════════════════════════════════ */
+    document.getElementById("sidebar-subscribe").addEventListener("submit", function(e) {
+      e.preventDefault();
+      document.getElementById("sidebar-subscribe").style.display = "none";
+      document.getElementById("sidebar-success").style.display = "block";
+    });
+
+    /* ══════════════════════════════════
+       NEWSLETTER (Formspree)
+    ══════════════════════════════════ */
+    document.getElementById("newsletter-btn").addEventListener("click", async function() {
+      var email = document.getElementById("newsletter-email").value.trim();
+      if (!email || !email.includes("@")) {
+        document.getElementById("newsletter-email").focus();
+        return;
+      }
+      var btn = document.getElementById("newsletter-btn");
+      btn.textContent = "Enviando…";
+      btn.disabled = true;
+      try {
+        var res = await fetch("https://formspree.io/f/mzdkebnz", {
+          method: "POST",
+          body: JSON.stringify({ email: email, source: "blog-newsletter" }),
+          headers: { "Content-Type": "application/json", "Accept": "application/json" }
+        });
+        if (res.ok) {
+          document.getElementById("newsletter-form-wrap").style.display = "none";
+          document.getElementById("newsletter-success").style.display = "block";
+        } else { throw new Error(); }
+      } catch {
+        btn.textContent = "Reintentar";
+        btn.disabled = false;
+      }
+    });
+
+    /* ══════════════════════════════════
+       SCROLL REVEAL
+    ══════════════════════════════════ */
+    var revObs = new IntersectionObserver(function(entries) {
+      entries.forEach(function(e) {
+        if (e.isIntersecting) { e.target.classList.add("visible"); revObs.unobserve(e.target); }
+      });
+    }, { threshold: 0.06 });
+    document.querySelectorAll(".reveal").forEach(function(el) { revObs.observe(el); });
+
+    /* ══════════════════════════════════
+       HAMBURGER
+    ══════════════════════════════════ */
+    (function() {
+      var btn = document.getElementById("hamburger");
+      var menu = document.querySelector(".nav-links");
+      btn.addEventListener("click", function() { btn.classList.toggle("open"); menu.classList.toggle("open"); });
+      menu.querySelectorAll("a").forEach(function(a) {
+        a.addEventListener("click", function() { btn.classList.remove("open"); menu.classList.remove("open"); });
+      });
+    })();
+    </script>
+  </body>
+</html>

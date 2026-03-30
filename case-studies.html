@@ -1,0 +1,923 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Casos de Éxito — nodo8</title>
+    <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+    <style>
+      :root {
+        --bg: #0a0a0a; --surface: #111111; --surface2: #181818; --surface3: #1e1e1e;
+        --border: rgba(255,255,255,0.07); --accent: #c8f04b;
+        --accent-dim: rgba(200,240,75,0.12); --accent-glow: rgba(200,240,75,0.06);
+        --text: #f0f0ec; --muted: #888880;
+        --font-display: "Syne", sans-serif; --font-body: "DM Sans", sans-serif;
+        --nav-h: 68px;
+      }
+      *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+      html { scroll-behavior: smooth; }
+      body { background: var(--bg); color: var(--text); font-family: var(--font-body); font-size: 16px; line-height: 1.7; overflow-x: hidden; }
+
+      /* ── NAV ── */
+      nav { position: fixed; top: 0; left: 0; right: 0; z-index: 300; display: flex; align-items: center; justify-content: space-between; padding: 1.25rem 2.5rem; border-bottom: 1px solid var(--border); background: rgba(10,10,10,0.88); backdrop-filter: blur(12px); height: var(--nav-h); }
+      .nav-logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+      .nav-logo-text { font-family: var(--font-display); font-size: 1.1rem; font-weight: 800; color: var(--text); letter-spacing: -0.02em; }
+      .nav-logo-text span { color: var(--accent); }
+      .nav-links { display: flex; gap: 2rem; list-style: none; }
+      .nav-links a { font-size: 0.85rem; color: var(--muted); text-decoration: none; letter-spacing: 0.03em; transition: color 0.2s; }
+      .nav-links a:hover { color: var(--text); }
+      .nav-links a.active { color: var(--accent); }
+      .nav-cta { font-family: var(--font-body); font-size: 0.85rem; font-weight: 500; color: var(--bg); background: var(--accent); border: none; padding: 0.55rem 1.25rem; border-radius: 4px; cursor: pointer; text-decoration: none; transition: opacity 0.2s; }
+      .nav-cta:hover { opacity: 0.88; }
+      .hamburger { display: none; flex-direction: column; gap: 5px; background: none; border: none; cursor: pointer; padding: 4px; z-index: 10; }
+      .hamburger span { display: block; width: 22px; height: 1.5px; background: var(--text); border-radius: 2px; transition: transform 0.3s ease, opacity 0.3s ease; transform-origin: center; }
+      .hamburger.open span:nth-child(1) { transform: translateY(6.5px) rotate(45deg); }
+      .hamburger.open span:nth-child(2) { opacity: 0; transform: scaleX(0); }
+      .hamburger.open span:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); }
+
+      /* ── BUTTONS ── */
+      .btn-primary { font-family: var(--font-body); font-size: 0.9rem; font-weight: 500; color: var(--bg); background: var(--accent); border: none; padding: 0.85rem 2rem; border-radius: 4px; cursor: pointer; text-decoration: none; transition: opacity 0.2s, transform 0.2s; display: inline-block; }
+      .btn-primary:hover { opacity: 0.88; transform: translateY(-1px); }
+      .btn-ghost { font-family: var(--font-body); font-size: 0.82rem; font-weight: 400; color: var(--muted); background: transparent; border: 1px solid var(--border); padding: 0.5rem 1.1rem; border-radius: 4px; cursor: pointer; text-decoration: none; transition: color 0.2s, border-color 0.2s; display: inline-block; }
+      .btn-ghost:hover { color: var(--accent); border-color: rgba(200,240,75,0.3); }
+
+      /* ── SHARED ── */
+      .section-eyebrow { font-size: 0.75rem; color: var(--accent); letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 0.5rem; }
+      .section-title { font-family: var(--font-display); font-size: clamp(1.8rem, 4vw, 2.8rem); font-weight: 700; line-height: 1.1; letter-spacing: -0.02em; }
+      .tag { font-size: 0.7rem; color: var(--muted); background: var(--surface3); border: 1px solid var(--border); padding: 3px 9px; border-radius: 100px; white-space: nowrap; }
+
+      /* ── HERO ── */
+      .hero { min-height: 64vh; display: flex; flex-direction: column; justify-content: flex-end; padding: 8rem 2.5rem 5rem; position: relative; overflow: hidden; }
+      .hero-grid { position: absolute; inset: 0; background-image: linear-gradient(rgba(200,240,75,0.028) 1px, transparent 1px), linear-gradient(90deg, rgba(200,240,75,0.028) 1px, transparent 1px); background-size: 56px 56px; -webkit-mask-image: radial-gradient(ellipse 85% 80% at 50% 35%, black 20%, transparent 100%); mask-image: radial-gradient(ellipse 85% 80% at 50% 35%, black 20%, transparent 100%); z-index: 0; }
+      .hero-overlay { position: absolute; inset: 0; background: linear-gradient(to top, rgba(10,10,10,1) 0%, rgba(10,10,10,0.72) 55%, rgba(10,10,10,0.3) 100%); z-index: 1; }
+      .hero-glow { position: absolute; top: 15%; left: 50%; transform: translateX(-50%); width: 800px; height: 420px; background: radial-gradient(ellipse, rgba(200,240,75,0.055) 0%, transparent 70%); z-index: 0; pointer-events: none; }
+      .hero-content { position: relative; z-index: 2; max-width: 860px; }
+      .hero-tag { display: inline-flex; align-items: center; gap: 8px; font-size: 0.78rem; color: var(--accent); letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 1.5rem; animation: fadeUp 0.6s ease both; }
+      .hero-tag::before { content: ""; width: 24px; height: 1px; background: var(--accent); }
+      .hero h1 { font-family: var(--font-display); font-size: clamp(2.2rem, 5.5vw, 4.4rem); font-weight: 800; line-height: 1.04; letter-spacing: -0.035em; margin-bottom: 1.25rem; animation: fadeUp 0.6s 0.1s ease both; }
+      .hero h1 em { font-style: normal; color: var(--accent); }
+      .hero-sub { font-size: 1rem; color: var(--muted); max-width: 520px; font-weight: 300; line-height: 1.8; margin-bottom: 3rem; animation: fadeUp 0.6s 0.2s ease both; }
+      .hero-stats { display: flex; gap: 3.5rem; flex-wrap: wrap; animation: fadeUp 0.6s 0.3s ease both; }
+      .hero-stat { display: flex; flex-direction: column; gap: 0.1rem; }
+      .hero-stat-num { font-family: var(--font-display); font-size: 2.4rem; font-weight: 800; color: var(--accent); line-height: 1; letter-spacing: -0.03em; }
+      .hero-stat-label { font-size: 0.8rem; color: var(--muted); }
+
+      /* ── FILTERS ── */
+      .filters-bar { padding: 2.5rem 2.5rem 0; max-width: 1300px; margin: 0 auto; }
+      .filter-group { margin-bottom: 0.85rem; display: flex; align-items: center; gap: 0.6rem; flex-wrap: wrap; }
+      .filter-label { font-size: 0.7rem; color: var(--muted); letter-spacing: 0.1em; text-transform: uppercase; margin-right: 0.2rem; flex-shrink: 0; }
+      .filter-btn { font-family: var(--font-body); font-size: 0.78rem; font-weight: 400; color: var(--muted); background: var(--surface); border: 1px solid var(--border); padding: 0.38rem 1rem; border-radius: 100px; cursor: pointer; transition: color 0.18s, border-color 0.18s, background 0.18s; white-space: nowrap; }
+      .filter-btn:hover { color: var(--text); border-color: rgba(255,255,255,0.18); }
+      .filter-btn.active { color: var(--bg); background: var(--accent); border-color: var(--accent); }
+
+      /* ── GRID ── */
+      .cases-section { padding: 2.5rem 2.5rem 6rem; max-width: 1300px; margin: 0 auto; }
+      .cases-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(360px, 1fr)); gap: 1px; background: var(--border); border: 1px solid var(--border); border-radius: 16px; overflow: hidden; }
+
+      /* ── CASE CARD ── */
+      .case-card { background: var(--surface); display: flex; flex-direction: column; transition: background 0.25s; }
+      .case-card.hidden { display: none; }
+      .case-card:hover { background: var(--surface2); }
+      .case-thumb { height: 190px; position: relative; overflow: hidden; flex-shrink: 0; }
+      .case-thumb-bg { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; }
+      .case-thumb-icon { position: relative; z-index: 1; opacity: 0.22; }
+      .case-thumb-icon svg { width: 72px; height: 72px; stroke: var(--accent); fill: none; stroke-width: 1; }
+      .case-thumb-overlay { position: absolute; inset: 0; background: linear-gradient(to bottom, transparent 35%, rgba(10,10,10,0.92) 100%); z-index: 2; }
+      .case-industry-badge { position: absolute; top: 1rem; left: 1rem; z-index: 3; font-size: 0.65rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--bg); background: var(--accent); padding: 4px 10px; border-radius: 100px; }
+      .case-budget { position: absolute; top: 1rem; right: 1rem; z-index: 3; font-size: 0.65rem; color: var(--muted); background: rgba(10,10,10,0.75); border: 1px solid var(--border); padding: 3px 9px; border-radius: 100px; backdrop-filter: blur(4px); }
+      .case-body { padding: 1.5rem; display: flex; flex-direction: column; gap: 0.9rem; flex: 1; }
+      .case-client { font-size: 0.72rem; color: var(--muted); letter-spacing: 0.06em; text-transform: uppercase; }
+      .case-title { font-family: var(--font-display); font-weight: 700; font-size: 1.05rem; color: var(--text); line-height: 1.3; }
+      .case-metrics { display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.6rem; }
+      .case-metric { background: var(--surface3); border-radius: 8px; padding: 0.75rem; }
+      .case-metric-num { font-family: var(--font-display); font-size: 1.5rem; font-weight: 800; color: var(--accent); line-height: 1; letter-spacing: -0.02em; }
+      .case-metric-label { font-size: 0.68rem; color: var(--muted); margin-top: 0.15rem; line-height: 1.35; }
+      .case-stack { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+      .case-footer { display: flex; align-items: center; justify-content: space-between; padding-top: 0.25rem; }
+      .case-duration { font-size: 0.72rem; color: var(--muted); }
+
+      /* ── NO RESULTS ── */
+      .no-results { display: none; text-align: center; padding: 5rem 2rem; color: var(--muted); font-size: 0.95rem; grid-column: 1/-1; background: var(--surface); }
+
+      /* ── MODAL ── */
+      .modal-overlay { display: none; position: fixed; inset: 0; z-index: 500; background: rgba(0,0,0,0.82); backdrop-filter: blur(6px); overflow-y: auto; padding: 2rem 1rem; }
+      .modal-overlay.open { display: flex; align-items: flex-start; justify-content: center; }
+      .modal { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; width: 100%; max-width: 780px; margin: auto; overflow: hidden; animation: fadeUp 0.3s ease both; }
+      .modal-header { position: relative; height: 220px; overflow: hidden; }
+      .modal-header-bg { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; }
+      .modal-header-icon { opacity: 0.15; }
+      .modal-header-icon svg { width: 110px; height: 110px; stroke: var(--accent); fill: none; stroke-width: 0.8; }
+      .modal-header-overlay { position: absolute; inset: 0; background: linear-gradient(to bottom, transparent 20%, var(--surface) 100%); }
+      .modal-header-badges { position: absolute; top: 1.25rem; left: 1.5rem; display: flex; gap: 0.5rem; z-index: 2; }
+      .modal-close { position: absolute; top: 1.25rem; right: 1.5rem; z-index: 2; background: rgba(10,10,10,0.7); border: 1px solid var(--border); color: var(--muted); width: 34px; height: 34px; border-radius: 50%; cursor: pointer; font-size: 1.1rem; display: flex; align-items: center; justify-content: center; transition: color 0.2s, border-color 0.2s; }
+      .modal-close:hover { color: var(--text); border-color: rgba(255,255,255,0.25); }
+      .modal-body { padding: 0 2rem 2rem; }
+      .modal-client { font-size: 0.72rem; color: var(--muted); letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 0.35rem; }
+      .modal-title { font-family: var(--font-display); font-size: 1.55rem; font-weight: 800; letter-spacing: -0.025em; line-height: 1.2; margin-bottom: 1.75rem; }
+      .modal-section { margin-bottom: 1.5rem; }
+      .modal-section-label { font-size: 0.68rem; color: var(--accent); letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 0.5rem; }
+      .modal-section p { font-size: 0.9rem; color: var(--muted); line-height: 1.85; }
+      .modal-steps { list-style: none; counter-reset: steps; display: flex; flex-direction: column; gap: 0.6rem; }
+      .modal-steps li { counter-increment: steps; display: flex; gap: 0.9rem; font-size: 0.9rem; color: var(--muted); line-height: 1.7; }
+      .modal-steps li::before { content: counter(steps); flex-shrink: 0; width: 22px; height: 22px; background: var(--accent-dim); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.7rem; font-weight: 700; color: var(--accent); margin-top: 0.22rem; }
+      .modal-results { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: var(--border); border: 1px solid var(--border); border-radius: 10px; overflow: hidden; margin-bottom: 1.5rem; }
+      .modal-result { background: var(--surface2); padding: 1.1rem; text-align: center; }
+      .modal-result-num { font-family: var(--font-display); font-size: 1.8rem; font-weight: 800; color: var(--accent); line-height: 1; letter-spacing: -0.03em; }
+      .modal-result-label { font-size: 0.7rem; color: var(--muted); margin-top: 0.2rem; line-height: 1.4; }
+      .modal-stack { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-bottom: 1.5rem; }
+      .modal-testimonial { background: var(--surface3); border-left: 2px solid var(--accent); border-radius: 0 8px 8px 0; padding: 1.25rem 1.5rem; margin-bottom: 1.75rem; }
+      .modal-testimonial blockquote { font-size: 0.92rem; color: var(--text); line-height: 1.85; font-style: italic; margin-bottom: 0.65rem; }
+      .modal-testimonial cite { font-size: 0.75rem; color: var(--muted); font-style: normal; }
+      .modal-cta { display: flex; align-items: center; gap: 1rem; flex-wrap: wrap; }
+      .modal-meta { font-size: 0.78rem; color: var(--muted); }
+
+      /* ── CTA ── */
+      .cta-section { padding: 6rem 2.5rem; border-top: 1px solid var(--border); }
+      .cta-box { max-width: 1200px; margin: 0 auto; background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 5.5rem 4rem; text-align: center; position: relative; overflow: hidden; }
+      .cta-box::before { content: ""; position: absolute; inset: 0; background-image: linear-gradient(rgba(200,240,75,0.035) 1px, transparent 1px), linear-gradient(90deg, rgba(200,240,75,0.035) 1px, transparent 1px); background-size: 42px 42px; z-index: 0; }
+      .cta-box::after { content: ""; position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%); width: 700px; height: 350px; background: radial-gradient(ellipse, rgba(200,240,75,0.07) 0%, transparent 70%); z-index: 0; pointer-events: none; }
+      .cta-box-inner { position: relative; z-index: 1; }
+      .cta-box h2 { font-family: var(--font-display); font-size: clamp(1.8rem, 3.5vw, 2.6rem); font-weight: 800; letter-spacing: -0.03em; margin-bottom: 1rem; line-height: 1.15; }
+      .cta-box h2 em { font-style: normal; color: var(--accent); }
+      .cta-box p { font-size: 1rem; color: var(--muted); margin-bottom: 2.5rem; max-width: 480px; margin-left: auto; margin-right: auto; line-height: 1.8; }
+
+      /* ── FOOTER ── */
+      footer { padding: 2.5rem; border-top: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem; }
+      .footer-brand { display: flex; align-items: center; gap: 8px; }
+      .footer-brand-text { font-family: var(--font-display); font-size: 0.9rem; font-weight: 800; color: var(--muted); letter-spacing: -0.02em; }
+      .footer-brand-text span { color: var(--accent); }
+      .footer-copy { font-size: 0.8rem; color: var(--muted); }
+      .footer-links { display: flex; gap: 1.5rem; }
+      .footer-links a { font-size: 0.8rem; color: var(--muted); text-decoration: none; transition: color 0.2s; }
+      .footer-links a:hover { color: var(--text); }
+
+      /* ── ANIMATIONS ── */
+      @keyframes fadeUp { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: translateY(0); } }
+      .reveal { opacity: 0; transform: translateY(28px); transition: opacity 0.65s ease, transform 0.65s ease; }
+      .reveal.visible { opacity: 1; transform: translateY(0); }
+
+      /* ── THUMB GRADIENTS ── */
+      .thumb-retail    { background: linear-gradient(135deg, #0d1a0a 0%, #111f0e 40%, #0a1208 100%); }
+      .thumb-banca     { background: linear-gradient(135deg, #0a0d1a 0%, #0e1220 40%, #080a14 100%); }
+      .thumb-logistica { background: linear-gradient(135deg, #1a100a 0%, #1f140e 40%, #140d08 100%); }
+      .thumb-airlines  { background: linear-gradient(135deg, #0a0f1a 0%, #0d1420 40%, #08101a 100%); }
+      .thumb-crm       { background: linear-gradient(135deg, #120a1a 0%, #180e20 40%, #0e0814 100%); }
+      .thumb-devops    { background: linear-gradient(135deg, #0a1a13 0%, #0e2018 40%, #081410 100%); }
+
+      /* ── RESPONSIVE ── */
+      @media (max-width: 900px) {
+        .cases-grid { grid-template-columns: 1fr; }
+        .modal-results { grid-template-columns: repeat(2, 1fr); }
+      }
+      @media (max-width: 768px) {
+        nav { padding: 1rem 1.5rem; }
+        .hamburger { display: flex; }
+        .nav-links { display: none; flex-direction: column; gap: 0; position: fixed; top: var(--nav-h); left: 0; right: 0; background: rgba(10,10,10,0.97); border-bottom: 1px solid var(--border); padding: 1rem 0; backdrop-filter: blur(12px); }
+        .nav-links.open { display: flex; }
+        .nav-links li { padding: 0; }
+        .nav-links a { display: block; padding: 0.75rem 2rem; }
+        .hero { padding: 6rem 1.5rem 4rem; }
+        .hero-stats { gap: 2rem; }
+        .filters-bar { padding: 2rem 1.5rem 0; }
+        .cases-section { padding: 2rem 1.5rem 5rem; }
+        .case-metrics { grid-template-columns: repeat(2, 1fr); }
+        .modal { border-radius: 12px; }
+        .modal-body { padding: 0 1.25rem 1.5rem; }
+        .modal-results { grid-template-columns: 1fr; }
+        .cta-section { padding: 4rem 1.5rem; }
+        .cta-box { padding: 3.5rem 1.75rem; }
+        footer { flex-direction: column; align-items: flex-start; padding: 2rem 1.5rem; }
+      }
+    </style>
+  </head>
+  <body>
+
+    <!-- NAV -->
+    <nav>
+      <a href="/" class="nav-logo">
+        <svg width="30" height="30" viewBox="0 0 30 30" fill="none">
+          <circle cx="15" cy="3" r="2.2" fill="#c8f04b"/>
+          <circle cx="24.6" cy="7.4" r="2.2" fill="#c8f04b" opacity="0.7"/>
+          <circle cx="27" cy="15" r="2.2" fill="#c8f04b"/>
+          <circle cx="24.6" cy="22.6" r="2.2" fill="#c8f04b" opacity="0.7"/>
+          <circle cx="15" cy="27" r="2.2" fill="#c8f04b"/>
+          <circle cx="5.4" cy="22.6" r="2.2" fill="#c8f04b" opacity="0.7"/>
+          <circle cx="3" cy="15" r="2.2" fill="#c8f04b"/>
+          <circle cx="5.4" cy="7.4" r="2.2" fill="#c8f04b" opacity="0.7"/>
+          <circle cx="15" cy="15" r="3.5" fill="none" stroke="#c8f04b" stroke-width="1.5"/>
+          <line x1="15" y1="5.2" x2="15" y2="11.5" stroke="#c8f04b" stroke-width="1.2" stroke-linecap="round"/>
+          <line x1="15" y1="18.5" x2="15" y2="24.8" stroke="#c8f04b" stroke-width="1.2" stroke-linecap="round"/>
+          <line x1="5.2" y1="15" x2="11.5" y2="15" stroke="#c8f04b" stroke-width="1.2" stroke-linecap="round"/>
+          <line x1="18.5" y1="15" x2="24.8" y2="15" stroke="#c8f04b" stroke-width="1.2" stroke-linecap="round"/>
+        </svg>
+        <span class="nav-logo-text">nodo<span>8</span></span>
+      </a>
+      <ul class="nav-links">
+        <li><a href="/services">Servicios</a></li>
+        <li><a href="/industries">Industrias</a></li>
+        <li><a href="/ai">IA</a></li>
+        <li><a href="/careers">Careers</a></li>
+        <li><a href="/partners">Partners</a></li>
+        <li><a href="/case-studies" class="active">Casos de Éxito</a></li>
+        <li><a href="/blog">Blog</a></li>
+        <li><a href="/roi">Calc. ROI</a></li>
+        <li><a href="/contact">Contacto</a></li>
+      </ul>
+      <button class="hamburger" id="hamburger" aria-label="Menú">
+        <span></span><span></span><span></span>
+      </button>
+      <a href="/contact" class="nav-cta">Agendar llamada</a>
+    </nav>
+
+    <!-- HERO -->
+    <section class="hero">
+      <div class="hero-grid"></div>
+      <div class="hero-glow"></div>
+      <div class="hero-overlay"></div>
+      <div class="hero-content">
+        <div class="hero-tag">Resultados reales</div>
+        <h1>Resultados que<br /><em>hablan por sí solos</em></h1>
+        <p class="hero-sub">
+          Proyectos reales, clientes reales, impacto medible. Así es como nodo8
+          transforma operaciones complejas en ventajas competitivas.
+        </p>
+        <div class="hero-stats">
+          <div class="hero-stat">
+            <span class="hero-stat-num" data-target="20" data-prefix="+">0</span>
+            <span class="hero-stat-label">Proyectos completados</span>
+          </div>
+          <div class="hero-stat">
+            <span class="hero-stat-num" data-target="5" data-prefix="$" data-suffix="M+">0</span>
+            <span class="hero-stat-label">En valor generado</span>
+          </div>
+          <div class="hero-stat">
+            <span class="hero-stat-num" data-target="6">0</span>
+            <span class="hero-stat-label">Industrias atendidas</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FILTERS -->
+    <div class="filters-bar">
+      <div class="filter-group">
+        <span class="filter-label">Industria</span>
+        <button class="filter-btn active" data-filter-industry="all">Todos</button>
+        <button class="filter-btn" data-filter-industry="retail">Retail</button>
+        <button class="filter-btn" data-filter-industry="banca">Banca</button>
+        <button class="filter-btn" data-filter-industry="logistica">Logística</button>
+        <button class="filter-btn" data-filter-industry="airlines">Airlines</button>
+        <button class="filter-btn" data-filter-industry="crm">CRM</button>
+        <button class="filter-btn" data-filter-industry="devops">DevOps</button>
+      </div>
+      <div class="filter-group">
+        <span class="filter-label">Tecnología</span>
+        <button class="filter-btn active" data-filter-tech="all">Todas</button>
+        <button class="filter-btn" data-filter-tech="aws">AWS</button>
+        <button class="filter-btn" data-filter-tech="salesforce">Salesforce</button>
+        <button class="filter-btn" data-filter-tech="microsoft">Microsoft</button>
+        <button class="filter-btn" data-filter-tech="gcp">GCP</button>
+      </div>
+    </div>
+
+    <!-- CASES GRID -->
+    <section class="cases-section">
+      <div class="cases-grid" id="cases-grid">
+
+        <!-- CASO 1: Retail -->
+        <div class="case-card reveal"
+             data-industry="retail"
+             data-tech="aws"
+             data-case="retail">
+          <div class="case-thumb thumb-retail">
+            <div class="case-thumb-bg">
+              <div class="case-thumb-icon">
+                <svg viewBox="0 0 24 24"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
+              </div>
+            </div>
+            <div class="case-thumb-overlay"></div>
+            <span class="case-industry-badge">Retail</span>
+            <span class="case-budget">$180,000 USD</span>
+          </div>
+          <div class="case-body">
+            <div class="case-client">Grupo Comercial MX</div>
+            <div class="case-title">Plataforma cloud unificada para inventario en 50 tiendas</div>
+            <div class="case-metrics">
+              <div class="case-metric">
+                <div class="case-metric-num">40%</div>
+                <div class="case-metric-label">Reducción en merma</div>
+              </div>
+              <div class="case-metric">
+                <div class="case-metric-num">60%</div>
+                <div class="case-metric-label">Más rápido el reabastecimiento</div>
+              </div>
+            </div>
+            <div class="case-stack">
+              <span class="tag">AWS</span>
+              <span class="tag">React</span>
+              <span class="tag">PostgreSQL</span>
+              <span class="tag">Docker</span>
+            </div>
+            <div class="case-footer">
+              <span class="case-duration">8 meses</span>
+              <button class="btn-ghost open-modal" data-case="retail">Ver caso completo →</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- CASO 2: Banca -->
+        <div class="case-card reveal"
+             data-industry="banca"
+             data-tech="microsoft"
+             data-case="banca">
+          <div class="case-thumb thumb-banca">
+            <div class="case-thumb-bg">
+              <div class="case-thumb-icon">
+                <svg viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v16"/></svg>
+              </div>
+            </div>
+            <div class="case-thumb-overlay"></div>
+            <span class="case-industry-badge">Banca</span>
+            <span class="case-budget">$220,000 USD</span>
+          </div>
+          <div class="case-body">
+            <div class="case-client">Banco Regional Norte</div>
+            <div class="case-title">Rediseño completo de app móvil bancaria con nueva capa de seguridad</div>
+            <div class="case-metrics">
+              <div class="case-metric">
+                <div class="case-metric-num">4.8★</div>
+                <div class="case-metric-label">App Store (antes 3.2)</div>
+              </div>
+              <div class="case-metric">
+                <div class="case-metric-num">200%</div>
+                <div class="case-metric-label">Más usuarios activos</div>
+              </div>
+            </div>
+            <div class="case-stack">
+              <span class="tag">React Native</span>
+              <span class="tag">Node.js</span>
+              <span class="tag">Azure</span>
+              <span class="tag">AES-256</span>
+            </div>
+            <div class="case-footer">
+              <span class="case-duration">6 meses</span>
+              <button class="btn-ghost open-modal" data-case="banca">Ver caso completo →</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- CASO 3: Logística -->
+        <div class="case-card reveal"
+             data-industry="logistica"
+             data-tech="gcp"
+             data-case="logistica">
+          <div class="case-thumb thumb-logistica">
+            <div class="case-thumb-bg">
+              <div class="case-thumb-icon">
+                <svg viewBox="0 0 24 24"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+              </div>
+            </div>
+            <div class="case-thumb-overlay"></div>
+            <span class="case-industry-badge">Logística</span>
+            <span class="case-budget">$150,000 USD</span>
+          </div>
+          <div class="case-body">
+            <div class="case-client">TransMex Logistics</div>
+            <div class="case-title">Plataforma IoT de tracking GPS para flota de 300 unidades</div>
+            <div class="case-metrics">
+              <div class="case-metric">
+                <div class="case-metric-num">30%</div>
+                <div class="case-metric-label">Ahorro en combustible</div>
+              </div>
+              <div class="case-metric">
+                <div class="case-metric-num">95%</div>
+                <div class="case-metric-label">Entregas a tiempo</div>
+              </div>
+            </div>
+            <div class="case-stack">
+              <span class="tag">GCP</span>
+              <span class="tag">Python</span>
+              <span class="tag">IoT Core</span>
+              <span class="tag">React</span>
+            </div>
+            <div class="case-footer">
+              <span class="case-duration">5 meses</span>
+              <button class="btn-ghost open-modal" data-case="logistica">Ver caso completo →</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- CASO 4: Airlines -->
+        <div class="case-card reveal"
+             data-industry="airlines"
+             data-tech="aws"
+             data-case="airlines">
+          <div class="case-thumb thumb-airlines">
+            <div class="case-thumb-bg">
+              <div class="case-thumb-icon">
+                <svg viewBox="0 0 24 24"><path d="M21 16v-2l-8-5V3.5a1.5 1.5 0 00-3 0V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5l8 2.5z"/></svg>
+              </div>
+            </div>
+            <div class="case-thumb-overlay"></div>
+            <span class="case-industry-badge">Airlines</span>
+            <span class="case-budget">$450,000 USD</span>
+          </div>
+          <div class="case-body">
+            <div class="case-client">Aero Regional</div>
+            <div class="case-title">Modernización completa: reservas y check-in con microservicios en AWS</div>
+            <div class="case-metrics">
+              <div class="case-metric">
+                <div class="case-metric-num">70%</div>
+                <div class="case-metric-label">Reducción en tiempos de espera</div>
+              </div>
+              <div class="case-metric">
+                <div class="case-metric-num">99.9%</div>
+                <div class="case-metric-label">Uptime del sistema</div>
+              </div>
+            </div>
+            <div class="case-stack">
+              <span class="tag">AWS</span>
+              <span class="tag">Microservicios</span>
+              <span class="tag">React</span>
+              <span class="tag">APIs REST</span>
+            </div>
+            <div class="case-footer">
+              <span class="case-duration">12 meses</span>
+              <button class="btn-ghost open-modal" data-case="airlines">Ver caso completo →</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- CASO 5: CRM / Salesforce -->
+        <div class="case-card reveal"
+             data-industry="crm"
+             data-tech="salesforce"
+             data-case="crm">
+          <div class="case-thumb thumb-crm">
+            <div class="case-thumb-bg">
+              <div class="case-thumb-icon">
+                <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
+              </div>
+            </div>
+            <div class="case-thumb-overlay"></div>
+            <span class="case-industry-badge">CRM</span>
+            <span class="case-budget">$120,000 USD</span>
+          </div>
+          <div class="case-body">
+            <div class="case-client">Distribuidora Nacional</div>
+            <div class="case-title">Implementación Salesforce Sales Cloud con integración ERP y visibilidad total del pipeline</div>
+            <div class="case-metrics">
+              <div class="case-metric">
+                <div class="case-metric-num">45%</div>
+                <div class="case-metric-label">Incremento en conversión</div>
+              </div>
+              <div class="case-metric">
+                <div class="case-metric-num">100%</div>
+                <div class="case-metric-label">Pipeline visible</div>
+              </div>
+            </div>
+            <div class="case-stack">
+              <span class="tag">Salesforce</span>
+              <span class="tag">Apex</span>
+              <span class="tag">REST APIs</span>
+              <span class="tag">SAP</span>
+            </div>
+            <div class="case-footer">
+              <span class="case-duration">4 meses</span>
+              <button class="btn-ghost open-modal" data-case="crm">Ver caso completo →</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- CASO 6: DevOps -->
+        <div class="case-card reveal"
+             data-industry="devops"
+             data-tech="aws"
+             data-case="devops">
+          <div class="case-thumb thumb-devops">
+            <div class="case-thumb-bg">
+              <div class="case-thumb-icon">
+                <svg viewBox="0 0 24 24"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+              </div>
+            </div>
+            <div class="case-thumb-overlay"></div>
+            <span class="case-industry-badge">DevOps</span>
+            <span class="case-budget">$90,000 USD</span>
+          </div>
+          <div class="case-body">
+            <div class="case-client">FinTech Startup CDMX</div>
+            <div class="case-title">CI/CD completo e infraestructura como código: de deploys quincenales a diarios</div>
+            <div class="case-metrics">
+              <div class="case-metric">
+                <div class="case-metric-num">80%</div>
+                <div class="case-metric-label">Menos bugs en producción</div>
+              </div>
+              <div class="case-metric">
+                <div class="case-metric-num">50%</div>
+                <div class="case-metric-label">Reducción en costos infra</div>
+              </div>
+            </div>
+            <div class="case-stack">
+              <span class="tag">AWS</span>
+              <span class="tag">Terraform</span>
+              <span class="tag">GitHub Actions</span>
+              <span class="tag">Kubernetes</span>
+            </div>
+            <div class="case-footer">
+              <span class="case-duration">3 meses</span>
+              <button class="btn-ghost open-modal" data-case="devops">Ver caso completo →</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="no-results" id="no-results">No hay casos para los filtros seleccionados.</div>
+      </div>
+    </section>
+
+    <!-- MODAL OVERLAY -->
+    <div class="modal-overlay" id="modal-overlay" role="dialog" aria-modal="true">
+      <div class="modal" id="modal">
+        <!-- filled by JS -->
+      </div>
+    </div>
+
+    <!-- CTA FINAL -->
+    <section class="cta-section">
+      <div class="cta-box reveal">
+        <div class="cta-box-inner">
+          <div class="section-eyebrow" style="margin-bottom:1.1rem;">Tu empresa, el próximo caso</div>
+          <h2>¿Tu empresa podría ser<br /><em>el próximo caso de éxito?</em></h2>
+          <p>Cada proyecto empieza con una conversación. Cuéntanos tu reto y te mostramos cómo lo resolveríamos.</p>
+          <a href="/contact" class="btn-primary">Agendar llamada gratuita</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer>
+      <div class="footer-brand">
+        <svg width="18" height="18" viewBox="0 0 30 30" fill="none">
+          <circle cx="15" cy="3" r="2.2" fill="#c8f04b"/>
+          <circle cx="24.6" cy="7.4" r="2.2" fill="#c8f04b" opacity="0.6"/>
+          <circle cx="27" cy="15" r="2.2" fill="#c8f04b"/>
+          <circle cx="24.6" cy="22.6" r="2.2" fill="#c8f04b" opacity="0.6"/>
+          <circle cx="15" cy="27" r="2.2" fill="#c8f04b"/>
+          <circle cx="5.4" cy="22.6" r="2.2" fill="#c8f04b" opacity="0.6"/>
+          <circle cx="3" cy="15" r="2.2" fill="#c8f04b"/>
+          <circle cx="5.4" cy="7.4" r="2.2" fill="#c8f04b" opacity="0.6"/>
+          <circle cx="15" cy="15" r="3.5" fill="none" stroke="#c8f04b" stroke-width="1.5"/>
+          <line x1="15" y1="5.2" x2="15" y2="11.5" stroke="#c8f04b" stroke-width="1.2" stroke-linecap="round"/>
+          <line x1="15" y1="18.5" x2="15" y2="24.8" stroke="#c8f04b" stroke-width="1.2" stroke-linecap="round"/>
+          <line x1="5.2" y1="15" x2="11.5" y2="15" stroke="#c8f04b" stroke-width="1.2" stroke-linecap="round"/>
+          <line x1="18.5" y1="15" x2="24.8" y2="15" stroke="#c8f04b" stroke-width="1.2" stroke-linecap="round"/>
+        </svg>
+        <span class="footer-brand-text">nodo<span>8</span></span>
+      </div>
+      <div class="footer-copy">© 2026 nodo8 · Guadalajara, México</div>
+      <div class="footer-links">
+        <a href="/services">Servicios</a>
+        <a href="/industries">Industrias</a>
+        <a href="/case-studies">Casos de Éxito</a>
+        <a href="/careers">Careers</a>
+      </div>
+    </footer>
+
+    <script>
+    /* ══════════════════════════════════
+       DATA
+    ══════════════════════════════════ */
+    var CASES = {
+      retail: {
+        industry: "Retail", client: "Grupo Comercial MX",
+        title: "Plataforma cloud unificada para inventario en tiempo real — 50 tiendas",
+        budget: "$180,000 USD", duration: "8 meses",
+        thumbClass: "thumb-retail",
+        iconPath: '<path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/>',
+        context: "Grupo Comercial MX opera 50 tiendas en 8 estados del país. Su sistema de inventario consistía en hojas de cálculo manuales y un ERP local que no se comunicaba entre tiendas, generando merma, sobre-stock y pérdidas estimadas de $2.1M al año.",
+        reto: "Unificar el inventario de 50 tiendas en tiempo real, reducir la merma por pedidos incorrectos y habilitar un dashboard operativo para el equipo central de operaciones sin interrumpir las operaciones del día a día.",
+        pasos: [
+          "Auditoría completa del sistema legado y mapeo de flujos de inventario por tienda.",
+          "Diseño de arquitectura cloud en AWS con API Gateway centralizada y base de datos PostgreSQL multi-región.",
+          "Desarrollo de dashboard en React con actualización en tiempo real y alertas automáticas de bajo stock.",
+          "Migración por fases: 10 tiendas piloto → 25 → 50, con rollback instantáneo.",
+          "Capacitación a 200 usuarios en 3 semanas. Go-live sin downtime."
+        ],
+        results: [
+          { num: "40%", label: "Reducción en merma" },
+          { num: "60%", label: "Más rápido el reabastecimiento" },
+          { num: "$2.1M", label: "Pérdidas anuales eliminadas" }
+        ],
+        stack: ["AWS EC2", "RDS PostgreSQL", "API Gateway", "React", "Docker", "CloudWatch"],
+        testimonial: "Antes tardábamos 3 días en saber el inventario real de todas las tiendas. Hoy lo vemos en tiempo real desde cualquier dispositivo. nodo8 transformó nuestra operación.",
+        testimonialAuthor: "Directora de Operaciones, Grupo Comercial MX"
+      },
+      banca: {
+        industry: "Banca", client: "Banco Regional Norte",
+        title: "Rediseño completo de app móvil bancaria — de 3.2 a 4.8 estrellas",
+        budget: "$220,000 USD", duration: "6 meses",
+        thumbClass: "thumb-banca",
+        iconPath: '<rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v16"/>',
+        context: "Banco Regional Norte tenía una app móvil con más de 5 años sin actualización significativa. Las quejas de usuarios por lentitud, crashes frecuentes y procesos de 12 pasos para transferencias simples habían llevado la calificación a 3.2 estrellas con más de 4,000 reseñas negativas.",
+        reto: "Rediseñar completamente la app manteniendo la disponibilidad del servicio, implementar biometría y cifrado AES-256, reducir el flujo de transferencia a 3 pasos y cumplir con regulaciones CNBV vigentes.",
+        pasos: [
+          "UX research con 60 usuarios actuales para identificar los 10 puntos de fricción principales.",
+          "Rediseño completo en React Native con sistema de diseño propio, dark mode y accesibilidad WCAG AA.",
+          "Implementación de cifrado AES-256 end-to-end y autenticación biométrica (Face ID / huella).",
+          "Integración con Azure Active Directory y capa de seguridad bancaria certificada por CNBV.",
+          "Beta con 1,000 usuarios → retroalimentación → ajustes → lanzamiento progresivo."
+        ],
+        results: [
+          { num: "4.8★", label: "App Store (antes 3.2)" },
+          { num: "200%", label: "Más usuarios activos" },
+          { num: "0", label: "Incidentes de seguridad" }
+        ],
+        stack: ["React Native", "Node.js", "Azure AD", "AES-256", "Face ID / Touch ID", "CNBV"],
+        testimonial: "nodo8 no solo mejoró la app, cambió la percepción que nuestros clientes tienen del banco. El NPS subió 42 puntos en los primeros 3 meses post-lanzamiento.",
+        testimonialAuthor: "CTO, Banco Regional Norte"
+      },
+      logistica: {
+        industry: "Logística", client: "TransMex Logistics",
+        title: "Plataforma IoT + tracking GPS para flota de 300 unidades en tiempo real",
+        budget: "$150,000 USD", duration: "5 meses",
+        thumbClass: "thumb-logistica",
+        iconPath: '<rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/>',
+        context: "TransMex opera 300 unidades de transporte de carga. El seguimiento se hacía por llamadas telefónicas al conductor, sin datos de ruta, consumo de combustible ni ETA precisos. Los clientes exigían visibilidad en tiempo real y las penalizaciones por retrasos costaban $400,000 al año.",
+        reto: "Implementar una plataforma IoT que capturara posición GPS, velocidad, temperatura de carga y consumo de combustible en tiempo real, con dashboard operativo para despachadores y portal de tracking para clientes.",
+        pasos: [
+          "Instalación de dispositivos IoT en 300 unidades con integración a GCP IoT Core.",
+          "Pipeline de datos en tiempo real con Pub/Sub + BigQuery para análisis histórico.",
+          "Dashboard operativo en React con mapa en vivo, alertas de desvío de ruta y ETA dinámico.",
+          "Portal de autoservicio para clientes finales con tracking público por número de guía.",
+          "Módulo de eficiencia: comparación de rutas, consumo por conductor, ranking de desempeño."
+        ],
+        results: [
+          { num: "30%", label: "Ahorro en combustible" },
+          { num: "95%", label: "Entregas a tiempo" },
+          { num: "$400K", label: "Penalizaciones eliminadas/año" }
+        ],
+        stack: ["GCP IoT Core", "Pub/Sub", "BigQuery", "Python", "React", "PostgreSQL"],
+        testimonial: "Antes cuando un cliente preguntaba dónde estaba su carga, no teníamos respuesta precisa. Hoy tienen un portal propio. Eso cambió por completo las conversaciones de renovación de contratos.",
+        testimonialAuthor: "Gerente de Operaciones, TransMex Logistics"
+      },
+      airlines: {
+        industry: "Airlines", client: "Aero Regional",
+        title: "Modernización completa de reservas y check-in con microservicios en AWS",
+        budget: "$450,000 USD", duration: "12 meses",
+        thumbClass: "thumb-airlines",
+        iconPath: '<path d="M21 16v-2l-8-5V3.5a1.5 1.5 0 00-3 0V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5l8 2.5z"/>',
+        context: "Aero Regional operaba con un sistema monolítico de reservas del año 2008 que no podía escalar en temporada alta, causaba caídas frecuentes y requería 45 minutos promedio para completar un proceso de check-in manual. El sistema no tenía API para integrarse con OTAs como Despegar o Booking.",
+        reto: "Reemplazar el sistema monolítico sin interrumpir operaciones, migrar a arquitectura de microservicios en AWS con capacidad de escalar 10x en temporada alta, integrar con OTAs vía API y reducir el tiempo de check-in a menos de 5 minutos.",
+        pasos: [
+          "Análisis exhaustivo del sistema legado y definición de 12 microservicios independientes.",
+          "Arquitectura strangler fig: nuevos microservicios en paralelo, migración gradual por módulo.",
+          "Despliegue en AWS EKS con auto-scaling configurado para picos de temporada alta.",
+          "Desarrollo de API REST pública documentada con Swagger para integración con OTAs.",
+          "Check-in digital: web + quioscos + móvil. Integración con aduanas y migración.",
+          "Pruebas de carga a 50x el tráfico normal antes del go-live definitivo."
+        ],
+        results: [
+          { num: "70%", label: "Reducción en tiempos de espera" },
+          { num: "99.9%", label: "Uptime del sistema" },
+          { num: "3 OTAs", label: "Integradas desde día 1" }
+        ],
+        stack: ["AWS EKS", "Microservicios", "API Gateway", "React", "Node.js", "Swagger"],
+        testimonial: "Era el proyecto más crítico que habíamos emprendido. nodo8 lo ejecutó con una metodología que nos dio confianza en cada etapa. El go-live fue el primer lanzamiento sin incidentes en nuestra historia.",
+        testimonialAuthor: "Director de TI, Aero Regional"
+      },
+      crm: {
+        industry: "CRM / Salesforce", client: "Distribuidora Nacional",
+        title: "Salesforce Sales Cloud con integración ERP — pipeline visible al 100%",
+        budget: "$120,000 USD", duration: "4 meses",
+        thumbClass: "thumb-crm",
+        iconPath: '<path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/>',
+        context: "Distribuidora Nacional tiene un equipo de 45 vendedores que manejaban sus contactos y oportunidades en Excel. Sin visibilidad del pipeline, el director comercial no podía proyectar ingresos con precisión. La tasa de seguimiento a leads era del 32% y el ciclo de ventas promedio era de 67 días.",
+        reto: "Implementar Salesforce Sales Cloud configurado para el proceso de ventas propio de la distribuidora, integrarlo con su ERP SAP para tener precios e inventario en tiempo real, y adoptar el CRM con los 45 vendedores en menos de 8 semanas.",
+        pasos: [
+          "Workshop de 2 días para mapear el proceso de ventas real (no el ideal) con el equipo.",
+          "Configuración de Salesforce: etapas de oportunidad, campos personalizados, reglas de asignación.",
+          "Desarrollo en Apex de integración bidireccional con SAP: precios, stock, pedidos confirmados.",
+          "Automatización de seguimiento: flows que asignan tareas y envían recordatorios automáticos.",
+          "Capacitación por grupos de 8 personas. Adopción medida semana a semana con dashboard de uso."
+        ],
+        results: [
+          { num: "45%", label: "Incremento en conversión" },
+          { num: "100%", label: "Pipeline visible" },
+          { num: "38 días", label: "Ciclo de venta (antes 67)" }
+        ],
+        stack: ["Salesforce Sales Cloud", "Apex", "Salesforce Flow", "REST API", "SAP Integration"],
+        testimonial: "Por primera vez en 15 años de empresa puedo ver exactamente cuánto vamos a vender el próximo mes. Y los vendedores no pelean con la herramienta, la usan porque los ayuda.",
+        testimonialAuthor: "Director Comercial, Distribuidora Nacional"
+      },
+      devops: {
+        industry: "DevOps", client: "FinTech Startup CDMX",
+        title: "CI/CD completo + IaC: de deploys quincenales a múltiples deploys diarios",
+        budget: "$90,000 USD", duration: "3 meses",
+        thumbClass: "thumb-devops",
+        iconPath: '<polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/>',
+        context: "Esta FinTech de 28 personas lanzaba actualizaciones cada 2 semanas después de un proceso de deploy manual que tomaba 6 horas y requería presencia de 3 ingenieros. El 40% de los deploys causaban algún incidente en producción. La infraestructura en AWS no tenía IaC, era \"arqueología\" para cualquier ingeniero nuevo.",
+        reto: "Implementar un pipeline CI/CD completo que permitiera deploys múltiples por día con confianza, documentar y codificar toda la infraestructura con Terraform, y reducir el tiempo de onboarding de ingenieros de 2 semanas a 2 días.",
+        pasos: [
+          "Auditoría completa de infraestructura existente y documentación de todos los recursos AWS.",
+          "Escritura de Terraform para 100% de la infraestructura: VPCs, EKS, RDS, S3, IAM.",
+          "Pipeline en GitHub Actions: linting → tests → build → staging deploy → smoke tests → prod deploy.",
+          "Rollback automático si algún health check falla post-deploy (tiempo de rollback: 90 segundos).",
+          "Alertas en Slack + dashboards de SLOs en CloudWatch. Runbooks para cada tipo de incidente."
+        ],
+        results: [
+          { num: "12x", label: "Más deploys por semana" },
+          { num: "80%", label: "Menos bugs en producción" },
+          { num: "50%", label: "Reducción en costos de infra" }
+        ],
+        stack: ["AWS EKS", "Terraform", "GitHub Actions", "Docker", "Kubernetes", "CloudWatch"],
+        testimonial: "Pasamos de temer los viernes de deploy a hacerlos cualquier día sin pensarlo dos veces. El equipo de ingeniería ganó confianza y velocidad al mismo tiempo.",
+        testimonialAuthor: "CTO & Co-Founder, FinTech Startup CDMX"
+      }
+    };
+
+    /* ══════════════════════════════════
+       FILTERS
+    ══════════════════════════════════ */
+    var activeIndustry = "all";
+    var activeTech = "all";
+
+    function applyFilters() {
+      var cards = document.querySelectorAll(".case-card");
+      var visible = 0;
+      cards.forEach(function(card) {
+        var indMatch = activeIndustry === "all" || card.dataset.industry === activeIndustry;
+        var techMatch = activeTech === "all" || card.dataset.tech === activeTech;
+        if (indMatch && techMatch) {
+          card.classList.remove("hidden");
+          visible++;
+        } else {
+          card.classList.add("hidden");
+        }
+      });
+      document.getElementById("no-results").style.display = visible === 0 ? "block" : "none";
+      /* re-trigger reveals on newly shown cards */
+      document.querySelectorAll(".case-card:not(.hidden) .reveal, .case-card:not(.hidden)").forEach(function(el) {
+        if (!el.classList.contains("visible")) el.classList.add("visible");
+      });
+    }
+
+    document.querySelectorAll("[data-filter-industry]").forEach(function(btn) {
+      btn.addEventListener("click", function() {
+        document.querySelectorAll("[data-filter-industry]").forEach(function(b){ b.classList.remove("active"); });
+        btn.classList.add("active");
+        activeIndustry = btn.dataset.filterIndustry;
+        applyFilters();
+      });
+    });
+
+    document.querySelectorAll("[data-filter-tech]").forEach(function(btn) {
+      btn.addEventListener("click", function() {
+        document.querySelectorAll("[data-filter-tech]").forEach(function(b){ b.classList.remove("active"); });
+        btn.classList.add("active");
+        activeTech = btn.dataset.filterTech;
+        applyFilters();
+      });
+    });
+
+    /* ══════════════════════════════════
+       MODAL
+    ══════════════════════════════════ */
+    function buildModal(key) {
+      var d = CASES[key];
+      if (!d) return "";
+
+      var stepsHtml = d.pasos.map(function(s){ return "<li>" + s + "</li>"; }).join("");
+      var resultsHtml = d.results.map(function(r){
+        return '<div class="modal-result"><div class="modal-result-num">' + r.num + '</div><div class="modal-result-label">' + r.label + '</div></div>';
+      }).join("");
+      var stackHtml = d.stack.map(function(s){ return '<span class="tag">' + s + '</span>'; }).join("");
+
+      return '<div class="modal-header">' +
+        '<div class="modal-header-bg thumb-' + key + '">' +
+          '<div class="modal-header-icon"><svg viewBox="0 0 24 24">' + d.iconPath + '</svg></div>' +
+        '</div>' +
+        '<div class="modal-header-overlay"></div>' +
+        '<div class="modal-header-badges">' +
+          '<span class="case-industry-badge">' + d.industry + '</span>' +
+          '<span class="case-budget">' + d.budget + '</span>' +
+        '</div>' +
+        '<button class="modal-close" id="modal-close-btn" aria-label="Cerrar">✕</button>' +
+      '</div>' +
+      '<div class="modal-body">' +
+        '<div class="modal-client">' + d.client + ' · ' + d.duration + '</div>' +
+        '<div class="modal-title">' + d.title + '</div>' +
+
+        '<div class="modal-section">' +
+          '<div class="modal-section-label">Contexto del cliente</div>' +
+          '<p>' + d.context + '</p>' +
+        '</div>' +
+        '<div class="modal-section">' +
+          '<div class="modal-section-label">El reto</div>' +
+          '<p>' + d.reto + '</p>' +
+        '</div>' +
+        '<div class="modal-section">' +
+          '<div class="modal-section-label">La solución nodo8 — paso a paso</div>' +
+          '<ol class="modal-steps">' + stepsHtml + '</ol>' +
+        '</div>' +
+        '<div class="modal-section-label" style="margin-bottom:0.75rem;">Resultados</div>' +
+        '<div class="modal-results">' + resultsHtml + '</div>' +
+
+        '<div class="modal-section-label" style="margin-bottom:0.6rem;">Stack tecnológico</div>' +
+        '<div class="modal-stack">' + stackHtml + '</div>' +
+
+        '<div class="modal-testimonial">' +
+          '<blockquote>"' + d.testimonial + '"</blockquote>' +
+          '<cite>— ' + d.testimonialAuthor + '</cite>' +
+        '</div>' +
+
+        '<div class="modal-cta">' +
+          '<a href="/contact" class="btn-primary">Quiero resultados similares →</a>' +
+          '<span class="modal-meta">Respuesta en menos de 24 horas</span>' +
+        '</div>' +
+      '</div>';
+    }
+
+    var overlay = document.getElementById("modal-overlay");
+    var modalEl = document.getElementById("modal");
+
+    function openModal(key) {
+      modalEl.innerHTML = buildModal(key);
+      overlay.classList.add("open");
+      document.body.style.overflow = "hidden";
+      document.getElementById("modal-close-btn").addEventListener("click", closeModal);
+    }
+
+    function closeModal() {
+      overlay.classList.remove("open");
+      document.body.style.overflow = "";
+    }
+
+    overlay.addEventListener("click", function(e) {
+      if (e.target === overlay) closeModal();
+    });
+
+    document.addEventListener("keydown", function(e) {
+      if (e.key === "Escape") closeModal();
+    });
+
+    document.querySelectorAll(".open-modal").forEach(function(btn) {
+      btn.addEventListener("click", function() {
+        openModal(btn.dataset.case);
+      });
+    });
+
+    /* ══════════════════════════════════
+       COUNT-UP
+    ══════════════════════════════════ */
+    function countUp(el) {
+      var target = parseInt(el.dataset.target, 10);
+      var prefix = el.dataset.prefix || "";
+      var suffix = el.dataset.suffix || "";
+      var start = 0; var dur = 1800;
+      var startTime = null;
+      function ease(t) { return 1 - Math.pow(1 - t, 3); }
+      function step(ts) {
+        if (!startTime) startTime = ts;
+        var p = Math.min((ts - startTime) / dur, 1);
+        el.textContent = prefix + Math.round(ease(p) * target) + suffix;
+        if (p < 1) requestAnimationFrame(step);
+      }
+      requestAnimationFrame(step);
+    }
+
+    var statEls = document.querySelectorAll(".hero-stat-num[data-target]");
+    var statsTriggered = false;
+    var statsObs = new IntersectionObserver(function(entries) {
+      entries.forEach(function(e) {
+        if (e.isIntersecting && !statsTriggered) {
+          statsTriggered = true;
+          statEls.forEach(function(el) { countUp(el); });
+        }
+      });
+    }, { threshold: 0.5 });
+    statEls.forEach(function(el) { statsObs.observe(el); });
+
+    /* ══════════════════════════════════
+       SCROLL REVEAL
+    ══════════════════════════════════ */
+    var revObs = new IntersectionObserver(function(entries) {
+      entries.forEach(function(e) {
+        if (e.isIntersecting) { e.target.classList.add("visible"); revObs.unobserve(e.target); }
+      });
+    }, { threshold: 0.06 });
+    document.querySelectorAll(".reveal").forEach(function(el) { revObs.observe(el); });
+
+    /* ══════════════════════════════════
+       HAMBURGER
+    ══════════════════════════════════ */
+    (function() {
+      var btn = document.getElementById("hamburger");
+      var menu = document.querySelector(".nav-links");
+      btn.addEventListener("click", function() { btn.classList.toggle("open"); menu.classList.toggle("open"); });
+      menu.querySelectorAll("a").forEach(function(a) {
+        a.addEventListener("click", function() { btn.classList.remove("open"); menu.classList.remove("open"); });
+      });
+    })();
+    </script>
+  </body>
+</html>

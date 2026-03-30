@@ -1,0 +1,812 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Calculadora ROI — nodo8</title>
+    <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+    <style>
+      :root {
+        --bg: #0a0a0a; --surface: #111111; --surface2: #181818; --surface3: #1e1e1e;
+        --border: rgba(255,255,255,0.07); --accent: #c8f04b;
+        --accent-dim: rgba(200,240,75,0.12); --accent-glow: rgba(200,240,75,0.06);
+        --text: #f0f0ec; --muted: #888880;
+        --font-display: "Syne", sans-serif; --font-body: "DM Sans", sans-serif;
+        --nav-h: 68px;
+      }
+      *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+      html { scroll-behavior: smooth; }
+      body { background: var(--bg); color: var(--text); font-family: var(--font-body); font-size: 16px; line-height: 1.7; overflow-x: hidden; }
+
+      /* ── NAV ── */
+      nav { position: fixed; top: 0; left: 0; right: 0; z-index: 300; display: flex; align-items: center; justify-content: space-between; padding: 1.25rem 2.5rem; border-bottom: 1px solid var(--border); background: rgba(10,10,10,0.88); backdrop-filter: blur(12px); height: var(--nav-h); }
+      .nav-logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+      .nav-logo-text { font-family: var(--font-display); font-size: 1.1rem; font-weight: 800; color: var(--text); letter-spacing: -0.02em; }
+      .nav-logo-text span { color: var(--accent); }
+      .nav-links { display: flex; gap: 2rem; list-style: none; }
+      .nav-links a { font-size: 0.85rem; color: var(--muted); text-decoration: none; letter-spacing: 0.03em; transition: color 0.2s; }
+      .nav-links a:hover { color: var(--text); }
+      .nav-links a.active { color: var(--accent); }
+      .nav-cta { font-family: var(--font-body); font-size: 0.85rem; font-weight: 500; color: var(--bg); background: var(--accent); border: none; padding: 0.55rem 1.25rem; border-radius: 4px; cursor: pointer; text-decoration: none; transition: opacity 0.2s; }
+      .nav-cta:hover { opacity: 0.88; }
+      .hamburger { display: none; flex-direction: column; gap: 5px; background: none; border: none; cursor: pointer; padding: 4px; z-index: 10; }
+      .hamburger span { display: block; width: 22px; height: 1.5px; background: var(--text); border-radius: 2px; transition: transform 0.3s ease, opacity 0.3s ease; transform-origin: center; }
+      .hamburger.open span:nth-child(1) { transform: translateY(6.5px) rotate(45deg); }
+      .hamburger.open span:nth-child(2) { opacity: 0; transform: scaleX(0); }
+      .hamburger.open span:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); }
+
+      /* ── SHARED ── */
+      .section-eyebrow { font-size: 0.75rem; color: var(--accent); letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 0.5rem; }
+      .section-title { font-family: var(--font-display); font-size: clamp(1.8rem, 4vw, 2.8rem); font-weight: 700; line-height: 1.1; letter-spacing: -0.02em; }
+      .btn-primary { font-family: var(--font-body); font-size: 0.92rem; font-weight: 500; color: var(--bg); background: var(--accent); border: none; padding: 0.85rem 2rem; border-radius: 6px; cursor: pointer; text-decoration: none; transition: opacity 0.2s, transform 0.2s; display: inline-block; }
+      .btn-primary:hover { opacity: 0.88; transform: translateY(-1px); }
+      .btn-ghost { font-family: var(--font-body); font-size: 0.88rem; color: var(--muted); background: transparent; border: 1px solid var(--border); padding: 0.75rem 1.75rem; border-radius: 6px; cursor: pointer; text-decoration: none; transition: color 0.2s, border-color 0.2s; display: inline-block; }
+      .btn-ghost:hover { color: var(--accent); border-color: rgba(200,240,75,0.3); }
+
+      /* ── HERO ── */
+      .hero { padding: calc(var(--nav-h) + 4rem) 2.5rem 3rem; position: relative; overflow: hidden; text-align: center; }
+      .hero-grid { position: absolute; inset: 0; background-image: linear-gradient(rgba(200,240,75,0.025) 1px, transparent 1px), linear-gradient(90deg, rgba(200,240,75,0.025) 1px, transparent 1px); background-size: 56px 56px; -webkit-mask-image: radial-gradient(ellipse 60% 80% at 50% 0%, black 25%, transparent 100%); mask-image: radial-gradient(ellipse 60% 80% at 50% 0%, black 25%, transparent 100%); z-index: 0; }
+      .hero-glow { position: absolute; top: 0; left: 50%; transform: translateX(-50%); width: 700px; height: 400px; background: radial-gradient(ellipse, rgba(200,240,75,0.065) 0%, transparent 70%); z-index: 0; pointer-events: none; }
+      .hero-content { position: relative; z-index: 1; max-width: 760px; margin: 0 auto; }
+      .hero-badge { display: inline-flex; align-items: center; gap: 7px; font-size: 0.75rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--bg); background: var(--accent); padding: 5px 14px; border-radius: 100px; margin-bottom: 1.5rem; animation: fadeUp 0.5s ease both; }
+      .hero h1 { font-family: var(--font-display); font-size: clamp(2rem, 5vw, 3.8rem); font-weight: 800; line-height: 1.05; letter-spacing: -0.035em; margin-bottom: 1.2rem; animation: fadeUp 0.5s 0.08s ease both; }
+      .hero h1 em { font-style: normal; color: var(--accent); }
+      .hero-sub { font-size: 1rem; color: var(--muted); font-weight: 300; line-height: 1.8; animation: fadeUp 0.5s 0.16s ease both; }
+
+      /* ── CALC WRAPPER ── */
+      .calc-section { padding: 3rem 2.5rem 5rem; max-width: 860px; margin: 0 auto; }
+
+      /* ── PROGRESS ── */
+      .progress-bar-wrap { margin-bottom: 2.5rem; }
+      .progress-steps { display: flex; align-items: center; gap: 0; margin-bottom: 0.85rem; }
+      .progress-step { display: flex; align-items: center; gap: 0.5rem; flex: 1; }
+      .progress-step:last-child { flex: none; }
+      .step-dot { width: 30px; height: 30px; border-radius: 50%; border: 2px solid var(--border); background: var(--surface); display: flex; align-items: center; justify-content: center; font-family: var(--font-display); font-size: 0.72rem; font-weight: 700; color: var(--muted); transition: all 0.35s ease; flex-shrink: 0; }
+      .step-dot.done { background: var(--accent); border-color: var(--accent); color: var(--bg); }
+      .step-dot.active { border-color: var(--accent); color: var(--accent); box-shadow: 0 0 0 4px var(--accent-dim); }
+      .step-label { font-size: 0.72rem; color: var(--muted); transition: color 0.3s; white-space: nowrap; }
+      .progress-step.active .step-label { color: var(--accent); }
+      .progress-step.done .step-label { color: var(--text); }
+      .step-line { flex: 1; height: 1px; background: var(--border); margin: 0 0.5rem; transition: background 0.35s; }
+      .step-line.done { background: var(--accent); }
+      .progress-track { height: 3px; background: var(--surface3); border-radius: 3px; overflow: hidden; }
+      .progress-fill { height: 100%; background: var(--accent); border-radius: 3px; transition: width 0.5s ease; }
+
+      /* ── WIZARD PANELS ── */
+      .wizard-panel { display: none; animation: fadeUp 0.4s ease both; }
+      .wizard-panel.active { display: block; }
+      .panel-title { font-family: var(--font-display); font-size: 1.35rem; font-weight: 700; letter-spacing: -0.02em; margin-bottom: 0.4rem; }
+      .panel-sub { font-size: 0.88rem; color: var(--muted); margin-bottom: 2rem; }
+
+      /* ── FORM FIELDS ── */
+      .field-group { margin-bottom: 1.4rem; }
+      .field-label { font-size: 0.8rem; color: var(--muted); margin-bottom: 0.5rem; display: block; letter-spacing: 0.02em; }
+      .field-label span { color: var(--accent); }
+      .field-select, .field-input {
+        width: 100%; background: var(--surface); border: 1px solid var(--border); border-radius: 8px;
+        padding: 0.75rem 1rem; font-family: var(--font-body); font-size: 0.9rem; color: var(--text);
+        outline: none; transition: border-color 0.2s; appearance: none;
+      }
+      .field-select:focus, .field-input:focus { border-color: rgba(200,240,75,0.4); }
+      .field-select option { background: #1a1a1a; }
+      .select-wrap { position: relative; }
+      .select-wrap::after { content: "▾"; position: absolute; right: 1rem; top: 50%; transform: translateY(-50%); color: var(--muted); pointer-events: none; font-size: 0.75rem; }
+      .fields-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+
+      /* slider */
+      .slider-wrap { display: flex; flex-direction: column; gap: 0.5rem; }
+      .slider-row { display: flex; align-items: center; gap: 1rem; }
+      .field-slider { flex: 1; -webkit-appearance: none; appearance: none; height: 4px; background: var(--surface3); border-radius: 4px; outline: none; cursor: pointer; }
+      .field-slider::-webkit-slider-thumb { -webkit-appearance: none; width: 18px; height: 18px; background: var(--accent); border-radius: 50%; cursor: pointer; transition: transform 0.15s; }
+      .field-slider::-webkit-slider-thumb:hover { transform: scale(1.2); }
+      .field-slider::-moz-range-thumb { width: 18px; height: 18px; background: var(--accent); border-radius: 50%; border: none; cursor: pointer; }
+      .slider-val { font-family: var(--font-display); font-size: 1rem; font-weight: 700; color: var(--accent); min-width: 90px; text-align: right; }
+      .slider-range { display: flex; justify-content: space-between; font-size: 0.68rem; color: var(--muted); }
+
+      /* checkboxes */
+      .checkbox-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.6rem; }
+      .checkbox-item { display: flex; align-items: flex-start; gap: 0.65rem; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 0.9rem 1rem; cursor: pointer; transition: border-color 0.2s, background 0.2s; user-select: none; }
+      .checkbox-item:hover { border-color: rgba(200,240,75,0.25); background: var(--surface2); }
+      .checkbox-item input { display: none; }
+      .checkbox-box { width: 18px; height: 18px; border: 1.5px solid var(--border); border-radius: 4px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 2px; transition: all 0.2s; background: var(--surface2); }
+      .checkbox-item input:checked ~ .checkbox-box { background: var(--accent); border-color: var(--accent); }
+      .checkbox-item input:checked ~ .checkbox-box::after { content: "✓"; font-size: 0.65rem; color: var(--bg); font-weight: 700; }
+      .checkbox-item input:checked ~ .checkbox-box + .checkbox-text { color: var(--text); }
+      .checkbox-item:has(input:checked) { border-color: rgba(200,240,75,0.35); background: var(--accent-dim); }
+      .checkbox-text { font-size: 0.83rem; color: var(--muted); line-height: 1.45; }
+
+      /* nav buttons */
+      .wizard-nav { display: flex; align-items: center; justify-content: space-between; margin-top: 2.5rem; }
+      .wizard-nav-right { display: flex; gap: 0.75rem; align-items: center; }
+      .step-counter { font-size: 0.75rem; color: var(--muted); }
+
+      /* ── RESULTS ── */
+      .results-panel { display: none; }
+      .results-panel.active { display: block; animation: fadeUp 0.5s ease both; }
+      .results-header { text-align: center; margin-bottom: 2.5rem; }
+      .results-header h2 { font-family: var(--font-display); font-size: clamp(1.5rem, 3.5vw, 2.2rem); font-weight: 800; letter-spacing: -0.03em; margin-bottom: 0.5rem; }
+      .results-header h2 em { font-style: normal; color: var(--accent); }
+      .results-header p { font-size: 0.88rem; color: var(--muted); }
+      .results-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1px; background: var(--border); border: 1px solid var(--border); border-radius: 14px; overflow: hidden; margin-bottom: 1.5rem; }
+      .result-card { background: var(--surface); padding: 1.75rem; display: flex; flex-direction: column; gap: 0.4rem; transition: background 0.2s; }
+      .result-card:hover { background: var(--surface2); }
+      .result-card.accent-card { background: var(--accent-dim); border: none; }
+      .result-icon { font-size: 1.3rem; line-height: 1; margin-bottom: 0.2rem; }
+      .result-label { font-size: 0.72rem; color: var(--muted); letter-spacing: 0.05em; text-transform: uppercase; }
+      .result-num { font-family: var(--font-display); font-size: 2rem; font-weight: 800; color: var(--accent); line-height: 1; letter-spacing: -0.03em; }
+      .result-card.accent-card .result-num { font-size: 1.5rem; }
+      .result-sub { font-size: 0.75rem; color: var(--muted); }
+      .results-disclaimer { font-size: 0.75rem; color: var(--muted); text-align: center; margin-bottom: 2rem; line-height: 1.7; border: 1px solid var(--border); border-radius: 8px; padding: 0.85rem 1.25rem; background: var(--surface); }
+
+      /* ── CAPTURE FORM ── */
+      .capture-block { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 2.5rem; }
+      .capture-block h3 { font-family: var(--font-display); font-size: 1.2rem; font-weight: 700; letter-spacing: -0.02em; margin-bottom: 0.35rem; }
+      .capture-block p { font-size: 0.85rem; color: var(--muted); margin-bottom: 1.75rem; }
+      .capture-fields { display: grid; grid-template-columns: 1fr 1fr; gap: 0.85rem; margin-bottom: 1rem; }
+      .capture-submit { width: 100%; font-family: var(--font-body); font-size: 0.95rem; font-weight: 600; color: var(--bg); background: var(--accent); border: none; padding: 1rem; border-radius: 6px; cursor: pointer; transition: opacity 0.2s; margin-top: 0.5rem; }
+      .capture-submit:hover { opacity: 0.88; }
+      .capture-success { display: none; text-align: center; padding: 1.5rem; }
+      .capture-success p { font-size: 1rem; color: var(--accent); font-family: var(--font-display); font-weight: 700; margin-bottom: 0.4rem; }
+      .capture-success span { font-size: 0.85rem; color: var(--muted); }
+
+      /* ── ROI CASES ── */
+      .cases-section { padding: 5rem 2.5rem; border-top: 1px solid var(--border); }
+      .cases-inner { max-width: 1100px; margin: 0 auto; }
+      .cases-header { margin-bottom: 2.5rem; display: flex; align-items: flex-end; justify-content: space-between; flex-wrap: wrap; gap: 1rem; }
+      .cases-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: var(--border); border: 1px solid var(--border); border-radius: 14px; overflow: hidden; }
+      .roi-case { background: var(--surface); padding: 2rem; display: flex; flex-direction: column; gap: 0.75rem; transition: background 0.22s; }
+      .roi-case:hover { background: var(--surface2); }
+      .roi-case-industry { font-size: 0.68rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--bg); background: var(--accent); padding: 3px 9px; border-radius: 100px; display: inline-block; }
+      .roi-case-title { font-family: var(--font-display); font-weight: 700; font-size: 0.95rem; line-height: 1.4; color: var(--text); }
+      .roi-case-stats { display: flex; flex-direction: column; gap: 0.4rem; }
+      .roi-case-stat { display: flex; justify-content: space-between; align-items: center; font-size: 0.8rem; }
+      .roi-case-stat-label { color: var(--muted); }
+      .roi-case-stat-val { color: var(--accent); font-weight: 600; font-family: var(--font-display); font-size: 0.88rem; }
+
+      /* ── FOOTER ── */
+      footer { padding: 2.5rem; border-top: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem; }
+      .footer-brand { display: flex; align-items: center; gap: 8px; }
+      .footer-brand-text { font-family: var(--font-display); font-size: 0.9rem; font-weight: 800; color: var(--muted); letter-spacing: -0.02em; }
+      .footer-brand-text span { color: var(--accent); }
+      .footer-copy { font-size: 0.8rem; color: var(--muted); }
+      .footer-links { display: flex; gap: 1.5rem; }
+      .footer-links a { font-size: 0.8rem; color: var(--muted); text-decoration: none; transition: color 0.2s; }
+      .footer-links a:hover { color: var(--text); }
+
+      /* ── ANIMATIONS ── */
+      @keyframes fadeUp { from { opacity: 0; transform: translateY(22px); } to { opacity: 1; transform: translateY(0); } }
+      .reveal { opacity: 0; transform: translateY(26px); transition: opacity 0.6s ease, transform 0.6s ease; }
+      .reveal.visible { opacity: 1; transform: translateY(0); }
+
+      /* ── RESPONSIVE ── */
+      @media (max-width: 700px) {
+        .fields-row { grid-template-columns: 1fr; }
+        .checkbox-grid { grid-template-columns: 1fr; }
+        .results-grid { grid-template-columns: 1fr; }
+        .capture-fields { grid-template-columns: 1fr; }
+        .cases-grid { grid-template-columns: 1fr; }
+        .cases-header { flex-direction: column; align-items: flex-start; }
+      }
+      @media (max-width: 768px) {
+        nav { padding: 1rem 1.5rem; }
+        .hamburger { display: flex; }
+        .nav-links { display: none; flex-direction: column; gap: 0; position: fixed; top: var(--nav-h); left: 0; right: 0; background: rgba(10,10,10,0.97); border-bottom: 1px solid var(--border); padding: 1rem 0; backdrop-filter: blur(12px); }
+        .nav-links.open { display: flex; }
+        .nav-links li { padding: 0; }
+        .nav-links a { display: block; padding: 0.75rem 2rem; }
+        .hero { padding: calc(var(--nav-h) + 2.5rem) 1.5rem 2.5rem; }
+        .calc-section { padding: 2rem 1.5rem 4rem; }
+        .cases-section { padding: 4rem 1.5rem; }
+        .progress-steps { gap: 0; }
+        footer { flex-direction: column; align-items: flex-start; padding: 2rem 1.5rem; }
+      }
+    </style>
+  </head>
+  <body>
+
+    <!-- NAV -->
+    <nav>
+      <a href="/" class="nav-logo">
+        <svg width="30" height="30" viewBox="0 0 30 30" fill="none">
+          <circle cx="15" cy="3" r="2.2" fill="#c8f04b"/>
+          <circle cx="24.6" cy="7.4" r="2.2" fill="#c8f04b" opacity="0.7"/>
+          <circle cx="27" cy="15" r="2.2" fill="#c8f04b"/>
+          <circle cx="24.6" cy="22.6" r="2.2" fill="#c8f04b" opacity="0.7"/>
+          <circle cx="15" cy="27" r="2.2" fill="#c8f04b"/>
+          <circle cx="5.4" cy="22.6" r="2.2" fill="#c8f04b" opacity="0.7"/>
+          <circle cx="3" cy="15" r="2.2" fill="#c8f04b"/>
+          <circle cx="5.4" cy="7.4" r="2.2" fill="#c8f04b" opacity="0.7"/>
+          <circle cx="15" cy="15" r="3.5" fill="none" stroke="#c8f04b" stroke-width="1.5"/>
+          <line x1="15" y1="5.2" x2="15" y2="11.5" stroke="#c8f04b" stroke-width="1.2" stroke-linecap="round"/>
+          <line x1="15" y1="18.5" x2="15" y2="24.8" stroke="#c8f04b" stroke-width="1.2" stroke-linecap="round"/>
+          <line x1="5.2" y1="15" x2="11.5" y2="15" stroke="#c8f04b" stroke-width="1.2" stroke-linecap="round"/>
+          <line x1="18.5" y1="15" x2="24.8" y2="15" stroke="#c8f04b" stroke-width="1.2" stroke-linecap="round"/>
+        </svg>
+        <span class="nav-logo-text">nodo<span>8</span></span>
+      </a>
+      <ul class="nav-links">
+        <li><a href="/services">Servicios</a></li>
+        <li><a href="/industries">Industrias</a></li>
+        <li><a href="/ai">IA</a></li>
+        <li><a href="/careers">Careers</a></li>
+        <li><a href="/partners">Partners</a></li>
+        <li><a href="/case-studies">Casos de Éxito</a></li>
+        <li><a href="/blog">Blog</a></li>
+        <li><a href="/roi" class="active">Calc. ROI</a></li>
+        <li><a href="/contact">Contacto</a></li>
+      </ul>
+      <button class="hamburger" id="hamburger" aria-label="Menú">
+        <span></span><span></span><span></span>
+      </button>
+      <a href="/roi" class="nav-cta">Calc. ROI</a>
+    </nav>
+
+    <!-- HERO -->
+    <section class="hero">
+      <div class="hero-grid"></div>
+      <div class="hero-glow"></div>
+      <div class="hero-content">
+        <div class="hero-badge">Calculadora gratuita</div>
+        <h1>¿Cuánto vale la transformación<br /><em>digital para tu empresa?</em></h1>
+        <p class="hero-sub">Responde 3 preguntas simples y calcula tu ROI potencial en menos de 2 minutos.</p>
+      </div>
+    </section>
+
+    <!-- CALCULATOR -->
+    <section class="calc-section" id="calc-section">
+
+      <!-- PROGRESS -->
+      <div class="progress-bar-wrap" id="progress-wrap">
+        <div class="progress-steps">
+          <div class="progress-step active" id="ps-1">
+            <div class="step-dot active" id="dot-1">1</div>
+            <div class="step-label">Tu empresa</div>
+          </div>
+          <div class="step-line" id="line-1"></div>
+          <div class="progress-step" id="ps-2">
+            <div class="step-dot" id="dot-2">2</div>
+            <div class="step-label">Tus retos</div>
+          </div>
+          <div class="step-line" id="line-2"></div>
+          <div class="progress-step" id="ps-3">
+            <div class="step-dot" id="dot-3">3</div>
+            <div class="step-label">Situación actual</div>
+          </div>
+        </div>
+        <div class="progress-track"><div class="progress-fill" id="progress-fill" style="width:33%"></div></div>
+      </div>
+
+      <!-- STEP 1 -->
+      <div class="wizard-panel active" id="panel-1">
+        <div class="panel-title">Cuéntanos sobre tu empresa</div>
+        <p class="panel-sub">Usamos esta información para calibrar el modelo de ROI a tu industria y tamaño.</p>
+
+        <div class="fields-row">
+          <div class="field-group">
+            <label class="field-label">Industria <span>*</span></label>
+            <div class="select-wrap">
+              <select class="field-select" id="f-industry">
+                <option value="">Selecciona…</option>
+                <option value="retail">Retail / eCommerce</option>
+                <option value="banca">Banca / Finanzas</option>
+                <option value="logistica">Logística / Transporte</option>
+                <option value="airlines">Airlines / Aviación</option>
+                <option value="manufactura">Manufactura</option>
+                <option value="otro">Otro</option>
+              </select>
+            </div>
+          </div>
+          <div class="field-group">
+            <label class="field-label">Tamaño de empresa <span>*</span></label>
+            <div class="select-wrap">
+              <select class="field-select" id="f-size">
+                <option value="">Selecciona…</option>
+                <option value="sm">50 – 200 empleados</option>
+                <option value="md">200 – 500 empleados</option>
+                <option value="lg">500 – 1,000 empleados</option>
+                <option value="xl">1,000+ empleados</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <div class="fields-row">
+          <div class="field-group">
+            <label class="field-label">País</label>
+            <div class="select-wrap">
+              <select class="field-select" id="f-country">
+                <option value="mx">México</option>
+                <option value="us">Estados Unidos</option>
+                <option value="other">Otro</option>
+              </select>
+            </div>
+          </div>
+          <div class="field-group">
+            <label class="field-label">Presupuesto IT anual (USD)</label>
+            <div class="slider-wrap">
+              <div class="slider-row">
+                <input type="range" class="field-slider" id="f-budget" min="50000" max="2000000" step="10000" value="300000" />
+                <span class="slider-val" id="budget-val">$300,000</span>
+              </div>
+              <div class="slider-range"><span>$50K</span><span>$2M+</span></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="wizard-nav">
+          <span></span>
+          <div class="wizard-nav-right">
+            <span class="step-counter">Paso 1 de 3</span>
+            <button class="btn-primary" onclick="goStep(2)">Siguiente →</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- STEP 2 -->
+      <div class="wizard-panel" id="panel-2">
+        <div class="panel-title">¿Cuáles son tus retos actuales?</div>
+        <p class="panel-sub">Selecciona todos los que apliquen. Cuantos más identifiques, más preciso el cálculo.</p>
+
+        <div class="checkbox-grid" id="challenges-grid">
+          <label class="checkbox-item">
+            <input type="checkbox" value="legacy" />
+            <div class="checkbox-box"></div>
+            <span class="checkbox-text">Sistemas legacy lentos o inestables</span>
+          </label>
+          <label class="checkbox-item">
+            <input type="checkbox" value="manual" />
+            <div class="checkbox-box"></div>
+            <span class="checkbox-text">Procesos manuales que consumen tiempo</span>
+          </label>
+          <label class="checkbox-item">
+            <input type="checkbox" value="data" />
+            <div class="checkbox-box"></div>
+            <span class="checkbox-text">Falta de visibilidad de datos en tiempo real</span>
+          </label>
+          <label class="checkbox-item">
+            <input type="checkbox" value="infra" />
+            <div class="checkbox-box"></div>
+            <span class="checkbox-text">Costos de infraestructura muy altos</span>
+          </label>
+          <label class="checkbox-item">
+            <input type="checkbox" value="security" />
+            <div class="checkbox-box"></div>
+            <span class="checkbox-text">Problemas de seguridad o compliance</span>
+          </label>
+          <label class="checkbox-item">
+            <input type="checkbox" value="cx" />
+            <div class="checkbox-box"></div>
+            <span class="checkbox-text">Experiencia digital deficiente para clientes</span>
+          </label>
+          <label class="checkbox-item">
+            <input type="checkbox" value="devspeed" />
+            <div class="checkbox-box"></div>
+            <span class="checkbox-text">Equipos de desarrollo lentos o costosos</span>
+          </label>
+        </div>
+
+        <div class="wizard-nav">
+          <button class="btn-ghost" onclick="goStep(1)">← Anterior</button>
+          <div class="wizard-nav-right">
+            <span class="step-counter">Paso 2 de 3</span>
+            <button class="btn-primary" onclick="goStep(3)">Siguiente →</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- STEP 3 -->
+      <div class="wizard-panel" id="panel-3">
+        <div class="panel-title">Tu situación actual</div>
+        <p class="panel-sub">Números aproximados. Si no sabes alguno, déjalo en el valor predeterminado.</p>
+
+        <div class="field-group">
+          <label class="field-label">Horas por semana perdidas en procesos manuales</label>
+          <div class="slider-wrap">
+            <div class="slider-row">
+              <input type="range" class="field-slider" id="f-hours" min="5" max="200" step="5" value="40" />
+              <span class="slider-val" id="hours-val">40 hrs</span>
+            </div>
+            <div class="slider-range"><span>5 hrs</span><span>200 hrs</span></div>
+          </div>
+        </div>
+
+        <div class="field-group">
+          <label class="field-label">Número de sistemas legacy en tu organización</label>
+          <div class="slider-wrap">
+            <div class="slider-row">
+              <input type="range" class="field-slider" id="f-legacy" min="1" max="20" step="1" value="4" />
+              <span class="slider-val" id="legacy-val">4 sistemas</span>
+            </div>
+            <div class="slider-range"><span>1</span><span>20+</span></div>
+          </div>
+        </div>
+
+        <div class="fields-row">
+          <div class="field-group">
+            <label class="field-label">Gasto mensual en infraestructura IT (USD)</label>
+            <input type="number" class="field-input" id="f-infra" placeholder="Ej. 15000" value="15000" min="0" />
+          </div>
+          <div class="field-group">
+            <label class="field-label">Clientes perdidos por problemas técnicos / mes</label>
+            <input type="number" class="field-input" id="f-churn" placeholder="Ej. 5" value="5" min="0" />
+          </div>
+        </div>
+
+        <div class="wizard-nav">
+          <button class="btn-ghost" onclick="goStep(2)">← Anterior</button>
+          <div class="wizard-nav-right">
+            <span class="step-counter">Paso 3 de 3</span>
+            <button class="btn-primary" onclick="calcROI()">Calcular mi ROI →</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- RESULTS -->
+      <div class="results-panel" id="results-panel">
+        <div class="results-header">
+          <h2>Tu ROI <em>estimado</em> con nodo8</h2>
+          <p>Basado en tus respuestas y proyectos similares en tu industria</p>
+        </div>
+
+        <div class="results-grid">
+          <div class="result-card">
+            <div class="result-icon">💰</div>
+            <div class="result-label">Ahorro estimado año 1</div>
+            <div class="result-num" id="r-savings">$0</div>
+            <div class="result-sub" id="r-savings-sub">Reducción en costos operativos</div>
+          </div>
+          <div class="result-card">
+            <div class="result-icon">📈</div>
+            <div class="result-label">ROI proyectado a 3 años</div>
+            <div class="result-num" id="r-roi">0%</div>
+            <div class="result-sub">Retorno sobre la inversión</div>
+          </div>
+          <div class="result-card">
+            <div class="result-icon">⏱</div>
+            <div class="result-label">Horas recuperadas al año</div>
+            <div class="result-num" id="r-hours">0</div>
+            <div class="result-sub">Horas de procesos manuales eliminadas</div>
+          </div>
+          <div class="result-card accent-card">
+            <div class="result-icon">🚀</div>
+            <div class="result-label">Tiempo de implementación</div>
+            <div class="result-num" id="r-time">0 meses</div>
+            <div class="result-sub" id="r-invest">Inversión recomendada: calculando…</div>
+          </div>
+        </div>
+
+        <div class="results-disclaimer">
+          Estos son estimados conservadores basados en proyectos similares de nodo8 en tu industria.<br/>
+          Los resultados reales varían según el alcance del proyecto y el estado de tu infraestructura actual.
+        </div>
+
+        <!-- CAPTURE FORM -->
+        <div class="capture-block">
+          <h3>Obtén tu análisis personalizado — gratis</h3>
+          <p>Un consultor de nodo8 revisará tu situación específica y te entregará un plan de acción detallado sin costo.</p>
+          <form id="capture-form" action="https://formspree.io/f/mzdkebnz" method="POST">
+            <input type="hidden" name="source" value="roi-calculator" />
+            <input type="hidden" name="roi_savings" id="hidden-savings" />
+            <input type="hidden" name="roi_percent" id="hidden-roi" />
+            <input type="hidden" name="industry" id="hidden-industry" />
+            <div class="capture-fields">
+              <input class="field-input" type="text" name="nombre" placeholder="Tu nombre" required />
+              <input class="field-input" type="text" name="empresa" placeholder="Tu empresa" required />
+              <input class="field-input" type="email" name="email" placeholder="Email corporativo" required />
+              <input class="field-input" type="tel" name="telefono" placeholder="Teléfono / WhatsApp" />
+            </div>
+            <button class="capture-submit" type="submit" id="capture-btn">
+              Quiero mi análisis personalizado gratuito →
+            </button>
+          </form>
+          <div class="capture-success" id="capture-success">
+            <p>¡Listo! Te contactamos en menos de 24 horas.</p>
+            <span>Revisa tu email — te enviaremos una confirmación con los próximos pasos.</span>
+          </div>
+        </div>
+
+        <div style="text-align:center; margin-top:1.5rem;">
+          <button class="btn-ghost" onclick="resetCalc()">Recalcular con otros datos</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ROI CASES -->
+    <section class="cases-section">
+      <div class="cases-inner">
+        <div class="cases-header reveal">
+          <div>
+            <div class="section-eyebrow">ROI comprobado</div>
+            <h2 class="section-title">Casos reales de retorno</h2>
+          </div>
+          <a href="/case-studies" class="btn-ghost">Ver todos los casos →</a>
+        </div>
+        <div class="cases-grid">
+          <div class="roi-case reveal">
+            <span class="roi-case-industry">Retail</span>
+            <div class="roi-case-title">Plataforma cloud unificada para inventario en 50 tiendas</div>
+            <div class="roi-case-stats">
+              <div class="roi-case-stat"><span class="roi-case-stat-label">Inversión</span><span class="roi-case-stat-val">$180,000 USD</span></div>
+              <div class="roi-case-stat"><span class="roi-case-stat-label">Ahorro año 1</span><span class="roi-case-stat-val">$820,000 USD</span></div>
+              <div class="roi-case-stat"><span class="roi-case-stat-label">ROI a 3 años</span><span class="roi-case-stat-val">356%</span></div>
+              <div class="roi-case-stat"><span class="roi-case-stat-label">Implementación</span><span class="roi-case-stat-val">8 meses</span></div>
+            </div>
+          </div>
+          <div class="roi-case reveal">
+            <span class="roi-case-industry">DevOps</span>
+            <div class="roi-case-title">CI/CD completo e infraestructura como código para FinTech</div>
+            <div class="roi-case-stats">
+              <div class="roi-case-stat"><span class="roi-case-stat-label">Inversión</span><span class="roi-case-stat-val">$90,000 USD</span></div>
+              <div class="roi-case-stat"><span class="roi-case-stat-label">Ahorro año 1</span><span class="roi-case-stat-val">$310,000 USD</span></div>
+              <div class="roi-case-stat"><span class="roi-case-stat-label">ROI a 3 años</span><span class="roi-case-stat-val">244%</span></div>
+              <div class="roi-case-stat"><span class="roi-case-stat-label">Implementación</span><span class="roi-case-stat-val">3 meses</span></div>
+            </div>
+          </div>
+          <div class="roi-case reveal">
+            <span class="roi-case-industry">CRM</span>
+            <div class="roi-case-title">Salesforce Sales Cloud con integración ERP para distribuidora</div>
+            <div class="roi-case-stats">
+              <div class="roi-case-stat"><span class="roi-case-stat-label">Inversión</span><span class="roi-case-stat-val">$120,000 USD</span></div>
+              <div class="roi-case-stat"><span class="roi-case-stat-label">Ingresos adicionales</span><span class="roi-case-stat-val">+45% conversión</span></div>
+              <div class="roi-case-stat"><span class="roi-case-stat-label">ROI a 3 años</span><span class="roi-case-stat-val">310%</span></div>
+              <div class="roi-case-stat"><span class="roi-case-stat-label">Implementación</span><span class="roi-case-stat-val">4 meses</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer>
+      <div class="footer-brand">
+        <svg width="18" height="18" viewBox="0 0 30 30" fill="none">
+          <circle cx="15" cy="3" r="2.2" fill="#c8f04b"/>
+          <circle cx="24.6" cy="7.4" r="2.2" fill="#c8f04b" opacity="0.6"/>
+          <circle cx="27" cy="15" r="2.2" fill="#c8f04b"/>
+          <circle cx="24.6" cy="22.6" r="2.2" fill="#c8f04b" opacity="0.6"/>
+          <circle cx="15" cy="27" r="2.2" fill="#c8f04b"/>
+          <circle cx="5.4" cy="22.6" r="2.2" fill="#c8f04b" opacity="0.6"/>
+          <circle cx="3" cy="15" r="2.2" fill="#c8f04b"/>
+          <circle cx="5.4" cy="7.4" r="2.2" fill="#c8f04b" opacity="0.6"/>
+          <circle cx="15" cy="15" r="3.5" fill="none" stroke="#c8f04b" stroke-width="1.5"/>
+          <line x1="15" y1="5.2" x2="15" y2="11.5" stroke="#c8f04b" stroke-width="1.2" stroke-linecap="round"/>
+          <line x1="15" y1="18.5" x2="15" y2="24.8" stroke="#c8f04b" stroke-width="1.2" stroke-linecap="round"/>
+          <line x1="5.2" y1="15" x2="11.5" y2="15" stroke="#c8f04b" stroke-width="1.2" stroke-linecap="round"/>
+          <line x1="18.5" y1="15" x2="24.8" y2="15" stroke="#c8f04b" stroke-width="1.2" stroke-linecap="round"/>
+        </svg>
+        <span class="footer-brand-text">nodo<span>8</span></span>
+      </div>
+      <div class="footer-copy">© 2026 nodo8 · Guadalajara, México</div>
+      <div class="footer-links">
+        <a href="/roi">Calculadora ROI</a>
+        <a href="/case-studies">Casos de Éxito</a>
+        <a href="/services">Servicios</a>
+        <a href="/contact">Contacto</a>
+      </div>
+    </footer>
+
+    <script>
+    /* ══════════════════════════════════
+       SLIDERS
+    ══════════════════════════════════ */
+    function fmt(n) {
+      return "$" + n.toLocaleString("en-US");
+    }
+    var budgetEl = document.getElementById("f-budget");
+    var budgetVal = document.getElementById("budget-val");
+    budgetEl.addEventListener("input", function() {
+      budgetVal.textContent = fmt(+this.value);
+    });
+
+    var hoursEl = document.getElementById("f-hours");
+    var hoursVal = document.getElementById("hours-val");
+    hoursEl.addEventListener("input", function() {
+      hoursVal.textContent = this.value + " hrs";
+    });
+
+    var legacyEl = document.getElementById("f-legacy");
+    var legacyVal = document.getElementById("legacy-val");
+    legacyEl.addEventListener("input", function() {
+      legacyVal.textContent = this.value + " sistema" + (this.value == 1 ? "" : "s");
+    });
+
+    /* ══════════════════════════════════
+       WIZARD NAVIGATION
+    ══════════════════════════════════ */
+    var currentStep = 1;
+
+    function goStep(step) {
+      if (step === 2) {
+        var ind = document.getElementById("f-industry").value;
+        var sz  = document.getElementById("f-size").value;
+        if (!ind || !sz) {
+          var first = !ind ? document.getElementById("f-industry") : document.getElementById("f-size");
+          first.style.borderColor = "rgba(200,240,75,0.6)";
+          first.focus();
+          setTimeout(function(){ first.style.borderColor = ""; }, 2000);
+          return;
+        }
+      }
+      currentStep = step;
+      /* panels */
+      document.querySelectorAll(".wizard-panel").forEach(function(p){ p.classList.remove("active"); });
+      document.getElementById("panel-" + step).classList.add("active");
+      updateProgress(step);
+      document.getElementById("calc-section").scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+
+    function updateProgress(step) {
+      var pct = step === 1 ? 33 : step === 2 ? 66 : 100;
+      document.getElementById("progress-fill").style.width = pct + "%";
+      for (var i = 1; i <= 3; i++) {
+        var dot   = document.getElementById("dot-" + i);
+        var ps    = document.getElementById("ps-" + i);
+        dot.classList.remove("active", "done");
+        ps.classList.remove("active", "done");
+        if (i < step) { dot.classList.add("done"); ps.classList.add("done"); }
+        if (i === step) { dot.classList.add("active"); ps.classList.add("active"); }
+      }
+      for (var j = 1; j <= 2; j++) {
+        var ln = document.getElementById("line-" + j);
+        ln.classList.toggle("done", j < step);
+      }
+    }
+
+    /* ══════════════════════════════════
+       ROI CALCULATION
+    ══════════════════════════════════ */
+    var ROI_DATA = {
+      /* industry base savings multiplier (% of IT budget) */
+      industry: { retail: 0.38, banca: 0.30, logistica: 0.42, airlines: 0.35, manufactura: 0.32, otro: 0.28 },
+      /* size multiplier */
+      size:     { sm: 0.80, md: 1.0, lg: 1.25, xl: 1.55 },
+      /* country multiplier on hourly rate */
+      hourRate: { mx: 18, us: 35, other: 22 },
+      /* implementation months */
+      implTime: { sm: 3, md: 5, lg: 7, xl: 10 },
+      /* investment range ($) */
+      invest:   { sm: [60000, 120000], md: [100000, 220000], lg: [200000, 450000], xl: [350000, 900000] }
+    };
+
+    function calcROI() {
+      var industry = document.getElementById("f-industry").value || "otro";
+      var size     = document.getElementById("f-size").value || "md";
+      var country  = document.getElementById("f-country").value || "mx";
+      var budget   = +document.getElementById("f-budget").value;
+      var hours    = +document.getElementById("f-hours").value;   /* hrs/week */
+      var legacy   = +document.getElementById("f-legacy").value;
+      var infra    = +document.getElementById("f-infra").value || 15000; /* $/month */
+      var churn    = +document.getElementById("f-churn").value || 0;
+
+      /* ── get checked challenges ── */
+      var checks = document.querySelectorAll("#challenges-grid input:checked").length;
+      var challengeBonus = 1 + (checks * 0.04);
+
+      /* ── hourly savings ── */
+      var rate        = ROI_DATA.hourRate[country];
+      var hoursYear   = hours * 52 * 0.65;  /* 65% elimination */
+      var hourSavings = Math.round(hoursYear * rate);
+
+      /* ── infra savings (30% reduction) ── */
+      var infraSavings = Math.round(infra * 12 * 0.30);
+
+      /* ── legacy penalty savings ── */
+      var legacySavings = Math.round(legacy * 8000 * ROI_DATA.size[size]);
+
+      /* ── churn recovery (avg $2,500 per client) ── */
+      var churnSavings = Math.round(churn * 12 * 2500 * 0.55);
+
+      /* ── industry base ── */
+      var industryBase = Math.round(budget * ROI_DATA.industry[industry] * ROI_DATA.size[size]);
+
+      /* ── total year 1 savings (conservative: take 70%) ── */
+      var rawSavings = (hourSavings + infraSavings + legacySavings + churnSavings + industryBase) * challengeBonus;
+      var year1 = Math.round(rawSavings * 0.70 / 1000) * 1000;  /* round to nearest $1k */
+
+      /* ── investment range ── */
+      var investRange = ROI_DATA.invest[size];
+      var investMid   = (investRange[0] + investRange[1]) / 2;
+
+      /* ── 3-year ROI ── */
+      var year3  = year1 * 2.6;
+      var roi3yr = Math.round(((year3 - investMid) / investMid) * 100);
+
+      /* ── time ── */
+      var implMonths = ROI_DATA.implTime[size];
+
+      /* store for form */
+      document.getElementById("hidden-savings").value  = "$" + year1.toLocaleString("en-US");
+      document.getElementById("hidden-roi").value      = roi3yr + "%";
+      document.getElementById("hidden-industry").value = industry;
+
+      /* ── show results ── */
+      document.querySelectorAll(".wizard-panel").forEach(function(p){ p.classList.remove("active"); });
+      document.getElementById("progress-wrap").style.display = "none";
+      var rp = document.getElementById("results-panel");
+      rp.classList.add("active");
+
+      /* ── animate count-up ── */
+      function countUp(el, target, prefix, suffix, dur) {
+        var start = null;
+        function ease(t){ return 1 - Math.pow(1 - t, 3); }
+        function step(ts) {
+          if (!start) start = ts;
+          var p = Math.min((ts - start) / dur, 1);
+          var v = Math.round(ease(p) * target);
+          el.textContent = prefix + v.toLocaleString("en-US") + suffix;
+          if (p < 1) requestAnimationFrame(step);
+        }
+        requestAnimationFrame(step);
+      }
+
+      countUp(document.getElementById("r-savings"), year1, "$", "", 1800);
+      countUp(document.getElementById("r-roi"), roi3yr, "", "%", 1600);
+      countUp(document.getElementById("r-hours"), Math.round(hoursYear), "", " hrs", 1400);
+      document.getElementById("r-time").textContent = implMonths + " meses";
+      document.getElementById("r-invest").textContent =
+        "Inversión estimada: " + fmt(investRange[0]) + " – " + fmt(investRange[1]);
+
+      document.getElementById("calc-section").scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+
+    /* ══════════════════════════════════
+       RESET
+    ══════════════════════════════════ */
+    function resetCalc() {
+      document.getElementById("results-panel").classList.remove("active");
+      document.getElementById("progress-wrap").style.display = "block";
+      currentStep = 1;
+      goStep(1);
+      /* reset checkboxes */
+      document.querySelectorAll("#challenges-grid input").forEach(function(c){ c.checked = false; });
+    }
+
+    /* ══════════════════════════════════
+       CAPTURE FORM
+    ══════════════════════════════════ */
+    document.getElementById("capture-form").addEventListener("submit", async function(e) {
+      e.preventDefault();
+      var btn = document.getElementById("capture-btn");
+      btn.textContent = "Enviando…";
+      btn.disabled = true;
+      try {
+        var res = await fetch(this.action, {
+          method: "POST",
+          body: new FormData(this),
+          headers: { "Accept": "application/json" }
+        });
+        if (res.ok) {
+          this.style.display = "none";
+          document.getElementById("capture-success").style.display = "block";
+        } else { throw new Error(); }
+      } catch {
+        btn.textContent = "Reintentar";
+        btn.disabled = false;
+      }
+    });
+
+    /* ══════════════════════════════════
+       SCROLL REVEAL
+    ══════════════════════════════════ */
+    var revObs = new IntersectionObserver(function(entries) {
+      entries.forEach(function(e) {
+        if (e.isIntersecting) { e.target.classList.add("visible"); revObs.unobserve(e.target); }
+      });
+    }, { threshold: 0.06 });
+    document.querySelectorAll(".reveal").forEach(function(el) { revObs.observe(el); });
+
+    /* ══════════════════════════════════
+       HAMBURGER
+    ══════════════════════════════════ */
+    (function() {
+      var btn = document.getElementById("hamburger");
+      var menu = document.querySelector(".nav-links");
+      btn.addEventListener("click", function() { btn.classList.toggle("open"); menu.classList.toggle("open"); });
+      menu.querySelectorAll("a").forEach(function(a) {
+        a.addEventListener("click", function() { btn.classList.remove("open"); menu.classList.remove("open"); });
+      });
+    })();
+    </script>
+  </body>
+</html>
