@@ -530,6 +530,132 @@
         animation: fadeUp 0.6s 0.4s ease both;
       }
 
+      /* ── Clients strip ── */
+      .clients-strip {
+        padding: 3rem 2.5rem;
+        border-top: 1px solid var(--border);
+        border-bottom: 1px solid var(--border);
+        text-align: center;
+      }
+      .clients-eyebrow {
+        font-family: var(--font-display);
+        font-size: 0.68rem;
+        color: var(--muted);
+        letter-spacing: 0.15em;
+        text-transform: uppercase;
+        margin-bottom: 1.5rem;
+        opacity: 0.6;
+      }
+      .clients-row {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 0;
+      }
+      .client-name {
+        font-family: var(--font-display);
+        font-size: 0.78rem;
+        font-weight: 700;
+        color: #444;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        padding: 0.25rem 1.5rem;
+        transition: color 0.2s;
+      }
+      .client-name:hover { color: var(--muted); }
+      .client-sep {
+        width: 3px;
+        height: 3px;
+        background: #333;
+        border-radius: 50%;
+        flex-shrink: 0;
+      }
+
+      /* ── Industries grid ── */
+      .industries-grid-home {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+        gap: 1px;
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        overflow: hidden;
+      }
+      .industry-item {
+        background: var(--surface);
+        padding: 2rem 1.5rem;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+        text-decoration: none;
+        transition: background 0.25s;
+        position: relative;
+      }
+      .industry-item::after {
+        content: "";
+        position: absolute;
+        top: 0; left: 0; right: 0;
+        height: 2px;
+        background: var(--accent);
+        opacity: 0;
+        transition: opacity 0.25s;
+      }
+      .industry-item:hover { background: var(--surface2); }
+      .industry-item:hover::after { opacity: 1; }
+      .industry-item:hover .ind-home-name { color: var(--accent); }
+      .ind-home-icon {
+        width: 40px; height: 40px;
+        background: var(--accent-dim);
+        border-radius: 8px;
+        display: flex; align-items: center; justify-content: center;
+      }
+      .ind-home-icon svg {
+        width: 18px; height: 18px;
+        stroke: var(--accent); fill: none;
+        stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round;
+      }
+      .ind-home-name {
+        font-family: var(--font-display);
+        font-size: 0.9rem;
+        font-weight: 600;
+        color: var(--text);
+        transition: color 0.25s;
+      }
+
+      /* ── Clean CTA ── */
+      .cta-clean {
+        text-align: center;
+        padding: 7rem 2.5rem;
+        position: relative;
+        overflow: hidden;
+      }
+      .cta-clean::before {
+        content: "";
+        position: absolute;
+        top: 50%; left: 50%;
+        transform: translate(-50%, -50%);
+        width: 600px; height: 300px;
+        background: radial-gradient(ellipse, rgba(200,240,75,0.07) 0%, transparent 70%);
+        pointer-events: none;
+      }
+      .cta-clean h2 {
+        font-family: var(--font-display);
+        font-size: clamp(1.8rem, 4vw, 2.8rem);
+        font-weight: 700;
+        letter-spacing: -0.02em;
+        line-height: 1.15;
+        margin-bottom: 1rem;
+        position: relative;
+      }
+      .cta-clean p {
+        font-size: 1rem;
+        color: var(--muted);
+        margin-bottom: 2.5rem;
+        position: relative;
+      }
+      .cta-clean .btn-primary { position: relative; font-size: 1rem; padding: 1rem 2.5rem; }
+
       @media (max-width: 768px) {
         nav {
           padding: 1rem 1.5rem;
@@ -543,10 +669,10 @@
         section {
           padding: 4rem 1.5rem;
         }
-        .contact-section {
-          grid-template-columns: 1fr;
-          padding: 2rem;
-        }
+        .clients-strip { padding: 2.5rem 1.5rem; }
+        .client-name { padding: 0.2rem 0.9rem; font-size: 0.72rem; }
+        .industries-grid-home { grid-template-columns: repeat(2, 1fr); }
+        .cta-clean { padding: 5rem 1.5rem; }
         .section-note {
           text-align: left;
         }
@@ -688,7 +814,7 @@
       <div class="hero-grid"></div>
       <div class="hero-glow"></div>
       <div class="hero-glow2"></div>
-      <div class="hero-tag">Consultor IT · Guadalajara, MX</div>
+      <div class="hero-tag">Software, Cloud &amp; AI para negocios reales</div>
       <h1>Tecnología que <em>funciona</em><br />para tu negocio</h1>
       <p class="hero-sub">
         Desarrollo web, cloud, ciberseguridad y soporte técnico. Soluciones
@@ -700,19 +826,41 @@
       </div>
       <div class="hero-stats">
         <div>
-          <div class="stat-num">4+</div>
-          <div class="stat-lbl">Áreas de servicio</div>
+          <div class="stat-num">$5M+</div>
+          <div class="stat-lbl">en proyectos entregados</div>
         </div>
         <div>
-          <div class="stat-num">24h</div>
-          <div class="stat-lbl">Tiempo de respuesta</div>
+          <div class="stat-num">6</div>
+          <div class="stat-lbl">industrias atendidas</div>
         </div>
         <div>
-          <div class="stat-num">100%</div>
-          <div class="stat-lbl">Comprometido</div>
+          <div class="stat-num">3</div>
+          <div class="stat-lbl">países de operación</div>
+        </div>
+        <div>
+          <div class="stat-num">98%</div>
+          <div class="stat-lbl">satisfacción de clientes</div>
         </div>
       </div>
     </section>
+
+    <!-- Confían en nodo8 -->
+    <div class="clients-strip">
+      <div class="clients-eyebrow">Confían en nodo8</div>
+      <div class="clients-row">
+        <span class="client-name">Grupo Comercial MX</span>
+        <span class="client-sep"></span>
+        <span class="client-name">Aero Regional</span>
+        <span class="client-sep"></span>
+        <span class="client-name">Transmex</span>
+        <span class="client-sep"></span>
+        <span class="client-name">Banco Norte</span>
+        <span class="client-sep"></span>
+        <span class="client-name">Fintech CDMX</span>
+        <span class="client-sep"></span>
+        <span class="client-name">Retail Group</span>
+      </div>
+    </div>
 
     <section id="servicios">
       <div class="section-header">
@@ -800,6 +948,55 @@
       </div>
     </section>
 
+    <!-- Industrias -->
+    <section>
+      <div class="section-header">
+        <div>
+          <div class="section-eyebrow">Sectores</div>
+          <div class="section-title">Industrias que atendemos</div>
+        </div>
+        <p class="section-note">Experiencia vertical en los sectores que más lo necesitan.</p>
+      </div>
+      <div class="industries-grid-home">
+        <a href="/industries" class="industry-item">
+          <div class="ind-home-icon">
+            <svg viewBox="0 0 24 24"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+          </div>
+          <span class="ind-home-name">Retail</span>
+        </a>
+        <a href="/industries" class="industry-item">
+          <div class="ind-home-icon">
+            <svg viewBox="0 0 24 24"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
+          </div>
+          <span class="ind-home-name">Banca</span>
+        </a>
+        <a href="/industries" class="industry-item">
+          <div class="ind-home-icon">
+            <svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.38 2 2 0 0 1 3.6 1.2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.79a16 16 0 0 0 6.29 6.29l.95-.96a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+          </div>
+          <span class="ind-home-name">Airlines</span>
+        </a>
+        <a href="/industries" class="industry-item">
+          <div class="ind-home-icon">
+            <svg viewBox="0 0 24 24"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+          </div>
+          <span class="ind-home-name">Logística</span>
+        </a>
+        <a href="/industries" class="industry-item">
+          <div class="ind-home-icon">
+            <svg viewBox="0 0 24 24"><polyline points="22 12 16 12 14 15 10 9 8 12 2 12"/></svg>
+          </div>
+          <span class="ind-home-name">ERP</span>
+        </a>
+        <a href="/industries" class="industry-item">
+          <div class="ind-home-icon">
+            <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/></svg>
+          </div>
+          <span class="ind-home-name">CRM</span>
+        </a>
+      </div>
+    </section>
+
     <section id="proceso" style="padding-top: 0">
       <div class="section-header">
         <div>
@@ -853,116 +1050,10 @@
       </div>
     </section>
 
-    <section id="contacto">
-      <div class="contact-section">
-        <div class="contact-left">
-          <div class="section-eyebrow" style="margin-bottom: 1rem">
-            Hablemos
-          </div>
-          <h2>¿Tienes un proyecto en mente?</h2>
-          <p style="margin-top: 1rem">
-            Escríbeme y te respondo en menos de 24 horas para agendar una
-            llamada sin costo.
-          </p>
-          <div
-            style="
-              margin-top: 2rem;
-              display: flex;
-              flex-direction: column;
-              gap: 0.6rem;
-            "
-          >
-            <p class="contact-detail">✉ hola@nodo8.net</p>
-            <p class="contact-detail">📍 Guadalajara, Jalisco — México</p>
-          </div>
-        </div>
-        <form
-          class="contact-form"
-          action="https://formspree.io/f/mzdkebnz"
-          method="POST"
-          id="contact-form"
-        >
-          <div class="form-group">
-            <label for="nombre">Nombre</label>
-            <input
-              type="text"
-              id="nombre"
-              name="nombre"
-              placeholder="Tu nombre"
-              required
-            />
-          </div>
-          <div class="form-group">
-            <label for="email">Correo</label>
-            <input
-              type="email"
-              id="email"
-              name="email"
-              placeholder="tu@correo.com"
-              required
-            />
-          </div>
-          <div class="form-group">
-            <label for="mensaje">Mensaje</label>
-            <textarea
-              id="mensaje"
-              name="mensaje"
-              rows="4"
-              placeholder="Cuéntame sobre tu proyecto..."
-              required
-            ></textarea>
-          </div>
-          <button
-            type="submit"
-            class="btn-primary"
-            style="width: 100%; text-align: center"
-            id="submit-btn"
-          >
-            Enviar mensaje
-          </button>
-          <p
-            id="form-status"
-            style="font-size: 0.85rem; margin-top: 8px; display: none"
-          ></p>
-        </form>
-        <script>
-          const form = document.getElementById("contact-form");
-          const status = document.getElementById("form-status");
-          const btn = document.getElementById("submit-btn");
-          form.addEventListener("submit", async function (e) {
-            e.preventDefault();
-            btn.textContent = "Enviando...";
-            btn.style.opacity = "0.7";
-            btn.disabled = true;
-            const data = new FormData(form);
-            try {
-              const res = await fetch(form.action, {
-                method: "POST",
-                body: data,
-                headers: { Accept: "application/json" },
-              });
-              if (res.ok) {
-                status.textContent =
-                  "¡Mensaje enviado! Te respondo en menos de 24 horas.";
-                status.style.color = "#c8f04b";
-                status.style.display = "block";
-                form.reset();
-                btn.textContent = "Enviado";
-              } else {
-                throw new Error();
-              }
-            } catch {
-              status.textContent =
-                "Hubo un error. Escríbeme directo a hola@nodo8.net";
-              status.style.color = "#f04b4b";
-              status.style.display = "block";
-              btn.textContent = "Enviar mensaje";
-              btn.style.opacity = "1";
-              btn.disabled = false;
-            }
-          });
-        </script>
-      </div>
+    <section id="contacto" class="cta-clean">
+      <h2>¿Listo para modernizar<br>tu operación?</h2>
+      <p>Cuéntanos tu reto. Te respondemos en menos de 24 horas.</p>
+      <a href="/contact" class="btn-primary">Agendar llamada</a>
     </section>
 
     <footer>
