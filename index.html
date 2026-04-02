@@ -739,12 +739,12 @@
       .x-feed-inner {
         width: 100%;
         max-width: 600px;
+        margin: 0 auto;
         border-radius: 16px;
-        overflow: hidden;
         border: 1px solid var(--border);
         background: var(--surface);
-        min-height: 320px;
         padding: 1rem;
+        overflow: hidden;
       }
       .x-feed .twitter-tweet {
         margin: 0 auto !important;
@@ -903,15 +903,15 @@
         </div>
       </div>
 
-      <div class="x-feed-inner" id="x-feed-container">
+      <div class="x-feed-inner">
         <blockquote class="twitter-tweet" data-theme="dark" data-dnt="true">
-          <a href="https://x.com/nodo8us/status/2039556832696373470?s=46"></a>
+          <a href="https://x.com/nodo8us/status/2039556832696373470"></a>
         </blockquote>
       </div>
 
       <div class="x-feed-footer">
         <a
-          href="https://x.com/nodo8us/status/2039556832696373470?s=46"
+          href="https://x.com/nodo8us/status/2039556832696373470"
           target="_blank"
           rel="noopener noreferrer"
         >
@@ -1198,30 +1198,7 @@
         <a href="#servicios">Servicios</a>
       </div>
     </footer>
-    <script>
-      window.twttr = (function(d, s, id) {
-        var js, fjs = d.getElementsByTagName(s)[0];
-        var t = window.twttr || {};
-        if (d.getElementById(id)) return t;
-        js = d.createElement(s);
-        js.id = id;
-        js.src = "https://platform.twitter.com/widgets.js";
-        fjs.parentNode.insertBefore(js, fjs);
-
-        t._e = [];
-        t.ready = function(f) {
-          t._e.push(f);
-        };
-
-        return t;
-      }(document, "script", "twitter-wjs"));
-
-      document.addEventListener("DOMContentLoaded", function () {
-        if (window.twttr && window.twttr.widgets) {
-          window.twttr.widgets.load(document.getElementById("x-feed-container"));
-        }
-      });
-    </script>
+    <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
     <script>
       (function () {
         var btn  = document.getElementById("hamburger");
