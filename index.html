@@ -723,6 +723,45 @@
         .nav-links li:last-child { border-bottom: none; }
         .nav-links a { padding: 0.9rem 0; display: block; font-size: 0.95rem; }
       }
+      /* ── X / Twitter feed ── */
+      .x-feed {
+        padding: 5rem 2.5rem;
+        border-bottom: 1px solid var(--border);
+      }
+      .x-feed .section-header {
+        margin-bottom: 2.5rem;
+      }
+      .x-feed-inner {
+        max-width: 600px;
+        margin: 0 auto;
+        border-radius: 12px;
+        overflow: hidden;
+        border: 1px solid var(--border);
+        background: var(--surface);
+      }
+      .x-feed-inner iframe {
+        border-radius: 12px;
+      }
+      .x-feed-footer {
+        text-align: center;
+        margin-top: 1.5rem;
+      }
+      .x-feed-footer a {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-size: 0.85rem;
+        color: var(--accent);
+        text-decoration: none;
+        font-weight: 500;
+        transition: opacity 0.2s;
+      }
+      .x-feed-footer a:hover { opacity: 0.75; }
+      .x-feed-footer a svg {
+        width: 16px;
+        height: 16px;
+        fill: currentColor;
+      }
     </style>
   </head>
   <body>
@@ -841,6 +880,35 @@
           <div class="stat-num">98%</div>
           <div class="stat-lbl">satisfacción de clientes</div>
         </div>
+      </div>
+    </section>
+
+    <!-- X / Twitter feed -->
+    <section class="x-feed">
+      <div class="section-header">
+        <div>
+          <div class="section-eyebrow">Síguenos</div>
+          <div class="section-title">En X (Twitter)</div>
+        </div>
+        <p class="section-note">
+          Mantente al día con nuestras novedades, tips y proyectos.
+        </p>
+      </div>
+      <div class="x-feed-inner">
+        <a
+          class="twitter-timeline"
+          data-theme="dark"
+          data-chrome="noheader nofooter noborders transparent"
+          data-tweet-limit="5"
+          data-dnt="true"
+          href="https://twitter.com/nodo8us"
+        >Tweets de @nodo8us</a>
+      </div>
+      <div class="x-feed-footer">
+        <a href="https://twitter.com/nodo8us" target="_blank" rel="noopener noreferrer">
+          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.746l7.73-8.835L1.254 2.25H8.08l4.261 5.632 5.903-5.632Zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+          Ver perfil de @nodo8us
+        </a>
       </div>
     </section>
 
@@ -1119,6 +1187,7 @@
         <a href="#servicios">Servicios</a>
       </div>
     </footer>
+    <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
     <script>
       (function () {
         var btn  = document.getElementById("hamburger");
