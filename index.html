@@ -727,39 +727,44 @@
       .x-feed {
         padding: 5rem 2.5rem;
         border-bottom: 1px solid var(--border);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
       }
       .x-feed .section-header {
-        margin-bottom: 2.5rem;
+        width: 100%;
+        max-width: 600px;
+        margin-bottom: 2rem;
       }
       .x-feed-inner {
+        width: 100%;
         max-width: 600px;
-        margin: 0 auto;
-        border-radius: 12px;
+        border-radius: 16px;
         overflow: hidden;
         border: 1px solid var(--border);
         background: var(--surface);
+        min-height: 220px;
       }
       .x-feed-inner iframe {
-        border-radius: 12px;
+        border-radius: 16px !important;
       }
       .x-feed-footer {
-        text-align: center;
-        margin-top: 1.5rem;
+        margin-top: 1.25rem;
       }
       .x-feed-footer a {
         display: inline-flex;
         align-items: center;
-        gap: 0.5rem;
-        font-size: 0.85rem;
-        color: var(--accent);
+        gap: 0.45rem;
+        font-size: 0.82rem;
+        color: var(--muted);
         text-decoration: none;
         font-weight: 500;
-        transition: opacity 0.2s;
+        transition: color 0.2s;
       }
-      .x-feed-footer a:hover { opacity: 0.75; }
+      .x-feed-footer a:hover { color: var(--text); }
       .x-feed-footer a svg {
-        width: 16px;
-        height: 16px;
+        width: 14px;
+        height: 14px;
         fill: currentColor;
       }
     </style>
@@ -887,27 +892,24 @@
     <section class="x-feed">
       <div class="section-header">
         <div>
-          <div class="section-eyebrow">Síguenos</div>
-          <div class="section-title">En X (Twitter)</div>
+          <div class="section-eyebrow">Último post</div>
+          <div class="section-title">Lo que estamos compartiendo</div>
         </div>
-        <p class="section-note">
-          Mantente al día con nuestras novedades, tips y proyectos.
-        </p>
       </div>
       <div class="x-feed-inner">
         <a
           class="twitter-timeline"
           data-theme="dark"
           data-chrome="noheader nofooter noborders transparent"
-          data-tweet-limit="5"
+          data-tweet-limit="1"
           data-dnt="true"
           href="https://twitter.com/nodo8us"
-        >Tweets de @nodo8us</a>
+        >Cargando post de @nodo8us…</a>
       </div>
       <div class="x-feed-footer">
         <a href="https://twitter.com/nodo8us" target="_blank" rel="noopener noreferrer">
           <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.746l7.73-8.835L1.254 2.25H8.08l4.261 5.632 5.903-5.632Zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
-          Ver perfil de @nodo8us
+          Ver todos los posts en X
         </a>
       </div>
     </section>
